@@ -1,0 +1,22 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block layout_body %}
+
+    {% if error %}
+        <div>{{ error.message|trans }}</div>
+    {% endif %}
+
+    <form action="{{ path('register') }}" method="post" novalidate="novalidate">
+
+        {{ form_row(form.email) }}
+        {{ form_row(form.username) }}
+        {{ form_row(form.password) }}
+        {{ form_rest(form) }}
+        <button type="submit" class="btn btn-success">Register</button>
+    </form>
+
+    <script type="text/javascript">
+        switchPassword('#register_form_password');
+    </script>
+
+{% endblock %}

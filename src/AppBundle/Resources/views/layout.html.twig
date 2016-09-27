@@ -1,0 +1,23 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
+
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                <a href="{{ path('logout') }}">خروج</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                {% block layout_body %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

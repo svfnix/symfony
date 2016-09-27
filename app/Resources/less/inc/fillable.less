@@ -1,0 +1,45 @@
+.fillable() {
+
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  opacity: 0.8;
+
+  .transition(ease all 0.3s);
+
+  &:hover {
+      background-size: 100% 100%;
+      box-shadow: inset 0 0 0 1px #000;
+      opacity: 1;
+  }
+
+  &-center-right-left,
+  &-center-top-bottom,
+  &-center-corner {
+    background-position: 50% 50%;
+  }
+  &-to-left {
+    background-position: 100% 50%;
+  }
+  &-to-right {
+    background-position: 0% 50%;
+  }
+  &-to-top {
+    background-position: 50% 100%;
+  }
+  &-to-bottom {
+    background-position: 50% 0%;
+  }
+  &-center-right-left,
+  &-to-left,
+  &-to-right {
+    background-size: 0% 100%;
+  }
+  &-center-top-bottom,
+  &-to-top,
+  &-to-bottom {
+    background-size: 100% 0%;
+  }
+  &-center-corner {
+    background-size: 0% 0%;
+  }
+}

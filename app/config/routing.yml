@@ -1,0 +1,16 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+news_category:
+    resource: "@NewsCategoryBundle/Resources/config/routing.yml"
+    prefix:   /
+
+news_category_cat:
+    resource: "@NewsCategoryBundle/Controller/"
+    prefix:   /admin
+    type:     annotation
+
+news_content:
+    resource: "@NewsContentBundle/Resources/config/routing.yml"
+    prefix:   /

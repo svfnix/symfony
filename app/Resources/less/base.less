@@ -1,0 +1,37 @@
+@import "inc/mixins";
+@import "inc/for";
+
+//Configuration
+@font-sizes: 9px, 10px, 11px, 12px, 13px, 14px, 15px, 16px, 17px, 18px, 19px, 20px, 21px, 22px, 24px, 25px, 28px, 30px, 35px, 40px, 45px, 50px, 55px, 60px, 70px, 80px, 90px, 100px;
+@paddings: 1px, 2px, 3px, 4px, 5px, 10px, 15px, 20px, 25px, 30px, 35px, 40px, 50px, 60px, 75px, 100px;
+@margins: 1px, 2px, 3px, 4px, 5px, 10px, 15px, 20px, 25px, 30px, 35px, 40px, 50px, 60px, 75px, 100px;
+
+// Styles
+.ltr{direction: ltr}
+.rtl{direction: rtl}
+
+.fs {
+  .for(@font-sizes); .-each(@i) {
+    &-@{i} {.attr(font-size, @i);}
+  }
+}
+
+.padding {
+  .for(@paddings); .-each(@i) {
+    &-@{i} {.attr(padding, @i);}
+    &-top-@{i} {.attr(padding-top, @i);}
+    &-right-@{i} {.attr(padding-right, @i);}
+    &-left-@{i} {.attr(padding-left, @i);}
+    &-bottom-@{i} {.attr(padding-bottom, @i);}
+  }
+}
+
+.margin {
+  .for(@margins); .-each(@i) {
+    &-@{i} {.attr(margin, @i);}
+    &-top-@{i} {.attr(margin-top, @i);}
+    &-right-@{i} {.attr(margin-right, @i);}
+    &-left-@{i} {.attr(margin-left, @i);}
+    &-bottom-@{i} {.attr(margin-bottom, @i);}
+  }
+}

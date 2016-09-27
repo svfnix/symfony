@@ -1,0 +1,85 @@
+/*
+ * Skin: Purple
+ * ------------
+ */
+@import "../../bootstrap/mixins.less";
+@import "../../bootstrap/variables.less";
+@import "../variables.less";
+@import "../mixins.less";
+
+.skin-purple-light {
+  //Navbar
+  .main-header {
+    .navbar {
+      .navbar-variant(@purple; #fff);
+      .sidebar-toggle {
+        color: #fff;
+        &:hover {
+          background-color: darken(@purple, 5%);
+        }
+      }
+      @media (max-width: @screen-header-collapse) {
+        .dropdown-menu {
+          li {
+            &.divider {
+              background-color: rgba(255, 255, 255, 0.1);
+            }
+            a {
+              color: #fff;
+              &:hover {
+                background: darken(@purple, 5%);
+              }
+            }
+          }
+        }
+      }
+    }
+    //Logo
+    .logo {
+      .logo-variant(@purple);
+    }
+
+    li.user-header {
+      background-color: @purple;
+    }
+  }
+
+  //Content Header
+  .content-header {
+    background: transparent;
+  }
+
+  //Create the sidebar skin
+  .skin-light-sidebar(@purple);
+}
+
+.sidebar-collapse {
+  @media (min-width: @screen-sm) {
+    .sidebar-menu > li > a > .fa {
+      font-size: 22px;
+      margin: 5px;
+    }
+    .sidebar-menu > li > a > .menu-caption{
+      background: #605ca8 !important;
+      color: white;
+    }
+  }
+  .pull-left-container {
+    > .fa-angle-right,
+    > .fa-angle-down{
+      color: white;
+      margin-left: 0px !important;
+    }
+    .label{
+      padding: 6px 4px 2px 4px;
+      display: inline-block;
+      margin-top: -3px;
+      margin-left: -5px;
+    }
+  }
+}
+
+.navbar-nav > .user-menu > .dropdown-menu {
+  left: 0px !important;
+  right: auto !important;
+}
