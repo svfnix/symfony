@@ -8,7 +8,7 @@ use AppBundle\Traits\Metadata;
 use AppBundle\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use Symfony\Component\Validator\Constraint as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -40,10 +40,13 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=32, unique=true)
-     * @Assert/NotBlank(message="Put a username")
-     * @Assert/Length(min="3", minMessage="Username must be at least 3 characters")
-     * @Assert/Length(max="32", minMessage="Username can has maximum 32 characters")
-     * @Assert/
+     * @Assert\NotBlank(message="Put a username")
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 32,
+     *      minMessage = "Username must be at least {{ limit }} characters",
+     *      maxMessage = "Username can has maximum {{ limit }} characters"
+     * )
      */
     private $username;
 
@@ -51,8 +54,8 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
-     * @Assert/NotBlank(message="Put an email")
-     * @Assert/Email
+     * @Assert\NotBlank(message="Put an email")
+     * @Assert\Email
      */
     private $email;
 
@@ -60,7 +63,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
-     * @Assert/NotBlank(message="Put a password")
+     * @Assert\NotBlank(message="Put a password")
      */
     private $password;
 

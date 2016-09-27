@@ -2,36 +2,34 @@
 
 {% block layout_body %}
 
-    {% if error %}
-        <div>{{ error.message|trans }}</div>
-    {% endif %}
+    <div dir="ltr">{{ dump(form) }}</div>
 
     <div class="row margin-top-100px">
         <div class="col-sm-4 col-sm-offset-4">
             <div class="panelbox">
                 <form action="{{ path('register') }}" method="post" novalidate="novalidate">
 
-                    <div class="form-group">
+                    <div class="form-group{{ form.email.vars.valid == false ? ' has-error' : '' }}">
                         <label>آدرس ایمیل</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-envelope-o"></i></div>
-                            <input type="text" class="form-control" id="email" name="register_form[email]" value="{{ data.email }}" placeholder="آدرس ایمیل را وارد نمایید" />
+                            <input type="text" class="form-control" id="email" name="{{ form.email.vars.full_name }}" value="{{ form.email.vars.value }}" placeholder="آدرس ایمیل را وارد نمایید" />
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group{{ form.username.vars.valid == false ? ' has-error' : '' }}">
                         <label>نام کاربری</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                            <input type="email" class="form-control" id="username" name="register_form[username]" value="{{ data.username }}" placeholder="نام کاربری را وارد نمایید" />
+                            <input type="email" class="form-control" id="username" name="{{ form.username.vars.full_name }}" value="{{ form.username.vars.value }}" placeholder="نام کاربری را وارد نمایید" />
                         </div>
                     </div>
 
-                    <div class="form-group form-password">
+                    <div class="form-group form-password{{ form.password.vars.valid == false ? ' has-error' : '' }}">
                         <label>کلمه عبور </label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-hashtag mouse-hand password-key"></i></div>
-                            <input type="password" class="form-control" id="password" name="register_form[password]" placeholder="کلمه عبور را وارد نمایید" />
+                            <input type="password" class="form-control" id="password" name="{{ form.password.vars.full_name }}" placeholder="کلمه عبور را وارد نمایید" />
                         </div>
                     </div>
 

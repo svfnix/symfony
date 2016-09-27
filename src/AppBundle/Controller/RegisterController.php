@@ -37,9 +37,7 @@ class RegisterController extends BaseController
         }
 
         return array(
-            'form' => $form->createView(),
-            'data' => $form->getData(),
-            'error' => null
+            'form' => $form->createView()
         );
     }
 
