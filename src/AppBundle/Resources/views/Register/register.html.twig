@@ -5,7 +5,7 @@
     {% if error %}
         <div>{{ error.message|trans }}</div>
     {% endif %}
-    {{ dump(data) }}
+
     <div class="row margin-top-100px">
         <div class="col-sm-4 col-sm-offset-4">
             <div class="panelbox">
@@ -15,7 +15,7 @@
                         <label>آدرس ایمیل</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-envelope-o"></i></div>
-                            <input type="text" class="form-control" id="email" name="email" value="psproot@gmail.com" placeholder="آدرس ایمیل را وارد نمایید" />
+                            <input type="text" class="form-control" id="email" name="register_form[email]" value="{{ data.email }}" placeholder="آدرس ایمیل را وارد نمایید" />
                         </div>
                     </div>
 
@@ -23,7 +23,7 @@
                         <label>نام کاربری</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                            <input type="email" class="form-control" id="username" name="username" value="" placeholder="نام کاربری را وارد نمایید" />
+                            <input type="email" class="form-control" id="username" name="register_form[username]" value="{{ data.username }}" placeholder="نام کاربری را وارد نمایید" />
                         </div>
                     </div>
 
@@ -31,7 +31,7 @@
                         <label>کلمه عبور </label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-hashtag mouse-hand password-key"></i></div>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="کلمه عبور را وارد نمایید" />
+                            <input type="password" class="form-control" id="password" name="register_form[password]" placeholder="کلمه عبور را وارد نمایید" />
                         </div>
                     </div>
 
@@ -40,7 +40,7 @@
                     </script>
 
                     <div class="margin-top-30px"></div>
-                    <input type="submit" class="btn btn-warning btn-block" value="ایجاد اشتراک">
+                    <input type="submit" class="btn btn-info btn-block" value="ایجاد اشتراک">
 
                     {{ form_row(form._token) }}
 
