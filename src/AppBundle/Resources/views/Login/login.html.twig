@@ -6,27 +6,35 @@
         <div>{{ error.message|trans }}</div>
     {% endif %}
     <style>
-        body{background: #EEE}
+        body{background: #f9f9f9}
     </style>
     <div class="row margin-top-100px">
         <div class="col-sm-4 col-sm-offset-4">
             <div class="panelbox">
-                <div style="height: 100px;"></div>
-                <form action="{{ path('login') }}" method="post">
+                <form action="{{ path('login') }}" method="post" novalidate="novalidate">
 
                     <div class="form-group">
+                        <label>نام کاربری یا آدرس ایمیل</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                            <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="نام کاربری" />
+                            <input type="text" class="form-control" id="username" name="_username" value="{{ last_username }}" placeholder="نام کاربری یا آدرس ایمیل را وارد نمایید" />
                         </div>
                     </div>
 
-                    <div class="form-group">
+                    <div class="form-group form-password">
+                        <label>کلمه عبور <a href="#" class="pull-left fs-13px">فراموش شده ؟</a></label>
                         <div class="input-group">
-                            <div class="input-group-addon"><i class="fa fa-hashtag"></i></div>
-                            <input type="password" class="form-control" id="password" name="_password" placeholder="کلمه عبور" />
+                            <div class="input-group-addon"><i class="fa fa-hashtag mouse-hand password-key"></i></div>
+                            <input type="password" class="form-control" id="password" name="_password" placeholder="کلمه عبور را وارد نمایید" />
                         </div>
                     </div>
+
+                    <script>
+                        showPassword('.form-password');
+                    </script>
+
+                    <div class="margin-top-30px"></div>
+                    <input type="submit" class="btn btn-success btn-block" value="ورود به اشتراک">
 
                     {#
                         If you want to control the URL the user
@@ -34,20 +42,12 @@
                         <input type="hidden" name="_target_path" value="/account" />
                     #}
 
-                    <div class="checkbox">
-                        <input type="checkbox">
-                        <label style="margin-right: 10px;">من را به خاطر بسپار </label>
-                    </div>
-
-                    <div class="margin-top-20px"></div>
-                    <input type="submit" class="btn btn-success btn-block" value="ورود به اشتراک">
-                    <input type="submit" class="btn btn-warning btn-block" value="کلمه عبور خود را فراموش کرده ام">
-
-                    <div class="margin-top-20px"></div>
-                    <input type="submit" class="btn btn-info btn-block" value="ایجاد اشتراک جدید">
-
                 </form>
             </div>
+
+            <div class="margin-top-25px"></div>
+            <div class="center">کاربر جدید هستید؟ <a href="/register">ثبت نام کنید</a></div>
+
         </div>
     </div>
 

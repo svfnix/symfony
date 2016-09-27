@@ -9,9 +9,9 @@ var runSequence = require('run-sequence');
 
 // cleaning the stage
 gulp.task('clean', function(){
-    return del.sync('css/*');
-    return del.sync('js/*');
-    return del.sync('../web/dist/*', {force: true});
+    del.sync('css/*');
+    del.sync('js/*');
+    del.sync('../web/dist/*', {force: true});
 });
 
 // build tasks
@@ -29,7 +29,7 @@ gulp.task('build-less', function() {
                 removeAll: true
             }
         }))
-        .pipe(gulp.dest('../web/dist'))
+        .pipe(gulp.dest('../web/dist'));
 });
 
 gulp.task('build-js', function() {
