@@ -1,0 +1,3 @@
+news_content_homepage:
+    path:     /
+    defaults: { _controller: NewsContentBundle:Default:index }

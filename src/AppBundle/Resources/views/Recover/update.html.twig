@@ -1,0 +1,93 @@
+{% extends 'AppBundle::layout.html.twig' %}
+
+{% block layout_body %}
+
+    <style>
+        body{background: #f9f9f9}
+    </style>
+
+    <div class="row margin-top-100px">
+        <div class="col-sm-4 col-sm-offset-4">
+
+            {% if form.vars.errors|length > 0 %}
+                <div class="alert alert-warning-flat margin-bottom-5px" role="alert">
+                    <ul class="list-style-none padding-right-15px">
+                        {% for error in form.vars.errors %}
+                            <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            <div class="panelbox">
+
+                <form action="{{ path('register') }}" method="post" novalidate="novalidate">
+
+                    <div class="form-group{{ form.email.vars.valid == false ? ' has-error' : '' }}">
+                        <label>آدرس ایمیل</label>
+                        {% if form.email.vars.errors|length > 0 %}
+                            <div class="alert alert-flat alert-danger-flat" role="alert">
+                                <ul class="list-style-none padding-right-5px">
+                                    {% for error in form.email.vars.errors %}
+                                        <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-envelope-o"></i></div>
+                            <input type="text" class="form-control" id="email" name="{{ form.email.vars.full_name }}" value="{{ form.email.vars.value }}" placeholder="آدرس ایمیل را وارد نمایید" />
+                        </div>
+                    </div>
+
+                    <div class="form-group{{ form.username.vars.valid == false ? ' has-error' : '' }}">
+                        <label>نام کاربری</label>
+                        {% if form.username.vars.errors|length > 0 %}
+                            <div class="alert alert-flat alert-danger-flat" role="alert">
+                                <ul class="list-style-none padding-right-5px">
+                                    {% for error in form.username.vars.errors %}
+                                        <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                            <input type="email" class="form-control" id="username" name="{{ form.username.vars.full_name }}" value="{{ form.username.vars.value }}" placeholder="نام کاربری را وارد نمایید" />
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback form-password{{ form.password.vars.valid == false ? ' has-error' : '' }}">
+                        <label>کلمه عبور </label>
+                        {% if form.password.vars.errors|length > 0 %}
+                            <div class="alert alert-flat alert-danger-flat" role="alert">
+                                <ul class="list-style-none padding-right-5px">
+                                    {% for error in form.password.vars.errors %}
+                                        <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <div class="input-group">
+                            <div class="input-group-addon"><i class="fa fa-hashtag"></i></div>
+                            <input type="password" class="form-control" id="password" name="{{ form.password.vars.full_name }}" placeholder="کلمه عبور را وارد نمایید" />
+                            <i class="fa fa-eye-slash form-control-feedback padding-10px mouse-hand pointer-events-inherit password-key gray-hover"></i>
+                        </div>
+                    </div>
+
+                    <div class="margin-top-30px"></div>
+                    <input type="submit" class="btn btn-success btn-block" value="ایجاد اشتراک">
+
+                    {{ form_row(form._token) }}
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        showPassword('.form-password');
+    </script>
+
+{% endblock %}
