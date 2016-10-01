@@ -2,9 +2,12 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\RegisterFormType;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 class RegisterController extends BaseController
@@ -17,7 +20,12 @@ class RegisterController extends BaseController
      */
     public function register(Request $request)
     {
-        $form = $this->createForm(RegisterFormType::class);
+        $form = $this->createFormBuilder(new User())
+            ->add('email', EmailType::class)
+            ->add('username', TextType::class)
+            ->add('password', PasswordType::class)
+            ->getForm();
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){

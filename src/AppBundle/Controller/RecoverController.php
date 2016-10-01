@@ -2,9 +2,10 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Form\RegisterFormType;
+use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
 class RecoverController extends BaseController
@@ -17,21 +18,24 @@ class RecoverController extends BaseController
      */
     public function recover(Request $request)
     {
-        $form = $this->createForm(RegisterFormType::class);
+        $form = $this->createFormBuilder(new User())
+            ->add('username', TextType::class)
+            ->getForm();
+
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted()){
 
-            $user = $form->getData();
-            $user->setPassword($this->encodePassword($user, $user->getPassword()));
+            $data = $form->getData();
+            $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:User')->findOneByUsernameOrEmail($data->getUsername());
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-
-            $em->flush();
+            if(is_object($user)){
+                dump($user);
+                die();
+            }
 
             return $this->redirect(
-                $this->generateUrl('register_success')
+                $this->generateUrl('recover_success')
             );
 
         }
