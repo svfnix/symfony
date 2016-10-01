@@ -5,41 +5,37 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
-class RegisterController extends BaseController
+class RecoverController extends BaseController
 {
     /**
-     * @Route("/register", name="register")
+     * @Route("/recover", name="recover")
      * @Template()
      * @param Request $request
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function register(Request $request)
+    public function recover(Request $request)
     {
         $form = $this->createFormBuilder(new User())
-            ->add('email', EmailType::class)
             ->add('username', TextType::class)
-            ->add('password', PasswordType::class)
             ->getForm();
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted()){
 
-            $user = $form->getData();
-            $user->setPassword($this->encodePassword($user, $user->getPassword()));
+            $data = $form->getData();
+            $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:User')->findOneByUsernameOrEmail($data->getUsername());
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($user);
-
-            $em->flush();
+            if(is_object($user)){
+                dump($user);
+                die();
+            }
 
             return $this->redirect(
-                $this->generateUrl('register_success')
+                $this->generateUrl('recover_success')
             );
 
         }
@@ -50,7 +46,16 @@ class RegisterController extends BaseController
     }
 
     /**
-     * @Route("/register/success", name="register_success")
+     * @Route("/recover/update", name="recover_update")
+     * @Template()
+     */
+    public static function update()
+    {
+
+    }
+
+    /**
+     * @Route("/recover/success", name="recover_success")
      * @Template()
      */
     public static function success()

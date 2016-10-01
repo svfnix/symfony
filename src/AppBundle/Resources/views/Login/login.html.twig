@@ -8,6 +8,7 @@
     <style>
         body{background: #f9f9f9}
     </style>
+
     <div class="row margin-top-100px">
         <div class="col-sm-4 col-sm-offset-4">
             <div class="panelbox">
@@ -21,17 +22,14 @@
                         </div>
                     </div>
 
-                    <div class="form-group form-password">
+                    <div class="form-group has-feedback form-password">
                         <label>کلمه عبور <a href="#" class="pull-left fs-13px">فراموش شده ؟</a></label>
                         <div class="input-group">
-                            <div class="input-group-addon"><i class="fa fa-hashtag mouse-hand password-key"></i></div>
+                            <div class="input-group-addon"><i class="fa fa-hashtag"></i></div>
                             <input type="password" class="form-control" id="password" name="_password" placeholder="کلمه عبور را وارد نمایید" />
+                            <i class="fa fa-eye-slash form-control-feedback padding-10px mouse-hand pointer-events-inherit password-key gray-hover"></i>
                         </div>
                     </div>
-
-                    <script>
-                        showPassword('.form-password');
-                    </script>
 
                     <div class="margin-top-30px"></div>
                     <input type="submit" class="btn btn-success btn-block" value="ورود به اشتراک">
@@ -50,5 +48,9 @@
 
         </div>
     </div>
+
+    <script>
+        showPassword('.form-password');
+    </script>
 
 {% endblock %}
