@@ -22,7 +22,6 @@ class RegisterController extends BaseController
     {
         $form = $this->createFormBuilder(new User())
             ->add('email', EmailType::class)
-            ->add('username', TextType::class)
             ->add('password', PasswordType::class)
             ->getForm();
 

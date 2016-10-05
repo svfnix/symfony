@@ -17,7 +17,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @UniqueEntity(fields="email", message="this email is taken!")
- * @UniqueEntity(fields="username", message="this username is taken!")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
@@ -39,14 +38,7 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=32, unique=true)
-     * @Assert\NotBlank(message="Put a username")
-     * @Assert\Length(
-     *      min = 3,
-     *      max = 32,
-     *      minMessage = "Username must be at least {{ limit }} characters",
-     *      maxMessage = "Username can has maximum {{ limit }} characters"
-     * )
+     * @ORM\Column(name="username", type="string", length=30, nullable=true)
      */
     private $username;
 
@@ -77,14 +69,14 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="confirmation_token", type="json_array")
+     * @ORM\Column(name="confirmation_token", type="json_array", nullable=true)
      */
     private $confirmation_token;
 
     /**
      * @var datetime
      *
-     * @ORM\Column(name="confirmation_token_validate", type="datetime")
+     * @ORM\Column(name="confirmation_token_validate", type="datetime", nullable=true)
      */
     private $confirmation_token_validate;
 
