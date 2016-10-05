@@ -74,6 +74,21 @@ class User implements AdvancedUserInterface, \Serializable
      */
     private $roles = array();
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="confirmation_token", type="json_array")
+     */
+    private $confirmation_token;
+
+    /**
+     * @var datetime
+     *
+     * @ORM\Column(name="confirmation_token_validate", type="datetime")
+     */
+    private $confirmation_token_validate;
+
+
 
     /**
      * Get id
@@ -283,5 +298,52 @@ class User implements AdvancedUserInterface, \Serializable
             $this->email
             ) = unserialize($serialized);
     }
-}
 
+    /**
+     * Set confirmationToken
+     *
+     * @param array $confirmationToken
+     *
+     * @return User
+     */
+    public function setConfirmationToken($confirmationToken)
+    {
+        $this->confirmation_token = $confirmationToken;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmationToken
+     *
+     * @return array
+     */
+    public function getConfirmationToken()
+    {
+        return $this->confirmation_token;
+    }
+
+    /**
+     * Set confirmationTokenValidate
+     *
+     * @param \DateTime $confirmationTokenValidate
+     *
+     * @return User
+     */
+    public function setConfirmationTokenValidate($confirmationTokenValidate)
+    {
+        $this->confirmation_token_validate = $confirmationTokenValidate;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmationTokenValidate
+     *
+     * @return \DateTime
+     */
+    public function getConfirmationTokenValidate()
+    {
+        return $this->confirmation_token_validate;
+    }
+}

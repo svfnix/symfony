@@ -6,13 +6,13 @@ security:
         AppBundle\Entity\User: bcrypt
 
     role_hierarchy:
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: [ROLE_USER]
         ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         database:
-            entity: { class: AppBundle:User, property: email }
+            entity: { class: AppBundle:User, property: username }
 
     firewalls:
         # activate different ways to authenticate
@@ -28,6 +28,7 @@ security:
             form_login:
                 check_path: login
                 login_path: login
+                default_target_path: /
             logout:
                 path: logout
                 target: /
