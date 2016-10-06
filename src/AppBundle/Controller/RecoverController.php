@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -18,8 +19,9 @@ class RecoverController extends BaseController
      */
     public function recover(Request $request)
     {
-        $form = $this->createFormBuilder(new User())
-            ->add('username', TextType::class)
+        $form = $this
+            ->createFormBuilder(new User())
+            ->add('email', EmailType::class)
             ->getForm();
 
         $form->handleRequest($request);
@@ -27,11 +29,25 @@ class RecoverController extends BaseController
         if ($form->isSubmitted()){
 
             $data = $form->getData();
-            $user = $this->getDoctrine()->getManager()->getRepository('AppBundle:User')->findOneByUsernameOrEmail($data->getUsername());
+            $user = $this
+                ->getDoctrine()
+                ->getManager()
+                ->getRepository('AppBundle:User')
+                ->findOneByEmail($data->getEmail());
 
             if(is_object($user)){
-                dump($user);
-                die();
+
+                $token = md5(rand());
+
+                $user->setConfirmationToken($token);
+                $user->setConfirmationTokenValidate();
+
+                $this->sendMail(
+                    'psproot@gmail.com',
+                    'salam',
+                    'AppBundle:Recover:mail/test.html.twig',
+                    ['token' => $token]
+                );
             }
 
             return $this->redirect(

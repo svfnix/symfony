@@ -54,10 +54,36 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
+     * @ORM\Column(name="salt", type="string", length=128)
+     */
+    protected $salt;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="password", type="string", length=255)
      * @Assert\NotBlank(message="Put a password")
      */
     private $password;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="password_expires_at", type="boolean")
+     */
+    protected $passwordExpiresAt;
+
+    /**
+     * @var boolean
+     */
+    protected $enabled;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="locked", type="boolean")
+     */
+    protected $locked;
 
     /**
      * @var array
@@ -71,16 +97,19 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @ORM\Column(name="confirmation_token", type="json_array", nullable=true)
      */
-    private $confirmation_token;
+    private $confirmationToken;
 
     /**
      * @var datetime
      *
-     * @ORM\Column(name="confirmation_token_validate", type="datetime", nullable=true)
+     * @ORM\Column(name="confirmation_token_expires_at", type="datetime", nullable=true)
      */
-    private $confirmation_token_validate;
+    private $confirmationTokenExpiresAt;
 
-
+    /**
+     * @var \DateTime
+     */
+    protected $lastLogin;
 
     /**
      * Get id
@@ -90,6 +119,20 @@ class User implements AdvancedUserInterface, \Serializable
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * set salt
+     */
+    public function setSalt(){
+        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+    }
+
+    /**
+     * @return null
+     */
+    public function getSalt(){
+        return $this->salt;
     }
 
     /**
@@ -186,15 +229,56 @@ class User implements AdvancedUserInterface, \Serializable
         return array_unique($roles);
     }
 
-    public function eraseCredentials(){
+    /**
+     * Set confirmationToken
+     *
+     * @param array $confirmationToken
+     *
+     * @return User
+     */
+    public function setConfirmationToken($confirmationToken)
+    {
+        $this->confirmation_token = $confirmationToken;
 
+        return $this;
     }
 
     /**
-     * @return null
+     * Get confirmationToken
+     *
+     * @return array
      */
-    public function getSalt(){
-        return null;
+    public function getConfirmationToken()
+    {
+        return $this->confirmation_token;
+    }
+
+    /**
+     * Set confirmationTokenValidate
+     *
+     * @param \DateTime $confirmationTokenValidate
+     *
+     * @return User
+     */
+    public function setConfirmationTokenValidate($confirmationTokenValidate = null)
+    {
+        if(is_null($confirmationTokenValidate)){
+            $confirmationTokenValidate = new \DateTime();
+        }
+
+        $this->confirmation_token_validate = $confirmationTokenValidate;
+
+        return $this;
+    }
+
+    /**
+     * Get confirmationTokenValidate
+     *
+     * @return \DateTime
+     */
+    public function getConfirmationTokenValidate()
+    {
+        return $this->confirmation_token_validate;
     }
 
     /**
@@ -257,6 +341,16 @@ class User implements AdvancedUserInterface, \Serializable
         return $this->getIsActive();
     }
 
+    /**
+     * Removes sensitive data from the user.
+     *
+     * This is important if, at any given point, sensitive information like
+     * the plain-text password is stored on this object.
+     */
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
 
     /**
      * String representation of object
@@ -268,7 +362,6 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return serialize(array(
             $this->id,
-            $this->username,
             $this->email
         ));
     }
@@ -286,56 +379,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         list(
             $this->id,
-            $this->username,
             $this->email
             ) = unserialize($serialized);
-    }
-
-    /**
-     * Set confirmationToken
-     *
-     * @param array $confirmationToken
-     *
-     * @return User
-     */
-    public function setConfirmationToken($confirmationToken)
-    {
-        $this->confirmation_token = $confirmationToken;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmationToken
-     *
-     * @return array
-     */
-    public function getConfirmationToken()
-    {
-        return $this->confirmation_token;
-    }
-
-    /**
-     * Set confirmationTokenValidate
-     *
-     * @param \DateTime $confirmationTokenValidate
-     *
-     * @return User
-     */
-    public function setConfirmationTokenValidate($confirmationTokenValidate)
-    {
-        $this->confirmation_token_validate = $confirmationTokenValidate;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmationTokenValidate
-     *
-     * @return \DateTime
-     */
-    public function getConfirmationTokenValidate()
-    {
-        return $this->confirmation_token_validate;
     }
 }

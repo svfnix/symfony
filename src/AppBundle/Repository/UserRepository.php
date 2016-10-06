@@ -17,6 +17,36 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class UserRepository extends EntityRepository implements UserProviderInterface
 {
+
+    /**
+     * @param $username
+     * @return User|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByUsername($username)
+    {
+        return $this
+            ->createQueryBuilder('u')
+            ->andWhere('u.username = :username')
+            ->setParameter('username', $username)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+    /**
+     * @param $email
+     * @return User|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByEmail($email)
+    {
+        return $this
+            ->createQueryBuilder('u')
+            ->andWhere('u.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     /**
      * @param $username
      * @return User|null

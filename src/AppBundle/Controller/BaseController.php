@@ -20,4 +20,15 @@ class BaseController extends Controller
 
         return $encoder->encodePassword($password, $user->getSalt());
     }
+
+    public function sendMail($to, $subject, $template, $args=null)
+    {
+        $message = \Swift_Message::newInstance()
+            ->setSubject($subject)
+            ->setFrom([$this->container->getParameter('mailer_from_email') => $this->container->getParameter('mailer_from_name')])
+            ->setTo($to)
+            ->setBody(is_null($args) ? $template : $this->renderView($template, $args), 'text/html');
+
+        return $this->get('mailer')->send($message);
+    }
 }
