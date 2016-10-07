@@ -18,9 +18,11 @@ class RegisterController extends BaseController
      * @param Request $request
      * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
      */
-    public function register(Request $request)
+    public function index(Request $request)
     {
         $form = $this->createFormBuilder(new User())
+            ->add('name', TextType::class)
+            ->add('mobile', TextType::class)
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
             ->getForm();
@@ -34,8 +36,15 @@ class RegisterController extends BaseController
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
-
             $em->flush();
+
+            $this->sendMail(
+                $user->getEmail(),
+                $this->get('translator')->trans('ثبت نام با موفقیت انجام شد'),
+                $this->renderView('mail/register_done.html.twig', [
+                    'name' => $user->getname()
+                ])
+            );
 
             return $this->redirect(
                 $this->generateUrl('register_success')
@@ -44,6 +53,7 @@ class RegisterController extends BaseController
         }
 
         return array(
+            'error' => null,
             'form' => $form->createView()
         );
     }
@@ -52,7 +62,7 @@ class RegisterController extends BaseController
      * @Route("/register/success", name="register_success")
      * @Template()
      */
-    public static function success()
+    public function success()
     {
 
     }

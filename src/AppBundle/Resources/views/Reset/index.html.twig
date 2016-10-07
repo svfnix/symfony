@@ -9,19 +9,17 @@
     <div class="row margin-top-100px">
         <div class="col-sm-4 col-sm-offset-4">
 
-            {% if form.vars.errors|length > 0 %}
-                <div class="alert alert-warning-flat margin-bottom-5px" role="alert">
+            {% if error %}
+                <div class="alert alert-error-flat margin-bottom-15px" role="alert">
                     <ul class="list-style-none padding-right-15px">
-                        {% for error in form.vars.errors %}
-                            <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
-                        {% endfor %}
+                        <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
                     </ul>
                 </div>
             {% endif %}
 
             <div class="panelbox">
 
-                <form action="{{ path('recover') }}" method="post" novalidate="novalidate">
+                <form action="{{ path('reset') }}" method="post" novalidate="novalidate">
 
                     <div class="form-group{{ form.email.vars.valid == false ? ' has-error' : '' }}">
                         <label>آدرس ایمیل</label>
@@ -35,7 +33,7 @@
                             </div>
                         {% endif %}
                         <div class="input-group">
-                            <div class="input-group-addon"><i class="fa fa-envelope-o"></i></div>
+                            <div class="input-group-addon"><i class="fa fa-envelope"></i></div>
                             <input type="email" class="form-control" id="email" name="{{ form.email.vars.full_name }}" value="{{ form.email.vars.value }}" placeholder="آدرس ایمیل را وارد نمایید" />
                         </div>
                     </div>
@@ -47,6 +45,9 @@
 
                 </form>
             </div>
+
+            <div class="margin-top-25px"></div>
+            <div class="center"><a href="{{ path('login') }}">بازگشت به فرم ورود به اشتراک</a></div>
 
         </div>
     </div>

@@ -2,8 +2,8 @@
 
 namespace News\CategoryBundle\Entity;
 
-use AppBundle\Traits\Active;
 use AppBundle\Traits\Base;
+use AppBundle\Traits\Enabled;
 use AppBundle\Traits\Metadata;
 use AppBundle\Traits\Name;
 use AppBundle\Traits\Timestampable;
@@ -21,7 +21,7 @@ class Cat
     
     use Base,
         Name,
-        Active,
+        Enabled,
         Metadata,
         Timestampable,
         ORMBehaviors\SoftDeletable\SoftDeletable;

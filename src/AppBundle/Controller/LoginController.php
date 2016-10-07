@@ -18,13 +18,13 @@ class LoginController extends BaseController
      * @Route("/login", name="login")
      * @Template()
      */
-    public function loginAction()
+    public function index()
     {
         $authenticationUtils = $this->get('security.authentication_utils');
 
         return array(
             'last_username' => $authenticationUtils->getLastUsername(),
-            'error'         => $authenticationUtils->getLastAuthenticationError(),
+            'error'         => $authenticationUtils->getLastAuthenticationError()
         );
     }
 
@@ -32,7 +32,7 @@ class LoginController extends BaseController
      * @Route("/logout", name="logout")
      * @Template()
      */
-    public function logoutAction()
+    public function logout()
     {
         
     }

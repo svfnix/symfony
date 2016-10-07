@@ -19,6 +19,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 {
 
     /**
+     * @param $id
+     * @return User|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneById($id)
+    {
+        return $this
+            ->createQueryBuilder('u')
+            ->andWhere('u.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * @param $username
      * @return User|null
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -32,6 +47,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->getQuery()
             ->getOneOrNullResult();
     }
+
     /**
      * @param $email
      * @return User|null
@@ -64,6 +80,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * @param $token
+     * @return User|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findOneByResetPasswordToken($token)
+    {
+        return $this
+            ->createQueryBuilder('u')
+            ->andWhere('u.reset_password_token = :token')
+            ->setParameter('token', $token)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
      * @param string $username
      * @return User
      */
@@ -84,7 +115,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function refreshUser(UserInterface $user)
     {
         $class = get_class($user);
-        if(!$this->supportClass($class)) {
+        if(!$this->supportsClass($class)) {
             throw new UnsupportedUserException(sprintf(
                 "Instances of %s are not supported.",
                 $class

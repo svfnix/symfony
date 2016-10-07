@@ -2,8 +2,8 @@
 
 namespace AppBundle\Entity;
 
-use AppBundle\Traits\Active;
 use AppBundle\Traits\Base;
+use AppBundle\Traits\Enabled;
 use AppBundle\Traits\Metadata;
 use AppBundle\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,13 +16,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
- * @UniqueEntity(fields="email", message="this email is taken!")
+ * @UniqueEntity(fields="email", message="این آدرس ایمیل قبلا در سیستم ثبت شده است")
  */
 class User implements AdvancedUserInterface, \Serializable
 {
 
     use Base,
-        Active,
+        Enabled,
         Timestampable,
         Metadata;
 
@@ -38,15 +38,15 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=30, nullable=true)
+     * @ORM\Column(name="username", type="string", length=32, nullable=true)
      */
     private $username;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=255, unique=true)
-     * @Assert\NotBlank(message="Put an email")
+     * @ORM\Column(name="email", type="string", length=128, unique=true)
+     * @Assert\NotBlank(message="آدرس ایمیل معتبر نمی باشد")
      * @Assert\Email
      */
     private $email;
@@ -54,36 +54,42 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @ORM\Column(name="salt", type="string", length=128)
+     * @ORM\Column(name="salt", type="string", length=64)
      */
     protected $salt;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=255)
-     * @Assert\NotBlank(message="Put a password")
+     * @ORM\Column(name="password", type="string", length=64)
+     * @Assert\NotBlank(message="رمز عبور معتبر نمی باشد")
      */
     private $password;
 
     /**
-     * @var \DateTime
+     * @var string
      *
-     * @ORM\Column(name="password_expires_at", type="boolean")
+     * @ORM\Column(name="reset_password_token", type="string", length=64, nullable=true)
      */
-    protected $passwordExpiresAt;
+    private $resetPasswordToken;
 
     /**
-     * @var boolean
+     * @var string
+     *
+     * @Assert\NotBlank(message="نام و نام خانوادگی را وارد نمایید")
+     * @ORM\Column(name="name", type="string", length=128, nullable=true)
      */
-    protected $enabled;
+    private $name;
 
     /**
-     * @var boolean
+     * @var string
      *
-     * @ORM\Column(name="locked", type="boolean")
+     * @Assert\NotBlank(message="شماره موبایل را وارد نمایید")
+     * @ORM\Column(name="mobile", type="string", length=16, nullable=true)asswd
+     *
+     * @Assert\Regex(pattern="/^09[0-9]{9}$/", message="شماره وارد شده معتبر نمی باشد")
      */
-    protected $locked;
+    private $mobile;
 
     /**
      * @var array
@@ -91,25 +97,6 @@ class User implements AdvancedUserInterface, \Serializable
      * @ORM\Column(name="roles", type="json_array")
      */
     private $roles = array();
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="confirmation_token", type="json_array", nullable=true)
-     */
-    private $confirmationToken;
-
-    /**
-     * @var datetime
-     *
-     * @ORM\Column(name="confirmation_token_expires_at", type="datetime", nullable=true)
-     */
-    private $confirmationTokenExpiresAt;
-
-    /**
-     * @var \DateTime
-     */
-    protected $lastLogin;
 
     /**
      * Get id
@@ -122,23 +109,9 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * set salt
-     */
-    public function setSalt(){
-        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
-    }
-
-    /**
-     * @return null
-     */
-    public function getSalt(){
-        return $this->salt;
-    }
-
-    /**
      * Set username
      *
-     * @param string username
+     * @param string $username
      *
      * @return User
      */
@@ -184,6 +157,41 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Set salt
+     *
+     * @param $salt
+     * @return User
+     */
+    public function setSalt($salt){
+        $this->salt = $salt;
+    }
+
+    /**
+     * Generate Salt
+     *
+     * @return $this
+     */
+    public function generateSalt(){
+        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+
+        return $this;
+    }
+
+    /**
+     * Get salt
+     *
+     * @return string
+     */
+    public function getSalt(){
+
+        if(empty($this->salt)){
+            $this->generateSalt();
+        }
+
+        return $this->salt;
+    }
+
+    /**
      * Set password
      *
      * @param string $password
@@ -208,6 +216,79 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Set resetPasswordToken
+     *
+     * @param $resetPasswordToken
+     * @return User
+     */
+    public function setResetPasswordToken($resetPasswordToken)
+    {
+        $this->resetPasswordToken = $resetPasswordToken;
+
+        return $this;
+    }
+
+    /**
+     * Get resetPasswordToken
+     *
+     * @return array
+     */
+    public function getResetPasswordToken()
+    {
+        return $this->resetPasswordToken;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     *
+     * @return User
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set mobile
+     *
+     * @param string $mobile
+     *
+     * @return User
+     */
+    public function setMobile($mobile)
+    {
+        $this->mobile = $mobile;
+
+        return $this;
+    }
+
+    /**
+     * Get mobile
+     *
+     * @return string
+     */
+    public function getMobile()
+    {
+        return $this->mobile;
+    }
+
+    /**
+     * Set rules
+     *
      * @param array $roles
      *
      * @return User
@@ -220,6 +301,8 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Get rules
+     *
      * @return array
      */
     public function getRoles(){
@@ -227,58 +310,6 @@ class User implements AdvancedUserInterface, \Serializable
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
-    }
-
-    /**
-     * Set confirmationToken
-     *
-     * @param array $confirmationToken
-     *
-     * @return User
-     */
-    public function setConfirmationToken($confirmationToken)
-    {
-        $this->confirmation_token = $confirmationToken;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmationToken
-     *
-     * @return array
-     */
-    public function getConfirmationToken()
-    {
-        return $this->confirmation_token;
-    }
-
-    /**
-     * Set confirmationTokenValidate
-     *
-     * @param \DateTime $confirmationTokenValidate
-     *
-     * @return User
-     */
-    public function setConfirmationTokenValidate($confirmationTokenValidate = null)
-    {
-        if(is_null($confirmationTokenValidate)){
-            $confirmationTokenValidate = new \DateTime();
-        }
-
-        $this->confirmation_token_validate = $confirmationTokenValidate;
-
-        return $this;
-    }
-
-    /**
-     * Get confirmationTokenValidate
-     *
-     * @return \DateTime
-     */
-    public function getConfirmationTokenValidate()
-    {
-        return $this->confirmation_token_validate;
     }
 
     /**
@@ -293,7 +324,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function isAccountNonExpired()
     {
-        // TODO: Implement isAccountNonExpired() method.
+        return true;
     }
 
     /**
@@ -308,7 +339,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function isAccountNonLocked()
     {
-        // TODO: Implement isAccountNonLocked() method.
+        return true;
     }
 
     /**
@@ -323,7 +354,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function isCredentialsNonExpired()
     {
-        // TODO: Implement isCredentialsNonExpired() method.
+        return true;
     }
 
     /**
@@ -338,7 +369,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function isEnabled()
     {
-        return $this->getIsActive();
+        return $this->getEnabled();
     }
 
     /**
@@ -362,7 +393,15 @@ class User implements AdvancedUserInterface, \Serializable
     {
         return serialize(array(
             $this->id,
-            $this->email
+            $this->enabled,
+            $this->username,
+            $this->email,
+            $this->salt,
+            $this->password,
+            $this->resetPasswordToken,
+            $this->name,
+            $this->mobile,
+            $this->roles,
         ));
     }
 
@@ -379,7 +418,15 @@ class User implements AdvancedUserInterface, \Serializable
     {
         list(
             $this->id,
-            $this->email
+            $this->enabled,
+            $this->username,
+            $this->email,
+            $this->salt,
+            $this->password,
+            $this->resetPasswordToken,
+            $this->name,
+            $this->mobile,
+            $this->roles,
             ) = unserialize($serialized);
     }
 }

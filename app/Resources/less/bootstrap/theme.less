@@ -192,7 +192,7 @@
   text-shadow: 0 1px 0 rgba(255,255,255,.2);
   @shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 1px 2px rgba(0,0,0,.05);
   .box-shadow(@shadow);
-  font-size: 12px;
+  font-size: 14px;
 }
 
 // Mixin for generating new styles
@@ -206,6 +206,7 @@
 .alert-info       { .alert-styles(@alert-info-bg); }
 .alert-warning    { .alert-styles(@alert-warning-bg); }
 .alert-danger     { .alert-styles(@alert-danger-bg); }
+.alert-error     { .alert-styles(@alert-error-bg); color: @alert-error-text }
 
 // alert flat
 .alert-flat {
@@ -224,6 +225,7 @@
 .alert-info-flat       { .alert-styles-flat(@alert-info-bg); }
 .alert-warning-flat    { .alert-styles-flat(@alert-warning-bg); }
 .alert-danger-flat     { .alert-styles-flat(@alert-danger-bg); }
+.alert-error-flat     { .alert-styles-flat(@alert-error-bg); color: @alert-error-text  }
 
 
 //

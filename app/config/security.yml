@@ -12,7 +12,7 @@ security:
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
         database:
-            entity: { class: AppBundle:User, property: username }
+            entity: { class: AppBundle:User, property: email }
 
     firewalls:
         # activate different ways to authenticate
@@ -29,6 +29,7 @@ security:
                 check_path: login
                 login_path: login
                 default_target_path: /
+                csrf_token_generator: security.csrf.token_manager
             logout:
                 path: logout
                 target: /
