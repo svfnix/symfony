@@ -10,6 +10,9 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ResetController extends BaseController
 {
@@ -28,46 +31,56 @@ class ResetController extends BaseController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->get('email')->isValid()){
+        $errors = null;
+        if ($form->isSubmitted()){
 
             $data = $form->getData();
+            $errors = $this->get('validator')->validate($data->getEmail(), [
+                new Email(),
+                new NotBlank()
+            ]);
 
-            $em = $this
-                ->getDoctrine()
-                ->getManager();
+            if (!count($errors)) {
 
-            $user = $em
-                ->getRepository('AppBundle:User')
-                ->findOneByEmail($data->getEmail());
+                $em = $this
+                    ->getDoctrine()
+                    ->getManager();
 
-            if(is_object($user)){
+                $user = $em
+                    ->getRepository('AppBundle:User')
+                    ->findOneByEmail($data->getEmail());
 
-                $e_token = uniqid(mt_rand(), true);
-                $c_token = uniqid(mt_rand(), true);
+                if (is_object($user)) {
 
-                $user->setResetPasswordToken(password_hash($e_token, PASSWORD_BCRYPT, ['salt' => $c_token]));
-                $em->flush();
+                    $e_token = uniqid(mt_rand(), true);
+                    $c_token = uniqid(mt_rand(), true);
 
-                $response = new Response();
-                $response->headers->setCookie(new Cookie('rps', $c_token, 0, '/', null, false, false));
-                $response->send();
+                    $user->setResetPasswordToken(password_hash($e_token, PASSWORD_BCRYPT, ['salt' => $c_token]));
+                    $em->flush();
 
-                $this->sendMail(
-                    $user->getEmail(),
-                    $this->get('translator')->trans('Verification link'),
-                    $this->renderView('mail/reset_password_verification.html.twig', [
-                        'name' => $user->getname(),
-                        'token' => $e_token,
-                    ])
-                );
+                    $response = new Response();
+                    $response->headers->setCookie(new Cookie('rps', $c_token, 0, '/', null, false, false));
+                    $response->send();
+
+                    $this->sendMail(
+                        $user->getEmail(),
+                        $this->get('translator')->trans('Verification link'),
+                        $this->renderView('mail/reset_password_verification.html.twig', [
+                            'name' => $user->getname(),
+                            'token' => $e_token,
+                        ])
+                    );
+                }
+
+                return $this->redirectToRoute('reset_success');
+            } else {
+                $errors = $this->get('translator')->trans('آدرس ایمیل معتبر نمی باشد');
             }
-
-            return $this->redirectToRoute('reset_success');
 
         }
 
         return [
-            'error' => null,
+            'error' => $errors,
             'form' => $form->createView()
         ];
     }

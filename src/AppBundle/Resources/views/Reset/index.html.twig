@@ -12,7 +12,7 @@
             {% if error %}
                 <div class="alert alert-error-flat margin-bottom-15px" role="alert">
                     <ul class="list-style-none padding-right-15px">
-                        <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
+                        <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error|trans }}</li>
                     </ul>
                 </div>
             {% endif %}
@@ -21,17 +21,8 @@
 
                 <form action="{{ path('reset') }}" method="post" novalidate="novalidate">
 
-                    <div class="form-group{{ form.email.vars.valid == false ? ' has-error' : '' }}">
+                    <div class="form-group">
                         <label>آدرس ایمیل</label>
-                        {% if form.email.vars.errors|length > 0 %}
-                            <div class="alert alert-flat alert-danger-flat" role="alert">
-                                <ul class="list-style-none padding-right-5px">
-                                    {% for error in form.email.vars.errors %}
-                                        <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-envelope"></i></div>
                             <input type="email" class="form-control" id="email" name="{{ form.email.vars.full_name }}" value="{{ form.email.vars.value }}" placeholder="آدرس ایمیل را وارد نمایید" />
