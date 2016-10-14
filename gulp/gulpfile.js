@@ -18,26 +18,27 @@ gulp.task('clean', function(){
 });
 
 // build tasks
-gulp.task('build-fonts', function(){
-    return gulp.src('../app/Resources/font/*.svg')
+gulp.task('build-ifont', function(){
+    return gulp.src('../app/Resources/ifont/*.svg')
         .pipe(iconfontCss({
                 fontName: 'ifont',
-                path: '../app/Resources/templates/ifont.less',
-                fontPath: '/css/fonts/',
-                targetPath: '../app/Resources/build/ifont.less'
+                path: '../app/Resources/less/ifont/templates/ifont.less',
+                targetPath: '../ifont.less',
+                fontPath: './fonts/'
             }))
         .pipe(iconfont({
             fontName: 'ifont',
+            formats: ['ttf', 'eot', 'woff', 'woff2', 'svg'],
             normalize: true
         }))
-        .pipe(gulp.dest('../app/Resources/build/fonts/'));
+        .pipe(gulp.dest('../app/Resources/less/ifont/fonts/'));
 });
 
-gulp.task('build-fonts-css', function () {
-    return gulp.src('../app/Resources/build/ifont.less')
+gulp.task('build-ifont-css', function () {
+    return gulp.src('../app/Resources/less/ifont/ifont.less')
         .pipe(base64({
-            baseDir: '../app/Resources/build/fonts/',
-            maxImageSize: 40*1024
+            baseDir: '../app/Resources/less/ifont/',
+            maxImageSize: 100 * 1024
         }))
         .pipe(concat('ifont.less'))
         .pipe(gulp.dest('../app/Resources/less/'));
@@ -47,6 +48,8 @@ gulp.task('build-less', function() {
     return gulp.src([
             '../app/Resources/less/bootstrap/bootstrap.less',
             '../app/Resources/less/bootstrap/theme.less',
+            '../app/Resources/less/admin-lte/AdminLTE.less',
+            '../app/Resources/less/admin-lte/skins/skin-purple.less',
             '../app/Resources/less/*.less',
             '../src/**/*.less'
         ])
@@ -69,5 +72,5 @@ gulp.task('build-js', function() {
 
 // default tasks
 gulp.task('default', function (callback) {
-    runSequence('clean', ['build-less', 'build-js'], callback);
+    runSequence('clean', 'build-ifont', 'build-ifont-css', ['build-less', 'build-js'], callback);
 });
