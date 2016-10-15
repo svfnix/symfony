@@ -12,8 +12,6 @@ var runSequence = require('run-sequence');
 
 // cleaning the stage
 gulp.task('clean', function(){
-    del.sync('css/*');
-    del.sync('js/*');
     del.sync('../web/dist/*', {force: true});
 });
 
@@ -44,15 +42,13 @@ gulp.task('build-ifont-css', function () {
         .pipe(gulp.dest('../app/Resources/less/'));
 });
 
-gulp.task('build-less', function() {
+gulp.task('build-styles-front', function() {
     return gulp.src([
-            '../app/Resources/less/bootstrap/bootstrap.less',
-            '../app/Resources/less/bootstrap/theme.less',
-            '../app/Resources/less/admin-lte/AdminLTE.less',
-            '../app/Resources/less/admin-lte/skins/skin-purple.less',
-            '../app/Resources/less/*.less',
-            '../src/**/*.less'
-        ])
+        '../app/Resources/less/bootstrap/bootstrap.less',
+        '../app/Resources/less/bootstrap/theme.less',
+        '../app/Resources/less/*.less',
+        '../app/Resources/assets/*.css'
+    ])
         .pipe(less())
         .pipe(concatCss('style.css'))
         .pipe(cssnano({
@@ -63,8 +59,27 @@ gulp.task('build-less', function() {
         .pipe(gulp.dest('../web/dist'));
 });
 
-gulp.task('build-js', function() {
-    return gulp.src(['../app/Resources/js/*.js', '../src/**/*.js'])
+gulp.task('build-styles-admin', function() {
+    return gulp.src([
+        '../app/Resources/less/bootstrap/bootstrap.less',
+        '../app/Resources/less/bootstrap/theme.less',
+        '../app/Resources/less/admin-lte/AdminLTE.less',
+        '../app/Resources/less/admin-lte/skins/skin-purple.less',
+        '../app/Resources/less/*.less',
+        '../app/Resources/assets/*.css'
+    ])
+        .pipe(less())
+        .pipe(concatCss('admin.css'))
+        .pipe(cssnano({
+            discardComments: {
+                removeAll: true
+            }
+        }))
+        .pipe(gulp.dest('../web/dist'));
+});
+
+gulp.task('build-scripts', function() {
+    return gulp.src(['../app/Resources/assets/*.js'])
         .pipe(concat('script.js'))
         .pipe(uglify())
         .pipe(gulp.dest('../web/dist'));
@@ -72,5 +87,5 @@ gulp.task('build-js', function() {
 
 // default tasks
 gulp.task('default', function (callback) {
-    runSequence('clean', 'build-ifont', 'build-ifont-css', ['build-less', 'build-js'], callback);
+    runSequence('clean', 'build-ifont', 'build-ifont-css', ['build-styles-front', 'build-styles-admin', 'build-scripts'], callback);
 });
