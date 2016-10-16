@@ -316,13 +316,25 @@
                         <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
                     </ul>
                 </li>
+
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-dashboard"></i>
+                        <span class="sidebar-menu-header">Test</span>
+                        <span class="pull-left-container">
+                          <i class="fa fa-angle-left pull-left"></i>
+                        </span>
+                    </a>
+                    {%  block test %}{% endblock %}
+                </li>
+
                 <li class="treeview">
                     <a href="#">
                         <i class="fa fa-files-o"></i>
                         <span>Layout Options</span>
-            <span class="pull-left-container">
-              <span class="label label-primary pull-left">4</span>
-            </span>
+                        <span class="pull-left-container">
+                          <span class="label label-primary pull-left">4</span>
+                        </span>
                     </a>
                     <ul class="treeview-menu">
                         <li><a href="pages/layout/top-nav.html"><i class="fa fa-circle-o"></i> Top Navigation</a></li>

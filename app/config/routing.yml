@@ -6,8 +6,3 @@ user_settings_profile:
     resource: "@UserSettingsProfileBundle/Controller/"
     type:     annotation
     prefix:   /
-
-user_news:
-    resource: "@NewsCategoryBundle/Controller/"
-    prefix:   /admin
-    type:     annotation
