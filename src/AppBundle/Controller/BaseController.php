@@ -9,9 +9,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
-use Knp\Menu\MenuFactory;
-use Knp\Menu\Matcher\Matcher;
-use Knp\Menu\Renderer\ListRenderer;
+use AppBundle\Containers\Menu;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
@@ -51,23 +49,16 @@ class BaseController extends Controller
      */
     protected function userMenu(){
 
-        $factory = new MenuFactory();
-        $renderer = new ListRenderer(new Matcher());
-
-        $menus = [];
+        $menu = new Menu();
         $bundles = $this->getParameter('kernel.bundles');
         foreach ($bundles as $bundle){
             $bundle = new $bundle;
-            if(method_exists($bundle, 'getUserMenu')){
-                $menu = $bundle->getUserMenu($factory);
-                if(is_array($menu)){
-                    $menu['menu'] = $renderer->render($menu['menu']);
-                    $menus[$menu['order']][] = $menu;
-                }
+            if(method_exists($bundle, 'inflateUserMenu')){
+                $bundle->inflateUserMenu($menu);
             }
         }
 
-        return $menus;
+        return $menu->getMenus();
     }
 
 }

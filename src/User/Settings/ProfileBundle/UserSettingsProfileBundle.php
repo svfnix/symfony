@@ -2,23 +2,28 @@
 
 namespace User\Settings\ProfileBundle;
 
-use Knp\Menu\MenuFactory;
+use AppBundle\Containers\Menu;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class UserSettingsProfileBundle extends Bundle
 {
-    public function getUserMenu(MenuFactory $factory){
+    public function inflateUserMenu(Menu $menu){
 
-        $menu = $factory->createItem('My menu');
-        $menu->addChild('Home', array('uri' => '/'));
-        $menu->addChild('Comments', array('uri' => '#comments'));
-        $menu->addChild('Symfony2', array('uri' => 'http://symfony-reloaded.org/'));
-        $menu->addChild('Coming soon');
+        $main_menu = $menu->addMenu('user_setting');
+        $main_menu->setTitle('تنظیمات کاربری');
+        $main_menu->setSort(1000);
+        $main_menu->setIcon('user');
 
-        return [
-            'order' => 0,
-            'title' => '',
-            'menu' => $menu
-        ];
+        $sub_menu_1 = $main_menu->addMenu('profile');
+        $sub_menu_1->setTitle('مشخصات کاربری');
+        $sub_menu_1->setSort(100);
+        $sub_menu_1->setUrl('user_setting_profile');
+        $sub_menu_1->setIcon('circle-o');
+
+        $sub_menu_2 = $main_menu->addMenu('password');
+        $sub_menu_2->setTitle('تغییر رمز عبور');
+        $sub_menu_2->setSort(110);
+        $sub_menu_2->setUrl('user_setting_password');
+        $sub_menu_2->setIcon('circle-o');
     }
 }

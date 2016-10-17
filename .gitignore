@@ -1,4 +1,5 @@
-/.idea/workspace.xml
+!/.idea/symfony.iml
+/.idea/*
 /app/config/parameters.yml
 /build/
 /phpunit.xml

@@ -1,5 +1,22 @@
 {% extends 'admin.html.twig' %}
 
 {% block test %}
-    {{ render(controller('AppBundle:Base:userMenu')) }}
+
+    {% for menu in user_menu %}
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-{{ menu.getIcon() }}"></i>
+            <span class="sidebar-menu-header">{{ menu.getTitle() }}</span>
+            <span class="pull-left-container">
+              <i class="fa fa-angle-left pull-left"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            {% for submenu in menu.getMenus() %}
+                <li><a href="{{ submenu.getUrl() }}" target="{{ submenu.getTarget() }}"><i class="fa fa-{{ submenu.getIcon() }}"></i> {{ submenu.getTitle() }}</a></li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+
 {% endblock %}

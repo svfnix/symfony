@@ -47,7 +47,8 @@ gulp.task('build-styles-front', function() {
         '../app/Resources/less/bootstrap/bootstrap.less',
         '../app/Resources/less/bootstrap/theme.less',
         '../app/Resources/less/*.less',
-        '../app/Resources/assets/*.css'
+        '../app/Resources/assets/*.css',
+        '../src/**/*.less'
     ])
         .pipe(less())
         .pipe(concatCss('style.css'))
