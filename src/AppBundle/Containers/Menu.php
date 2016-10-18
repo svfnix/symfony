@@ -4,24 +4,53 @@ namespace AppBundle\Containers;
 
 class Menu
 {
+    const RED = 'red';
+    const YELLOW = 'yellow';
+    const BLUE = 'blue';
+    const GREEN = 'green';
+
+    private $priority;
+    private $parent;
+
     private $title;
     private $sort;
     private $url;
     private $icon;
     private $target;
-    private $stack;
+    private $labels = [];
+    private $stack = [];
+    private $tags = [];
+    private $permissions = [];
 
     /**
      * Menu constructor.
+     * @param $_priority
      */
-    function __construct(){
+    function __construct($_priority=0){
+        $this->priority = $_priority;
         $this->sort = 0;
         $this->stack = [];
     }
 
-    function addMenu($name) {
+    /**
+     * @param $name
+     * @param $_priority
+     * @return Menu|mixed
+     */
+    function addMenu($name, $_priority=0) {
 
-        $menu = new Menu();
+        if(isset($this->stack[$name])){
+            if($this->stack[$name]->getPriority() >= $_priority){
+                return $this->stack[$name];
+            }
+            $menu = new Menu($_priority);
+            $menu->setLabels($this->stack[$name]->getLabels());
+            $menu->setStack($this->stack[$name]->getStack());
+        } else {
+            $menu = new Menu($_priority);
+        }
+
+        $menu->setParent($this);
         $this->stack[$name] = $menu;
 
         return $menu;
@@ -51,6 +80,30 @@ class Menu
         });
 
         return $this->stack;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPriority()
+    {
+        return $this->priority;
+    }
+
+    /**
+     * @param mixed $parent
+     */
+    public function setParent($parent)
+    {
+        $this->parent = $parent;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getParent()
+    {
+        return $this->parent;
     }
 
     /**
@@ -136,10 +189,114 @@ class Menu
     }
 
     /**
+     * @return mixed
+     */
+    public function getLabels()
+    {
+        return $this->labels;
+    }
+
+    /**
+     * @param $title
+     * @param $color
+     * @internal param mixed $labels
+     */
+    public function setLabel($title, $color)
+    {
+        $this->labels[] = [
+            'title' => $title,
+            'color' => $color
+        ];
+    }
+
+    /**
+     * @param mixed $labels
+     */
+    public function setLabels($labels)
+    {
+        $this->labels = $labels;
+    }
+
+    /**
      * @return array
      */
     public function getStack()
     {
         return $this->stack;
+    }
+
+    /**
+     * @param array $stack
+     */
+    public function setStack(array $stack)
+    {
+        $this->stack = $stack;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    public function refreshTags()
+    {
+        $this->tags = [];
+
+        foreach($this->stack as $menu){
+            $this->tags = array_merge($this->tags, $menu->tags);
+        }
+    }
+
+    /**
+     * @param $tag
+     * @internal param mixed $tags
+     */
+    public function setTag($tag)
+    {
+        $this->tags[] = $tag;
+
+        if($this->parent){
+            $this->parent->setTag($tag);
+        }
+    }
+
+    /**
+     * @param mixed $tags
+     */
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+
+        if($this->parent){
+            $this->parent->refreshTags();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissions(): array
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @param array $permission
+     * @internal param array $permissions
+     */
+    public function setPermission(array $permission)
+    {
+        $this->permissions[] = $permission;
+    }
+
+    /**
+     * @param array $permissions
+     */
+    public function setPermissions(array $permissions)
+    {
+        $this->permissions = $permissions;
     }
 }

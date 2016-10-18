@@ -54,11 +54,15 @@ class BaseController extends Controller
         foreach ($bundles as $bundle){
             $bundle = new $bundle;
             if(method_exists($bundle, 'inflateUserMenu')){
-                $bundle->inflateUserMenu($menu);
+                $bundle->inflateUserMenu($menu, $this->get('router'));
             }
         }
 
         return $menu->getMenus();
+    }
+
+    protected function renderUserPanel($template, $args=[]){
+        return $this->render($template, array_merge($args, ['user_menu' => $this->userMenu()]));
     }
 
 }

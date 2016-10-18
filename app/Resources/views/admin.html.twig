@@ -304,7 +304,7 @@
             <!-- sidebar menu: : style can be found in sidebar.less -->
             <ul class="sidebar-menu">
 
-                <li class="active treeview">
+                <li class="treeview">
                     <a href="#">
                         <i class="fa fa-dashboard"></i>
                         <span class="sidebar-menu-header">Dashboard</span>
@@ -313,12 +313,45 @@
                         </span>
                     </a>
                     <ul class="treeview-menu">
-                        <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                        <li><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
                         <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
                     </ul>
                 </li>
 
-                {% block test %}{% endblock %}
+                {% for menu in user_menu %}
+                    <li class="treeview{% if app.request.get('_route') in menu.getTags() %} active{% endif %}">
+                        <a href="#">
+                            <i class="fa fa-{{ menu.getIcon() }}"></i>
+                            <span class="sidebar-menu-header">{{ menu.getTitle() }}</span>
+                            {% if menu.labels|length > 0 %}
+                                <span class="pull-left-container">
+                                {% for label in menu.labels %}
+                                    <small class="label pull-left bg-{{ label.color }}">{{ label.title }}</small>
+                                {% endfor %}
+                                </span>
+                            {% else %}
+                                <span class="pull-left-container">
+                                  <i class="fa fa-angle-left pull-left"></i>
+                                </span>
+                            {% endif %}
+                        </a>
+                        <ul class="treeview-menu">
+                            {% for submenu in menu.getMenus() %}
+                                <li{% if app.request.get('_route') in submenu.getTags() %} class="active"{% endif %}>
+                                    <a href="{{ submenu.getUrl() }}" target="{{ submenu.getTarget() }}"><i class="fa fa-{{ submenu.getIcon() }}"></i> {{ submenu.getTitle() }}
+                                        {% if submenu.labels|length > 0 %}
+                                            <span class="pull-left-container">
+                                                {% for label in submenu.labels %}
+                                                    <small class="label pull-left bg-{{ label.color }}">{{ label.title }}</small>
+                                                {% endfor %}
+                                            </span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
 
                 <li class="treeview">
                     <a href="#">

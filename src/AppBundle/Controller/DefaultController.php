@@ -13,8 +13,6 @@ class DefaultController extends BaseController
     public function indexAction(Request $request)
     {
         // replace this example code with whatever you need
-        return $this->render('default/index.html.twig', [
-            'user_menu' => $this->userMenu()
-        ]);
+        return $this->renderUserPanel('default/index.html.twig');
     }
 }

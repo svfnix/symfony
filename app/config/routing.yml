@@ -5,4 +5,4 @@ app:
 user_settings_profile:
     resource: "@UserSettingsProfileBundle/Controller/"
     type:     annotation
-    prefix:   /
+    prefix:   /user/settings
