@@ -6,15 +6,37 @@
  * Time: 13:34
  */
 
-namespace AppBundle\Controller;
+namespace AppBundle\Wrappers;
 
 use AppBundle\Entity\User;
-use AppBundle\Containers\Menu;
+use AppBundle\Provider\Menu;
+use AppBundle\Provider\RoleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Yaml\Yaml;
 
 
 class BaseController extends Controller
 {
+    private $roleManager = null;
+
+    protected function getRoleManager(){
+
+        if($this->roleManager){
+            return $this->roleManager;
+        } else {
+
+            $user = $this->get('security.context')->getToken()->getUser();
+            $bundle = $this->getRequest()->attributes->get('_template')->get('bundle');
+            $bundle = new $bundle;
+
+            $this->roleManager = new RoleManager(
+                $user->getRoles(),
+                $bundle->getRoles()
+            );
+        }
+
+    }
+
     /**
      * @param User $user
      * @param $password
@@ -59,10 +81,6 @@ class BaseController extends Controller
         }
 
         return $menu->getMenus();
-    }
-
-    protected function renderUserPanel($template, $args=[]){
-        return $this->render($template, array_merge($args, ['user_menu' => $this->userMenu()]));
     }
 
 }

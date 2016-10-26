@@ -2,11 +2,11 @@
 
 namespace User\Settings\ProfileBundle;
 
-use AppBundle\Containers\Menu;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use AppBundle\AppBundle;
+use AppBundle\Provider\Menu;
 use Symfony\Component\Routing\Router;
 
-class UserSettingsProfileBundle extends Bundle
+class UserSettingsProfileBundle extends AppBundle
 {
     public function inflateUserMenu(Menu $menu, Router $router){
 

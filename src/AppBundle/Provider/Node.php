@@ -6,7 +6,7 @@
  * Time: 12:35 AM
  */
 
-namespace AppBundle\Containers;
+namespace AppBundle\Provider;
 
 
 use AppBundle\Traits\Accessors;

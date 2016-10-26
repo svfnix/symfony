@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Containers;
+namespace AppBundle\Provider;
 
 class Menu
 {
@@ -199,7 +199,6 @@ class Menu
     /**
      * @param $title
      * @param $color
-     * @internal param mixed $labels
      */
     public function setLabel($title, $color)
     {
@@ -252,7 +251,6 @@ class Menu
 
     /**
      * @param $tag
-     * @internal param mixed $tags
      */
     public function setTag($tag)
     {

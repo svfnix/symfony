@@ -2,10 +2,11 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Wrappers\UserPanelController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultController extends BaseController
+class DefaultController extends UserPanelController
 {
     /**
      * @Route("/", name="homepage")
@@ -13,6 +14,6 @@ class DefaultController extends BaseController
     public function indexAction(Request $request)
     {
         // replace this example code with whatever you need
-        return $this->renderUserPanel('default/index.html.twig');
+        return $this->render('default/index.html.twig');
     }
 }
