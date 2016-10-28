@@ -6,6 +6,7 @@ use AppBundle\Traits\Base;
 use AppBundle\Traits\Enabled;
 use AppBundle\Traits\Metadata;
 use AppBundle\Traits\Timestampable;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -25,6 +26,12 @@ class User implements AdvancedUserInterface, \Serializable
         Enabled,
         Timestampable,
         Metadata;
+
+    function __construct()
+    {
+        $this->roles = array();
+        $this->groups = new ArrayCollection();
+    }
 
     /**
      * @var int
@@ -96,11 +103,20 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @ORM\Column(name="roles", type="json_array")
      */
-    private $roles = array();
+    private $roles;
 
     /**
-     * Get id
+     * @var ArrayCollection
      *
+     * @ORM\ManyToMany(targetEntity="Group", cascade={"persist"})
+     * @ORM\JoinTable(name="users_groups",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     *      )
+     */
+    private $groups;
+
+    /**
      * @return int
      */
     public function getId()
@@ -109,8 +125,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set username
-     *
      * @param string $username
      *
      * @return User
@@ -123,8 +137,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get username
-     *
      * @return string
      */
     public function getUsername()
@@ -133,8 +145,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set email
-     *
      * @param string $email
      *
      * @return User
@@ -147,8 +157,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get email
-     *
      * @return string
      */
     public function getEmail()
@@ -157,18 +165,16 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set salt
-     *
      * @param $salt
      * @return User
      */
     public function setSalt($salt){
         $this->salt = $salt;
+
+        return $this;
     }
 
     /**
-     * Generate Salt
-     *
      * @return $this
      */
     public function generateSalt(){
@@ -178,8 +184,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get salt
-     *
      * @return string
      */
     public function getSalt(){
@@ -192,8 +196,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set password
-     *
      * @param string $password
      *
      * @return User
@@ -206,8 +208,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get password
-     *
      * @return string
      */
     public function getPassword()
@@ -216,8 +216,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set resetPasswordToken
-     *
      * @param $resetPasswordToken
      * @return User
      */
@@ -229,8 +227,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get resetPasswordToken
-     *
      * @return array
      */
     public function getResetPasswordToken()
@@ -239,8 +235,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set name
-     *
      * @param string $name
      *
      * @return User
@@ -253,8 +247,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get name
-     *
      * @return string
      */
     public function getName()
@@ -263,8 +255,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set mobile
-     *
      * @param string $mobile
      *
      * @return User
@@ -277,8 +267,6 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get mobile
-     *
      * @return string
      */
     public function getMobile()
@@ -287,13 +275,11 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Set rules
-     *
      * @param array $roles
      *
      * @return User
      */
-    public function setRoles($roles)
+    public function setRoles(array $roles)
     {
         $this->roles = $roles;
 
@@ -301,8 +287,18 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Get rules
+     * @param $role
      *
+     * @return User
+     */
+    public function addRoles($role)
+    {
+        $this->roles[] = $role;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getRoles(){
@@ -310,6 +306,38 @@ class User implements AdvancedUserInterface, \Serializable
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
+    }
+
+    /**
+     * Add group
+     *
+     * @param \AppBundle\Entity\Group $group
+     *
+     * @return User
+     */
+    public function addGroup(\AppBundle\Entity\Group $group)
+    {
+        $this->groups[] = $group;
+
+        return $this;
+    }
+
+    /**
+     * Remove group
+     *
+     * @param \AppBundle\Entity\Group $group
+     */
+    public function removeGroup(\AppBundle\Entity\Group $group)
+    {
+        $this->groups->removeElement($group);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
     }
 
     /**
@@ -402,6 +430,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->name,
             $this->mobile,
             $this->roles,
+            $this->groups,
         ));
     }
 
@@ -427,6 +456,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->name,
             $this->mobile,
             $this->roles,
+            $this->groups,
             ) = unserialize($serialized);
     }
 }

@@ -1,8 +1,0 @@
-import
-manager:
-    title: "مسئول"
-    perms: [CREATE, READ, UPDATE, DELETE]
-
-inspector:
-    title: "بازرس"
-    perms: [READ]

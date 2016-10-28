@@ -17,7 +17,7 @@ gulp.task('clean', function(){
 
 // build tasks
 gulp.task('build-ifont', function(){
-    return gulp.src('../app/Resources/ifont/*.svg')
+    return gulp.src('../app/Resources/less/ifont/icons/*.svg')
         .pipe(iconfontCss({
                 fontName: 'ifont',
                 path: '../app/Resources/less/ifont/templates/ifont.less',
@@ -39,19 +39,41 @@ gulp.task('build-ifont-css', function () {
             maxImageSize: 100 * 1024
         }))
         .pipe(concat('ifont.less'))
-        .pipe(gulp.dest('../app/Resources/less/'));
+        .pipe(gulp.dest('../app/Resources/app/'));
 });
 
 gulp.task('build-styles-front', function() {
     return gulp.src([
         '../app/Resources/less/bootstrap/bootstrap.less',
         '../app/Resources/less/bootstrap/theme.less',
-        '../app/Resources/less/*.less',
-        '../app/Resources/assets/*.css',
-        '../src/**/*.less'
+        '../app/Resources/less/app/*.less',
+            '../app/Resources/assets/**/*.css',
+        '../app/Resources/less/front.less',
+        '../src/Front/**/*.less'
     ])
         .pipe(less())
-        .pipe(concatCss('style.css'))
+        .pipe(concatCss('front.css'))
+        .pipe(cssnano({
+            discardComments: {
+                removeAll: true
+            }
+        }))
+        .pipe(gulp.dest('../web/dist'));
+});
+
+gulp.task('build-styles-user', function() {
+    return gulp.src([
+            '../app/Resources/less/bootstrap/bootstrap.less',
+            '../app/Resources/less/bootstrap/theme.less',
+            '../app/Resources/less/admin-lte/AdminLTE.less',
+            '../app/Resources/less/admin-lte/skins/skin-purple.less',
+            '../app/Resources/less/app/*.less',
+            '../app/Resources/assets/**/*.css',
+            '../app/Resources/less/user.less',
+            '../src/User/**/*.less'
+        ])
+        .pipe(less())
+        .pipe(concatCss('user.css'))
         .pipe(cssnano({
             discardComments: {
                 removeAll: true
@@ -62,13 +84,15 @@ gulp.task('build-styles-front', function() {
 
 gulp.task('build-styles-admin', function() {
     return gulp.src([
-        '../app/Resources/less/bootstrap/bootstrap.less',
-        '../app/Resources/less/bootstrap/theme.less',
-        '../app/Resources/less/admin-lte/AdminLTE.less',
-        '../app/Resources/less/admin-lte/skins/skin-purple.less',
-        '../app/Resources/less/*.less',
-        '../app/Resources/assets/*.css'
-    ])
+            '../app/Resources/less/bootstrap/bootstrap.less',
+            '../app/Resources/less/bootstrap/theme.less',
+            '../app/Resources/less/admin-lte/AdminLTE.less',
+            '../app/Resources/less/admin-lte/skins/skin-green.less',
+            '../app/Resources/less/app/*.less',
+            '../app/Resources/assets/**/*.css',
+            '../app/Resources/less/admin.less',
+            '../src/Admin/**/*.less'
+        ])
         .pipe(less())
         .pipe(concatCss('admin.css'))
         .pipe(cssnano({
@@ -80,7 +104,7 @@ gulp.task('build-styles-admin', function() {
 });
 
 gulp.task('build-scripts', function() {
-    return gulp.src(['../app/Resources/assets/*.js'])
+    return gulp.src(['../app/Resources/assets/**/*.js'])
         .pipe(concat('script.js'))
         .pipe(uglify())
         .pipe(gulp.dest('../web/dist'));
@@ -88,5 +112,5 @@ gulp.task('build-scripts', function() {
 
 // default tasks
 gulp.task('default', function (callback) {
-    runSequence('clean', 'build-ifont', 'build-ifont-css', ['build-styles-front', 'build-styles-admin', 'build-scripts'], callback);
+    runSequence('clean', 'build-ifont', 'build-ifont-css', ['build-styles-front', 'build-styles-user', 'build-styles-admin', 'build-scripts'], callback);
 });

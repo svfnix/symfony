@@ -10,31 +10,86 @@ namespace AppBundle\Wrappers;
 
 use AppBundle\Entity\User;
 use AppBundle\Provider\Menu;
+use AppBundle\Provider\PermissionManager;
 use AppBundle\Provider\RoleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Yaml\Yaml;
 
 
 class BaseController extends Controller
 {
-    private $roleManager = null;
+    private $user_permissions = null;
 
-    protected function getRoleManager(){
+    /**
+     * @return mixed
+     */
+    protected function getUser(){
+        return $this->get('security.context')->getToken()->getUser();
+    }
 
-        if($this->roleManager){
-            return $this->roleManager;
-        } else {
+    /**
+     * @return mixed
+     */
+    protected function getBundle(){
+        return $this->getRequest()->attributes->get('_template')->get('bundle');
+    }
 
-            $user = $this->get('security.context')->getToken()->getUser();
-            $bundle = $this->getRequest()->attributes->get('_template')->get('bundle');
-            $bundle = new $bundle;
+    /**
+     * @return mixed
+     */
+    protected function getController(){
+        return $this->getRequest()->attributes->get('_template')->get('controller');
+    }
 
-            $this->roleManager = new RoleManager(
-                $user->getRoles(),
-                $bundle->getRoles()
-            );
+    /**
+     * @return mixed
+     */
+    protected function getAction(){
+        return $this->getRequest()->attributes->get('_template')->get('name');
+    }
+
+    /**
+     * @return \Doctrine\Common\Persistence\ObjectManager|object
+     */
+    protected function getEntityManager(){
+        return $this->getDoctrine()->getManager();
+    }
+
+    /**
+     * @param $repository
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
+    protected function getRepository($repository){
+        return $this->getDoctrine()->getRepository($repository);
+    }
+
+    /**
+     * @param null $bundle
+     * @return PermissionManager
+     */
+    protected function getUserPermissions($bundle=null){
+
+        if(!$this->user_permissions){
+
+            $groups = $this->getUser()->getGroups();
+
+            $permissions = [];
+            foreach ($groups as $group){
+                $permissions = array_merge($permissions, $group->getPermissions());
+            }
+
+            $this->user_permissions = $permissions;
         }
 
+        if(!$bundle){
+            $bundle = $this->getBundle();
+        }
+
+        $user_permissions = [];
+        if(isset($this->user_permissions[$bundle])) {
+            $user_permissions = $this->user_permissions[$bundle];
+        }
+
+        return new PermissionManager($user_permissions);
     }
 
     /**
