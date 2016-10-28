@@ -11,9 +11,9 @@ namespace AppBundle\Wrappers;
 
 use Symfony\Component\HttpFoundation\Response;
 
-class UserPanelController extends BaseController
+class AdminPanelController extends BaseController
 {
     protected function render($view, array $parameters = array(), Response $response = null){
-        return parent::render($view, array_merge($parameters, ['sidebar_menu' => $this->userMenu()]));
+        return parent::render($view, array_merge($parameters, ['sidebar_menu' => $this->adminMenu()]));
     }
 }

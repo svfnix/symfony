@@ -16,40 +16,39 @@ gulp.task('clean', function(){
 });
 
 // build tasks
-gulp.task('build-ifont', function(){
-    return gulp.src('../app/Resources/less/ifont/icons/*.svg')
+gulp.task('build-font', function(){
+    return gulp.src('../app/Resources/assets/icons/*.svg')
         .pipe(iconfontCss({
-                fontName: 'ifont',
-                path: '../app/Resources/less/ifont/templates/ifont.less',
-                targetPath: '../ifont.less',
-                fontPath: './fonts/'
+                fontName: 'app',
+                path: '../app/Resources/less/font/template.less',
+                targetPath: '../../../app/Resources/less/app/font.less',
+                fontPath: '/dist/fonts/'
             }))
         .pipe(iconfont({
-            fontName: 'ifont',
+            fontName: 'app',
             formats: ['ttf', 'eot', 'woff', 'woff2', 'svg'],
             normalize: true
         }))
-        .pipe(gulp.dest('../app/Resources/less/ifont/fonts/'));
+        .pipe(gulp.dest('../web/dist/fonts/'));
 });
 
-gulp.task('build-ifont-css', function () {
-    return gulp.src('../app/Resources/less/ifont/ifont.less')
+/*gulp.task('build-ifont-css', function () {
+    return gulp.src('../app/Resources/less/app/font.less')
         .pipe(base64({
-            baseDir: '../app/Resources/less/ifont/',
+            baseDir: '../web/',
             maxImageSize: 100 * 1024
         }))
-        .pipe(concat('ifont.less'))
-        .pipe(gulp.dest('../app/Resources/app/'));
-});
+        .pipe(concat('font.less'))
+        .pipe(gulp.dest('../app/Resources/less/app/'));
+});*/
 
 gulp.task('build-styles-front', function() {
     return gulp.src([
         '../app/Resources/less/bootstrap/bootstrap.less',
         '../app/Resources/less/bootstrap/theme.less',
         '../app/Resources/less/app/*.less',
-            '../app/Resources/assets/**/*.css',
-        '../app/Resources/less/front.less',
-        '../src/Front/**/*.less'
+        '../app/Resources/assets/**/*.css',
+        '../app/Resources/less/front.less'
     ])
         .pipe(less())
         .pipe(concatCss('front.css'))
@@ -69,8 +68,7 @@ gulp.task('build-styles-user', function() {
             '../app/Resources/less/admin-lte/skins/skin-purple.less',
             '../app/Resources/less/app/*.less',
             '../app/Resources/assets/**/*.css',
-            '../app/Resources/less/user.less',
-            '../src/User/**/*.less'
+            '../app/Resources/less/user.less'
         ])
         .pipe(less())
         .pipe(concatCss('user.css'))
@@ -90,8 +88,7 @@ gulp.task('build-styles-admin', function() {
             '../app/Resources/less/admin-lte/skins/skin-green.less',
             '../app/Resources/less/app/*.less',
             '../app/Resources/assets/**/*.css',
-            '../app/Resources/less/admin.less',
-            '../src/Admin/**/*.less'
+            '../app/Resources/less/admin.less'
         ])
         .pipe(less())
         .pipe(concatCss('admin.css'))
@@ -112,5 +109,5 @@ gulp.task('build-scripts', function() {
 
 // default tasks
 gulp.task('default', function (callback) {
-    runSequence('clean', 'build-ifont', 'build-ifont-css', ['build-styles-front', 'build-styles-user', 'build-styles-admin', 'build-scripts'], callback);
+    runSequence('clean', ['build-font', 'build-scripts'], ['build-styles-front', 'build-styles-user', 'build-styles-admin'], callback);
 });

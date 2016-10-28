@@ -5,14 +5,13 @@
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
             <link rel="stylesheet" type="text/css" href="/dist/style.css" />
-            <link rel="stylesheet" type="text/css" href="/vendor/fontawesome/4.6.3/css/font-awesome.min.css" />
-            <link rel="stylesheet" type="text/css" href="/vendor/fontiran/4.0/css/iransans.css" />
         {% endblock %}
 
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 
         {% block javascripts %}
             <script src="/vendor/jquery/2.2.3/jquery.min.js" ></script>
+            <script src="/vendor/bootstrap/3.6.6/js/bootstrap.min.js" ></script>
             <script src="/dist/script.js" ></script>
         {% endblock %}
     </head>

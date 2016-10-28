@@ -1,8 +1,10 @@
+imports:
+    - { resource: ../../src/Admin/routing.yml }
+    - { resource: ../../src/User/routing.yml }
+
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
-user_settings_profile:
-    resource: "@UserSettingsProfileBundle/Controller/"
-    type:     annotation
-    prefix:   /user/settings
+
+

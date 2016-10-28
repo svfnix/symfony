@@ -124,6 +124,23 @@ class BaseController extends Controller
     /**
      * @return array
      */
+    protected function adminMenu(){
+
+        $menu = new Menu();
+        $bundles = $this->getParameter('kernel.bundles');
+        foreach ($bundles as $bundle){
+            $bundle = new $bundle;
+            if(method_exists($bundle, 'inflateAdminMenu')){
+                $bundle->inflateUserMenu($menu, $this->get('router'));
+            }
+        }
+
+        return $menu->getMenus();
+    }
+
+    /**
+     * @return array
+     */
     protected function userMenu(){
 
         $menu = new Menu();
