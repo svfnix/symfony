@@ -1,0 +1,8 @@
+_user_settings_profile:
+	resource:	"@UserSettingsProfileBundle/Controller/"
+	prefix:		/user/settings/profile
+
+_admin_users_group:
+	resource:	"@AdminUsersGroupBundle/Controller/"
+	prefix:		/admin/users/group
+

@@ -1,6 +1,5 @@
 imports:
-    - { resource: ../../src/Admin/routing.yml }
-    - { resource: ../../src/User/routing.yml }
+    - { resource: routing_custom.yml }
 
 app:
     resource: "@AppBundle/Controller/"
