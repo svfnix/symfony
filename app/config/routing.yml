@@ -1,9 +1,10 @@
-imports:
-    - { resource: routing_custom.yml }
+src:
+    resource: routing_custom.yml
 
 app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
+  resource: "@AppBundle/Controller/"
+  type:     annotation
+
 
 
 

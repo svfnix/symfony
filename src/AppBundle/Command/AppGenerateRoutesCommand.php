@@ -13,7 +13,7 @@ class AppGenerateRoutesCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('app:generate_routes')
+            ->setName('app:generate:routes')
             ->setDescription('dynamically map bundles to routes')
         ;
     }
@@ -35,13 +35,10 @@ class AppGenerateRoutesCommand extends ContainerAwareCommand
                 $path = explode('/', ltrim(substr($path, strlen($root)), '/'));
                 if ($path[0] == 'src') {
                     $output->writeln("- {$name} [".implode('/', $path)."]");
-                    $path = explode('/', strtolower(preg_replace('/[A-Z]/', '/$0', $name)));
-                    array_pop($path);
-                    $route_name = implode('_', $path);
-                    $prefix_prefix = implode('/', $path);
+                    $path = explode('/', dirname(strtolower(preg_replace('/[A-Z]/', '/$0', $name))));
                     file_put_contents(
                         $config,
-                        "{$route_name}:\n\tresource:\t\"@{$name}/Controller/\"\n\tprefix:\t\t{$prefix_prefix}\n\n",
+                        implode('_', $path).":\n  resource: \"@{$name}/Controller/\"\n  type: annotation\n  prefix: ".implode('/', $path)."\n\n",
                         FILE_APPEND);
                 }
             }

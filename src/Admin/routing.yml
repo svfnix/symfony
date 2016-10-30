@@ -1,4 +1,0 @@
-admin_users_group:
-    resource: "@AdminUsersGroupBundle/Controller/"
-    type:     annotation
-    prefix:   /admin/users/group

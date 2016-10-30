@@ -11,7 +11,6 @@ namespace AppBundle\Wrappers;
 use AppBundle\Entity\User;
 use AppBundle\Provider\Menu;
 use AppBundle\Provider\PermissionManager;
-use AppBundle\Provider\RoleManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
@@ -131,7 +130,7 @@ class BaseController extends Controller
         foreach ($bundles as $bundle){
             $bundle = new $bundle;
             if(method_exists($bundle, 'inflateAdminMenu')){
-                $bundle->inflateUserMenu($menu, $this->get('router'));
+                $bundle->inflateAdminMenu($menu, $this->get('router'));
             }
         }
 

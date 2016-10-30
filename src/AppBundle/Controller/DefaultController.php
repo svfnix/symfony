@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Wrappers\UserPanelController;
+use AppBundle\Wrappers\AdminPanelController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultController extends UserPanelController
+class DefaultController extends AdminPanelController
 {
     /**
      * @Route("/", name="homepage")
