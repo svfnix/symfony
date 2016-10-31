@@ -10,6 +10,7 @@
   margin-bottom: 20px;
   width: 100%;
   box-shadow: @box-boxshadow;
+  padding:15px;
 
   // Box color variations
   &.box-primary {
@@ -176,7 +177,7 @@
 .box-header {
   color: #444;
   display: block;
-  padding: @box-padding;
+  padding: @box-header-padding;
   position: relative;
 
   //Add bottom border
@@ -203,11 +204,10 @@
     margin-left: 5px;
   }
   > .box-tools {
-    position: absolute;
-    left: 10px;
-    top: 5px;
     [data-toggle="tooltip"] {
       position: relative;
+      left: 10px;
+      top: 5px;
     }
 
     &.pull-left {
