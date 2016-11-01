@@ -13,6 +13,7 @@ class DefaultController extends AdminPanelController
      */
     public function indexAction()
     {
+        $this->getBreadCrumb()->defaultAction();
         return $this->render('AdminUsersGroupBundle:Default:index.html.twig');
     }
 }

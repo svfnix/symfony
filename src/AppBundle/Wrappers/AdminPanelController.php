@@ -13,7 +13,26 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminPanelController extends BaseController
 {
+    private $breadcrumb;
+
+    /**
+     * @return mixed
+     */
+    protected function getBreadCrumb(){
+        if(!$this->breadcrumb){
+            $bundle = $this->getBundle();
+            $bundle = new $bundle;
+            $this->breadcrumb = $bundle->getBreadCrumb();
+        }
+
+        return $this->breadcrumb;
+    }
+
     protected function render($view, array $parameters = array(), Response $response = null){
-        return parent::render($view, array_merge($parameters, ['sidebar_menu' => $this->adminMenu()]));
+        return parent::render($view, array_merge(
+            $parameters, [
+                'sidebar_menu' => $this->adminMenu(),
+                'breadcrumb' => $this->breadcrumb()
+            ]));
     }
 }

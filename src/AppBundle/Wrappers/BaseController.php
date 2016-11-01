@@ -12,6 +12,7 @@ use AppBundle\Entity\User;
 use AppBundle\Provider\Menu;
 use AppBundle\Provider\PermissionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 
 class BaseController extends Controller
@@ -29,21 +30,22 @@ class BaseController extends Controller
      * @return mixed
      */
     protected function getBundle(){
-        return $this->getRequest()->attributes->get('_template')->get('bundle');
+        print_r($this->request);die();
+        return $this->request->attributes->get('_template')->get('bundle');
     }
 
     /**
      * @return mixed
      */
     protected function getController(){
-        return $this->getRequest()->attributes->get('_template')->get('controller');
+        return $this->request->attributes->get('_template')->get('controller');
     }
 
     /**
      * @return mixed
      */
     protected function getAction(){
-        return $this->getRequest()->attributes->get('_template')->get('name');
+        return $this->request->attributes->get('_template')->get('name');
     }
 
     /**

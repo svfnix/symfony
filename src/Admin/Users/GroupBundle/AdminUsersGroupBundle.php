@@ -8,6 +8,10 @@ use Symfony\Component\Routing\Router;
 
 class AdminUsersGroupBundle extends Bundle
 {
+    public function getBreadCrumb(){
+        return new AdminUsersGroupBreadCrumb();
+    }
+
     public function inflateAdminMenu(Menu $menu, Router $router){
 
         $main_menu = $menu->addMenu('users');
