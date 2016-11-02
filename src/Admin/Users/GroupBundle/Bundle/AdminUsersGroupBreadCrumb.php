@@ -16,11 +16,20 @@ class AdminUsersGroupBreadCrumb extends BreadCrumb
 {
 
     /**
+     * AdminUsersGroupBreadCrumb constructor.
+     */
+    function __construct()
+    {
+        $this->breadcrumb = $this->createBreadcrumb('مدیریت کاربران');
+        return $this->breadcrumb;
+    }
+
+    /**
      * @return BreadCrumbItem
      */
     function actionDefault()
     {
-        $this->breadcrumb = $this->base('مدیریت کاربران')->add('مدیریت گروه ها', route('admin_users_group'));
+        $this->breadcrumb = $this->getBreadcrumb()->add('مدیریت گروه ها', route('admin_users_group'));
         return $this->breadcrumb;
     }
 

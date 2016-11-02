@@ -29,7 +29,7 @@ class BreadCrumb
      * @param null $link
      * @return BreadCrumbItem
      */
-    function base($title, $link = null)
+    function createBreadcrumb($title, $link = null)
     {
         $this->breadcrumb = new BreadCrumbItem($title, $link);
 
