@@ -6,7 +6,7 @@
  * Time: 9:02 PM
  */
 
-namespace Admin\Users\GroupBundle;
+namespace Admin\Users\GroupBundle\Bundle;
 
 
 use AppBundle\Provider\BreadCrumb;

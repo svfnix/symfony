@@ -30,7 +30,6 @@ class BaseController extends Controller
      * @return mixed
      */
     protected function getBundle(){
-        print_r($this->request);die();
         return $this->request->attributes->get('_template')->get('bundle');
     }
 
