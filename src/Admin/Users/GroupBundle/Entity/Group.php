@@ -6,7 +6,7 @@
  * Time: 9:19 PM
  */
 
-namespace AppBundle\Entity;
+namespace Admin\Users\GroupBundle\Entity;
 
 
 use Doctrine\ORM\Mapping as ORM;

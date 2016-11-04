@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Service\App;
 use AppBundle\Wrappers\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -43,9 +44,7 @@ class ResetController extends BaseController
 
             if (!count($errors)) {
 
-                $em = $this
-                    ->getDoctrine()
-                    ->getManager();
+                $em = App::getInstance()->getEntityManager();
 
                 $user = $em
                     ->getRepository('AppBundle:User')
@@ -63,7 +62,7 @@ class ResetController extends BaseController
                     $response->headers->setCookie(new Cookie('rps', $c_token, 0, '/', null, false, false));
                     $response->send();
 
-                    $this->sendMail(
+                    App::getInstance()->sendMail(
                         $user->getEmail(),
                         $this->get('translator')->trans('Verification link'),
                         $this->renderView('mail/reset_password_verification.html.twig', [
@@ -104,9 +103,7 @@ class ResetController extends BaseController
 
         $token = password_hash($e_token, PASSWORD_BCRYPT, ['salt' => $c_token]);
 
-        $em = $this
-            ->getDoctrine()
-            ->getManager();
+        $em = App::getInstance()->getEntityManager();
 
         $user = $em
             ->getRepository('AppBundle:User')
@@ -128,7 +125,7 @@ class ResetController extends BaseController
             $data = $form->getData();
 
             $user->generateSalt();
-            $user->setPassword($this->encodePassword($user, $data->getPassword()));
+            $user->setPassword(App::getInstance()->encodePassword($user, $data->getPassword()));
             $user->setResetPasswordToken(null);
             $em->flush();
 
@@ -136,7 +133,7 @@ class ResetController extends BaseController
             $response->headers->clearCookie('rps');
             $response->send();
 
-            $this->sendMail(
+            App::getInstance()->sendMail(
                 $user->getEmail(),
                 $this->get('translator')->trans('رمز عبور شما تغییر یافت'),
                 $this->renderView('mail/reset_password_done.html.twig', [

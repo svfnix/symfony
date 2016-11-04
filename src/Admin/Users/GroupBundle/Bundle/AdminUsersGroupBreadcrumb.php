@@ -9,43 +9,44 @@
 namespace Admin\Users\GroupBundle\Bundle;
 
 
-use AppBundle\Provider\BreadCrumb;
-use AppBundle\Provider\BreadCrumbItem;
+use AppBundle\Provider\Breadcrumb;
+use AppBundle\Provider\BreadcrumbItem;
+use AppBundle\Service\App;
+use Symfony\Component\Routing\Router;
 
-class AdminUsersGroupBreadCrumb extends BreadCrumb
+class AdminUsersGroupBreadcrumb extends Breadcrumb
 {
-
     /**
-     * AdminUsersGroupBreadCrumb constructor.
+     * AdminUsersGroupBreadcrumb constructor.
      */
     function __construct()
     {
         $this->breadcrumb = $this->createBreadcrumb('مدیریت کاربران');
-        return $this->breadcrumb;
     }
 
     /**
-     * @return BreadCrumbItem
+     * @return BreadcrumbItem
      */
-    function actionDefault()
+    public function actionDefault()
     {
-        $this->breadcrumb = $this->getBreadcrumb()->add('مدیریت گروه ها', route('admin_users_group'));
+        $router = App::getInstance()->getRouter();
+        $this->breadcrumb = $this->getBreadcrumb()->add('مدیریت گروه ها', $router->generate('admin_users_group'));
         return $this->breadcrumb;
     }
 
     /**
-     * @return BreadCrumbItem
+     * @return BreadcrumbItem
      */
-    function actionAdd()
+    public function actionAdd()
     {
         $this->breadcrumb = $this->actionDefault()->add('افزودن عنوان جدید');
         return $this->breadcrumb;
     }
 
     /**
-     * @return BreadCrumbItem
+     * @return BreadcrumbItem
      */
-    function actionEdit()
+    public function actionEdit()
     {
         $this->breadcrumb = $this->actionDefault()->add('ویرایش عنوان');
         return $this->breadcrumb;

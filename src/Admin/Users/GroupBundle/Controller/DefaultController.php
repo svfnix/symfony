@@ -2,20 +2,36 @@
 
 namespace Admin\Users\GroupBundle\Controller;
 
+use AppBundle\Service\App;
 use AppBundle\Wrappers\AdminPanelController;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends AdminPanelController
 {
     /**
+     * @param $page
+     * @param $key
+     * @param $type
+     * @return \Symfony\Component\HttpFoundation\Response
      * @Route("/", name="admin_users_group")
      */
-    public function indexAction(Request $request)
+    public function indexAction($page, $key, $type)
     {
-        file_put_contents('controller.txt', print_r($request, 1));
-        //$this->getBreadCrumb()->defaultAction();
+        $this->breadcrumb()->actionDefault();
+
+        $builder = new QueryBuilder();
+        $builder
+            ->select('*')
+            ->from('AdminUsersGroupBundle:Group')
+            ->orderBy('id', SORT_DESC)
+            ->setFirstResult($page * 20)
+            ->setMaxResults(20);
+
+        $paging = new Paginator($page, $totalcount, $rpp);
+        $pagelist = $paginator->getPagesList()
+
         return $this->render('AdminUsersGroupBundle:Default:index.html.twig');
     }
 }

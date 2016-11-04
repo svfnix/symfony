@@ -10,11 +10,13 @@ namespace Admin\Users\GroupBundle\Bundle;
 
 
 use AppBundle\Provider\Menu;
-use Symfony\Component\Routing\Router;
+use AppBundle\Service\App;
 
-class AdminUsersGroupAdminMenu
+class AdminUsersGroupMenu
 {
-    public function createAdminMenu(Menu $menu, Router $router){
+    public function createAdminMenu(Menu $menu){
+
+        $router = App::getInstance()->getRouter();
 
         $main_menu = $menu->addMenu('users');
         $main_menu->setTitle('مدیریت کاربران');

@@ -9,7 +9,7 @@
 namespace AppBundle\Provider;
 
 
-class BreadCrumbItem
+class BreadcrumbItem
 {
     private $title;
     private $link;
@@ -80,7 +80,7 @@ class BreadCrumbItem
     }
 
     public function add($title, $link=null){
-        $next = new BreadCrumbItem($title, $link);
+        $next = new BreadcrumbItem($title, $link);
         $next->setParent($this);
 
         return $next;

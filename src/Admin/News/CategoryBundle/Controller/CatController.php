@@ -23,8 +23,7 @@ class CatController extends AdminPanelController
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
+        $em = App::getInstance()->getEntityManager();
         $cats = $em->getRepository('NewsCategoryBundle:Cat')->findAll();
 
         return $this->render('NewsCategoryBundle:cat:index.html.twig', array(

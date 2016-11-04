@@ -4,6 +4,7 @@ namespace AppBundle\DataFixtures\ORM;
 
 
 use AppBundle\Entity\User;
+use AppBundle\Service\App;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -26,7 +27,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
         $user
             ->setUsername('user')
             ->setEmail('user@domain.tld')
-            ->setPassword($this->encodePassword($user, 'passwd'));
+            ->setPassword(App::getInstance()->encodePassword($user, 'passwd'));
 
         $manager->persist($user);
 
@@ -34,7 +35,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
         $admin
             ->setUsername('admin')
             ->setEmail('admin@domain.tld')
-            ->setPassword($this->encodePassword($admin, 'passwd'))
+            ->setPassword(App::getInstance()->encodePassword($admin, 'passwd'))
             ->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($admin);

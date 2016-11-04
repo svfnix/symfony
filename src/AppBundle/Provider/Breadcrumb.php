@@ -9,15 +9,15 @@
 namespace AppBundle\Provider;
 
 
-class BreadCrumb
+class Breadcrumb
 {
     /**
-     * @var BreadCrumbItem
+     * @var BreadcrumbItem
      */
     protected $breadcrumb;
 
     /**
-     * @return BreadCrumbItem
+     * @return BreadcrumbItem
      */
     public function getBreadcrumb()
     {
@@ -27,11 +27,11 @@ class BreadCrumb
     /**
      * @param $title
      * @param null $link
-     * @return BreadCrumbItem
+     * @return BreadcrumbItem
      */
     function createBreadcrumb($title, $link = null)
     {
-        $this->breadcrumb = new BreadCrumbItem($title, $link);
+        $this->breadcrumb = new BreadcrumbItem($title, $link);
 
         return $this->breadcrumb;
     }

@@ -8,69 +8,27 @@
 
 namespace AppBundle\Wrappers;
 
-use AppBundle\Entity\User;
-use AppBundle\Provider\Menu;
+use AppBundle\Provider\Breadcrumb;
+use AppBundle\Service\App;
 use AppBundle\Provider\PermissionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 
 
 class BaseController extends Controller
 {
     private $user_permissions = null;
-
-    /**
-     * @return mixed
-     */
-    protected function getUser(){
-        return $this->get('security.context')->getToken()->getUser();
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getBundle(){
-        return $this->request->attributes->get('_template')->get('bundle');
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getController(){
-        return $this->request->attributes->get('_template')->get('controller');
-    }
-
-    /**
-     * @return mixed
-     */
-    protected function getAction(){
-        return $this->request->attributes->get('_template')->get('name');
-    }
-
-    /**
-     * @return \Doctrine\Common\Persistence\ObjectManager|object
-     */
-    protected function getEntityManager(){
-        return $this->getDoctrine()->getManager();
-    }
-
-    /**
-     * @param $repository
-     * @return \Doctrine\Common\Persistence\ObjectRepository
-     */
-    protected function getRepository($repository){
-        return $this->getDoctrine()->getRepository($repository);
-    }
-
+    private $breadcrumb;
+    
     /**
      * @param null $bundle
      * @return PermissionManager
      */
     protected function getUserPermissions($bundle=null){
 
+        $app = App::getInstance();
         if(!$this->user_permissions){
 
-            $groups = $this->getUser()->getGroups();
+            $groups = $app->getUser()->getGroups();
 
             $permissions = [];
             foreach ($groups as $group){
@@ -81,7 +39,7 @@ class BaseController extends Controller
         }
 
         if(!$bundle){
-            $bundle = $this->getBundle();
+            $bundle = $app->getBundle();
         }
 
         $user_permissions = [];
@@ -93,66 +51,15 @@ class BaseController extends Controller
     }
 
     /**
-     * @param User $user
-     * @param $password
-     * @return mixed
+     * @return Breadcrumb
      */
-    protected function encodePassword(User $user, $password)
+    protected function breadcrumb()
     {
-        $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-
-        return $encoder->encodePassword($password, $user->getSalt());
-    }
-
-    /**
-     * @param $to
-     * @param $subject
-     * @param $body
-     * @return mixed
-     */
-    protected function sendMail($to, $subject, $body)
-    {
-        $message = \Swift_Message::newInstance()
-            ->setSubject($subject)
-            ->setFrom([$this->container->getParameter('mailer_from_email') => $this->container->getParameter('mailer_from')])
-            ->setTo($to)
-            ->setBody($body, 'text/html');
-
-        return $this->get('mailer')->send($message);
-    }
-
-    /**
-     * @return array
-     */
-    protected function adminMenu(){
-
-        $menu = new Menu();
-        $bundles = $this->getParameter('kernel.bundles');
-        foreach ($bundles as $bundle){
-            $bundle = new $bundle;
-            if(method_exists($bundle, 'inflateAdminMenu')){
-                $bundle->inflateAdminMenu($menu, $this->get('router'));
-            }
+        if(!$this->breadcrumb){
+            $this->breadcrumb = App::getInstance()->getBundleInstance()->getBreadcrumb();
         }
 
-        return $menu->getMenus();
-    }
-
-    /**
-     * @return array
-     */
-    protected function userMenu(){
-
-        $menu = new Menu();
-        $bundles = $this->getParameter('kernel.bundles');
-        foreach ($bundles as $bundle){
-            $bundle = new $bundle;
-            if(method_exists($bundle, 'inflateUserMenu')){
-                $bundle->inflateUserMenu($menu, $this->get('router'));
-            }
-        }
-
-        return $menu->getMenus();
+        return $this->breadcrumb;
     }
 
 }

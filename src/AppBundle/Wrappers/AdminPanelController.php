@@ -9,30 +9,41 @@
 namespace AppBundle\Wrappers;
 
 
+use AppBundle\Provider\Menu;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminPanelController extends BaseController
 {
-    private $breadcrumb;
 
     /**
-     * @return mixed
+     * @return array
      */
-    protected function getBreadCrumb(){
-        if(!$this->breadcrumb){
-            $bundle = $this->getBundle();
+    protected function adminMenu(){
+
+        $menu = new Menu();
+        $bundles = $this->getParameter('kernel.bundles');
+        foreach ($bundles as $bundle){
             $bundle = new $bundle;
-            $this->breadcrumb = $bundle->getBreadCrumb();
+            if(method_exists($bundle, 'inflateAdminMenu')){
+                $bundle->inflateAdminMenu($menu);
+            }
         }
 
-        return $this->breadcrumb;
+        return $menu->getMenus();
     }
 
-    protected function render($view, array $parameters = array(), Response $response = null){
+    /**
+     * @param string $view
+     * @param array $parameters
+     * @param Response|null $response
+     * @return Response
+     */
+    protected function render($view, array $parameters = array(), Response $response = null)
+    {
         return parent::render($view, array_merge(
             $parameters, [
                 'sidebar_menu' => $this->adminMenu(),
-                'breadcrumb' => $this->breadcrumb()
+                'breadcrumb' => $this->breadcrumb()->getBreadcrumb()
             ]));
     }
 }

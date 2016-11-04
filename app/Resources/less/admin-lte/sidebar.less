@@ -18,14 +18,15 @@
   width @transition-speed @transition-fn;
   .transition-transform(@transition-rule);
   @media (max-width: @screen-header-collapse) {
-    padding-top: 100px;
+    padding-top: 10px;
+    margin-top: 50px;
   }
   @media (max-width: @screen-xs-max) {
-    .translate(-@sidebar-width, 0);
+    .translate(@sidebar-width, 0);
   }
   .sidebar-collapse & {
     @media (min-width: @screen-sm) {
-      .translate(-@sidebar-width, 0);
+      .translate(@sidebar-width, 0);
     }
   }
   .sidebar-open & {

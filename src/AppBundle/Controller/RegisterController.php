@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use AppBundle\Service\App;
 use AppBundle\Wrappers\BaseController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -33,13 +34,13 @@ class RegisterController extends BaseController
         if ($form->isSubmitted() && $form->isValid()){
 
             $user = $form->getData();
-            $user->setPassword($this->encodePassword($user, $user->getPassword()));
+            $user->setPassword(App::getInstance()->encodePassword($user, $user->getPassword()));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
-            $this->sendMail(
+            App::getInstance()->sendMail(
                 $user->getEmail(),
                 $this->get('translator')->trans('ثبت نام با موفقیت انجام شد'),
                 $this->renderView('mail/register_done.html.twig', [
