@@ -18,7 +18,7 @@ class BaseController extends Controller
 {
     private $user_permissions = null;
     private $breadcrumb;
-    
+
     /**
      * @param null $bundle
      * @return PermissionManager

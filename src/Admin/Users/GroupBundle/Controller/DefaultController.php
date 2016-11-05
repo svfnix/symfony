@@ -7,21 +7,26 @@ use AppBundle\Wrappers\AdminPanelController;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends AdminPanelController
 {
     /**
      * @param $page
-     * @param $key
-     * @param $type
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @Route("/", name="admin_users_group")
+     * @param $sort
+     * @param $search
+     * @return Response
+     * @Route(
+     *     "/{page}/{sort}/{search}",
+     *     defaults={"page" = 1, "sort" = "id", "search" = ""},
+     *     name="admin_users_group"
+     *     )
      */
-    public function indexAction($page, $key, $type)
+    public function indexAction($page=0, $sort=null, $search=null)
     {
         $this->breadcrumb()->actionDefault();
 
-        $builder = new QueryBuilder();
+        /*$builder = new QueryBuilder();
         $builder
             ->select('*')
             ->from('AdminUsersGroupBundle:Group')
@@ -30,7 +35,7 @@ class DefaultController extends AdminPanelController
             ->setMaxResults(20);
 
         $paging = new Paginator($page, $totalcount, $rpp);
-        $pagelist = $paginator->getPagesList()
+        $pagelist = $paginator->getPagesList()*/
 
         return $this->render('AdminUsersGroupBundle:Default:index.html.twig');
     }
