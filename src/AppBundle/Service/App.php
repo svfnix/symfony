@@ -1,6 +1,7 @@
 <?php
 namespace AppBundle\Service;
 use AppBundle\Entity\User;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -104,7 +105,7 @@ class App
     }
 
     /**
-     * @return \Doctrine\Common\Persistence\ObjectManager|object
+     * @return EntityManager
      */
     public function getEntityManager(){
         return $this->container->get('doctrine')->getManager();
