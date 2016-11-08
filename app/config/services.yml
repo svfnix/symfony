@@ -4,8 +4,13 @@ parameters:
 #    parameter_name: value
 
 services:
+
     app.service:
         class:        AppBundle\Service\App
         arguments:    ['@service_container']
         tags:
             - {name: kernel.event_listener, event: kernel.controller, method: onKernelController}
+
+    admin_users_group_group:
+        class: Admin\Users\GroupBundle\Datatables\GroupDatatable
+        parent: sg_datatables.datatable.abstract

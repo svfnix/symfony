@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new Sg\DatatablesBundle\SgDatatablesBundle(),
             new AppBundle\AppBundle(),
             new User\Settings\ProfileBundle\UserSettingsProfileBundle(),
             new Admin\Users\GroupBundle\AdminUsersGroupBundle(),

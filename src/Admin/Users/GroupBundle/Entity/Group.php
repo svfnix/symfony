@@ -19,7 +19,7 @@ use AppBundle\Traits\Timestampable;
  * Group
  *
  * @ORM\Table(name="group")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\GroupRepository")
+ * @ORM\Entity(repositoryClass="Admin\Users\GroupBundle\Repository\GroupRepository")
  */
 class Group
 {

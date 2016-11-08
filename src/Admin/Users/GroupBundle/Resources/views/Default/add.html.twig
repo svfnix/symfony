@@ -1,0 +1,45 @@
+{% extends 'admin.html.twig' %}
+
+{% block body %}
+    {{ errors }}
+    <div class="box box-warning">
+        <div class="box-header with-border">
+            <h3 class="box-title">General Elements</h3>
+        </div>
+        <!-- /.box-header -->
+        <form role="form" method="post">
+            <div class="box-body">
+                {% if form.title.vars.errors|length > 0 %}
+                    <div class="alert alert-flat alert-danger-flat" role="alert">
+                        <ul class="list-style-none padding-right-5px">
+                            {% for error in form.title.vars.errors %}
+                                <li><i class="fa fa-quote-right margin-left-5px"></i> {{ error.message|trans }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="form-group{{ form.title.vars.valid == false ? ' has-error' : '' }}">
+                    <label>عنوان</label>
+                    <input name="title" class="form-control" placeholder="عنوان را وارد نمایید ..." type="text">
+                </div>
+                {% if form.memo.vars.errors|length > 0 %}
+                    <div class="alert alert-flat alert-danger-flat" role="alert">
+                        <ul class="list-style-none padding-right-5px">
+                            {% for error in form.memo.vars.errors %}
+                                <li><i class="fa fa-quote-right margin-left-5px"></i> {{ error.message|trans }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="form-group{{ form.memo.vars.valid == false ? ' has-error' : '' }}">
+                    <label>یادداشت</label>
+                    <textarea name="memo" class="form-control" rows="3" placeholder="یادداشتی وارد نمایید ..."></textarea>
+                </div>
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-primary">ثبت عنوان</button>
+            </div>
+        </form>
+        <!-- /.box-body -->
+    </div>
+{% endblock %}
