@@ -1,0 +1,177 @@
+{% extends 'theme/admin.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/vendor/jquery/extensions/waiting-spinner.js"></script>
+    <script src="/vendor/jquery/extensions/confirmation.js"></script>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+
+                <div class="box-header with-border">
+                    <h3 class="box-title bold">گروه های کاربری</h3>
+                    <div class="box-tools">
+                        <table>
+                            <tr>
+                                <td>
+                                    <select name="example_length" class="form-control input-sm" onchange="ajax_count($(this).val())">
+                                        <option value="10">۱۰ سطر</option>
+                                        <option value="25">۲۵ سطر</option>
+                                        <option value="50">۵۰ سطر</option>
+                                        <option value="100">۱۰۰ سطر</option>
+                                    </select>
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <div class="input-group input-group-sm" style="width: 150px;">
+                                        <input name="datagrid_table_search" id="datagrid_table_search" data-submit="#datagrid_table_search_submit" class="form-control pull-right enter_submit" placeholder="جستجو ..." type="text">
+                                        <div class="input-group-btn">
+                                            <button id="datagrid_table_search_submit" type="submit" class="btn btn-default" onclick="ajax_search($('#datagrid_table_search').val())"><i class="fa fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div id="datagrid_ajax_container"></div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block footer %}
+    {{ parent() }}
+    <script>
+
+        var _search = '';
+        var _count = 10;
+        var _page = 0;
+        var _order_by = '';
+        var _sort = '';
+
+        function ajax_request(url, data, events) {
+
+            var events = $.extend({
+                beforeSend: null,
+                done: null,
+                fail: null,
+                always: null
+            }, events);
+
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: data,
+                events: events,
+                beforeSend: function (xhr) {
+                    if(typeof events.beforeSend === 'function'){
+                        events.beforeSend();
+                    } else {
+                        waitingSpinner.show();
+                    }
+                }
+            })
+            .done(function (data) {
+                try {
+                    if(typeof events.done === 'function'){
+                        events.done(data);
+                    } else {
+                        $('#datagrid_ajax_container').html(data);
+                    }
+                } catch (e) {
+                    alert("خطا در پردازش اطلاعات!");
+                }
+            })
+            .fail(function () {
+                if(typeof events.fail === 'function'){
+                    events.fail();
+                } else {
+                    alert("خطا در دریافت اطلاعات!");
+                }
+            })
+            .always(function () {
+                if(typeof events.always === 'function'){
+                    events.always();
+                } else {
+                    waitingSpinner.hide();
+                }
+            });
+        }
+
+        function ajax_refresh_list() {
+            ajax_request(
+                "{{ datagrid_url }}",
+                {search: _search, count: _count, page: _page, order_by: _order_by, sort: _sort}
+            );
+        }
+
+        function ajax_search(search) {
+
+            _search = search;
+            _count = 10;
+            _page = 0;
+            _order_by = '';
+            _sort = '';
+
+            ajax_refresh_list();
+        }
+
+        function ajax_count(count) {
+
+            _count = count;
+            _page = 0;
+            _order_by = '';
+            _sort = '';
+
+            ajax_refresh_list();
+        }
+
+        function ajax_page(page) {
+
+            _page = page;
+
+            ajax_refresh_list();
+        }
+
+        function ajax_sort(order_by) {
+
+            if(_order_by == order_by){
+                _sort = (_sort == 'asc') ? 'desc' : 'asc';
+            } else {
+                _order_by = order_by;
+                _sort = 'asc';
+            }
+            _page = 0;
+
+            ajax_refresh_list();
+        }
+
+        function ajax_delete(callback){
+            modalConfirm.show('اطلاعات حذف شده قابل بازگشت نمی باشد. آیا مطمئنید ؟', 'حذف شود', 'danger', callback);
+        }
+
+        $('#datagrid_ajax_container').on('change', '#datagrid_check_all_key', function(){
+            if($(this).is(':checked')){
+                $('.datagrid_check_all').prop('checked', true);
+            } else {
+                $('.datagrid_check_all').prop('checked', false);
+            }
+        });
+
+        $('#datagrid_ajax_container').on('change', '.datagrid_check_all', function(){
+            if($(".datagrid_check_all:not(:checked)").length){
+                $('#datagrid_check_all_key').prop('checked', false);
+            } else {
+                $('#datagrid_check_all_key').prop('checked', true);
+            }
+        });
+
+        ajax_search($('#datagrid_table_search').val());
+    </script>
+{% endblock %}

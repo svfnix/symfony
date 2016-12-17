@@ -8,9 +8,9 @@
 
 namespace AppBundle\Wrappers;
 
-use AppBundle\Provider\Breadcrumb;
-use AppBundle\Service\App;
-use AppBundle\Provider\PermissionManager;
+use AppBundle\Helper\Breadcrumb;
+use AppBundle\Helper\App;
+use AppBundle\Helper\PermissionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 
@@ -60,6 +60,34 @@ class BaseController extends Controller
         }
 
         return $this->breadcrumb;
+    }
+
+    /**
+     * @param $count
+     * @param $page
+     * @param $pp
+     * @return array
+     */
+    protected function pagination($count, $page, $pp)
+    {
+        $max = floor($count / $pp);
+
+        $start = $page - 3;
+        if($start < 0){
+            $start = 0;
+        }
+
+        $end = $page + 3;
+        if($end > $max){
+            $end = $max;
+        }
+
+        return [
+            'current' => $page,
+            'max' => $max,
+            'start' => $start,
+            'end' => $end
+        ];
     }
 
 }

@@ -1,14 +1,49 @@
-{% extends 'admin.html.twig' %}
+{% extends 'theme/admin/datagrid.html.twig' %}
 
-{% block body %}
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box">
+{% set datagrid_url = path('admin_users_group_remote_list') %}
 
-                {{ datatable_render(datatable) }}
-
-            </div>
-            <!-- /.box -->
-        </div>
-    </div>
+{% block commandbar %}
+    {{ parent() }}
+    <a href="{{ path('admin_users_group_add') }}" class="btn btn-success">افزودن گروه جدید</a>
+    <a href="javascript:void(0)" onclick="do_delete_all()" class="btn btn-danger">حذف انتخاب شده ها</a>
 {% endblock %}
+
+
+{% block footer %}
+{{ parent() }}
+<script>
+    function do_delete(id){
+        ajax_delete(function(){
+            ajax_request("{{ path('admin_users_group_remote_delete') }}", {ids: id}, {
+                beforeSend: function () {
+                    modalConfirm.wait();
+                },
+                done: function(data){
+                    if(data.response == 1){
+                        modalConfirm.done();
+                        ajax_refresh_list();
+                    } else {
+                        modalConfirm.show('پاسخ دریافت شده معتبر نمی باشد', 'باشه', 'default', function(){
+                            modalConfirm.hide();
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    function do_delete_all(){
+        var ids = $(".datagrid_check_all:checked").map(function(){
+            return $(this).val();
+        }).get();
+        if(ids == ''){
+            modalConfirm.show('حداقل یک سطر جهت حذف انتخاب نمایید.', 'باشه', 'default', function(){
+                modalConfirm.hide();
+            });
+        } else {
+            do_delete(ids);
+        }
+    }
+</script>
+{% endblock %}
+

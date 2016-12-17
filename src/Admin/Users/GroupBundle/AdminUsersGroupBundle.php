@@ -2,10 +2,10 @@
 
 namespace Admin\Users\GroupBundle;
 
-use Admin\Users\GroupBundle\Bundle\AdminUsersGroupMenu;
-use Admin\Users\GroupBundle\Bundle\AdminUsersGroupBreadcrumb;
+use Admin\Users\GroupBundle\Meta\AdminUsersGroupMenu;
+use Admin\Users\GroupBundle\Meta\AdminUsersGroupBreadcrumb;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use AppBundle\Provider\Menu;
+use AppBundle\Helper\Menu;
 use Symfony\Component\Routing\Router;
 
 class AdminUsersGroupBundle extends Bundle

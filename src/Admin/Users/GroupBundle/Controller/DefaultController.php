@@ -2,8 +2,9 @@
 
 namespace Admin\Users\GroupBundle\Controller;
 
-use Admin\Users\GroupBundle\Entity\Group;
-use AppBundle\Service\App;
+use AppBundle\Entity\UserGroup;
+use Admin\Users\GroupBundle\Form\UserGroupType;
+use AppBundle\Helper\App;
 use AppBundle\Wrappers\AdminPanelController;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -11,23 +12,55 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Twig\Extensions\AppExtension;
 
 class DefaultController extends AdminPanelController
 {
 
     /**
-     * @Route("/list", name="admin_users_group_list")
+     * @Route("/remote_list", name="admin_users_group_remote_list")
+     * @param Request $request
+     * @return Response
      */
-    public function list()
+    public function remote_list(Request $request)
     {
-        $datatable = $this->get('admin_users_group_group');
-        $datatable->buildDatatable();
 
-        $query = $this->get('sg_datatables.query')->getQueryFrom($datatable);
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:UserGroup');
 
-        return $query->getResponse();
+        $filters = $this->getFilters($request, $em->getClassMetadata(UserGroup::class)->getFieldNames());
+        $response = call_user_func_array([$repo, 'filter'], $filters);
+
+        return $this->render('AdminUsersGroupBundle:Default:remote/list.html.twig', [
+            'items' => $response,
+            'filters' => $filters,
+            'pagination' => $this->pagination($response->count(), $filters['page'], $filters['count'])
+        ]);
+    }
+
+    /**
+     * @Route("/remote_delete", name="admin_users_group_remote_delete")
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function remote_delete(Request $request)
+    {
+        $ids = $request->request->get('ids');
+
+        if(!is_array($ids)){
+            $ids = [$ids];
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:UserGroup');
+        $repo->bulkDelete($ids);
+
+        return$this->json([
+            'response' => '1'
+        ]);
     }
 
     /**
@@ -36,13 +69,7 @@ class DefaultController extends AdminPanelController
     public function index()
     {
         $this->breadcrumb()->actionDefault();
-
-        $datatable = $this->get('admin_users_group_group');
-        $datatable->buildDatatable();
-
-        return $this->render('AdminUsersGroupBundle:Default:index.html.twig', array(
-            'datatable' => $datatable,
-        ));
+        return $this->render('AdminUsersGroupBundle:Default:index.html.twig');
     }
 
     /**
@@ -52,24 +79,23 @@ class DefaultController extends AdminPanelController
      */
     public function add(Request $request)
     {
-        $form = $this->createFormBuilder(new Group())
-            ->add('title', TextType::class)
-            ->add('memo', TextareaType::class)
-            ->getForm();
+        $this->breadcrumb()->actionAdd();
+
+        $group = new UserGroup();
+        $form = $this->createForm(UserGroupType::class, $group);
 
         $form->handleRequest($request);
-
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($form);
+            $em->persist($group);
             $em->flush();
 
             //return $this->redirectToRoute('task_success');
         }
 
-        return $this->render('AdminUsersGroupBundle:Default:add.html.twig', array(
+        return $this->render('AdminUsersGroupBundle:Default:add.html.twig', [
             'form' => $form->createView(),
             'errors' => $form->getErrors()
-        ));
+        ]);
     }
 }

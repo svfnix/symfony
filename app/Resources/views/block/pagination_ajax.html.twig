@@ -1,0 +1,30 @@
+<div class="box-footer clearfix no-border">
+    {% if pagination.max %}
+    <ul class="pagination pagination-sm no-margin pull-right">
+
+        {% if pagination.current > 10 %}
+        <li>
+            <a href="javascript:void(0)" onclick="ajax_page({{ pagination.current - 0 }})">{{ 1|pnum }}</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" onclick="ajax_page({{ (pagination.current / 2)|round }})">...</a>
+        </li>
+        {% endif %}
+
+        {% for i in pagination.start..pagination.end %}
+        <li{{ pagination.current == i ? ' class="active"' }}>
+            <a href="javascript:void(0)" onclick="ajax_page({{ i }})">{{ (i + 1)|pnum }}</a>
+        </li>
+        {% endfor %}
+
+        {% if pagination.current < pagination.max - 10 %}
+        <li>
+            <a href="javascript:void(0)" onclick="ajax_page({{ ((pagination.current + pagination.max) / 2)|round }})">...</a>
+        <li>
+            <a href="javascript:void(0)" onclick="ajax_page({{ pagination.max }})">{{ (pagination.max + 1)|pnum }}</a>
+        </li>
+        {% endif %}
+
+    </ul>
+    {% endif %}
+</div>

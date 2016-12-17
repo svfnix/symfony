@@ -3,7 +3,7 @@
 namespace User\Settings\ProfileBundle;
 
 use AppBundle\AppBundle;
-use AppBundle\Provider\Menu;
+use AppBundle\Helper\Menu;
 use Symfony\Component\Routing\Router;
 
 class UserSettingsProfileBundle extends AppBundle

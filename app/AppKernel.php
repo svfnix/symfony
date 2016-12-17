@@ -17,10 +17,10 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new Sg\DatatablesBundle\SgDatatablesBundle(),
             new AppBundle\AppBundle(),
-            new User\Settings\ProfileBundle\UserSettingsProfileBundle(),
             new Admin\Users\GroupBundle\AdminUsersGroupBundle(),
+            new Admin\Users\UserBundle\AdminUsersUserBundle(),
+            new User\Settings\ProfileBundle\UserSettingsProfileBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

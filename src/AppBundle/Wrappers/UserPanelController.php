@@ -9,7 +9,7 @@
 namespace AppBundle\Wrappers;
 
 
-use AppBundle\Provider\Menu;
+use AppBundle\Helper\Menu;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserPanelController extends BaseController

@@ -32,7 +32,7 @@ gulp.task('build-font', function(){
         .pipe(gulp.dest('../web/dist/fonts/'));
 });
 
-/*gulp.task('build-ifont-css', function () {
+/*gulp.task('build-font-css', function () {
     return gulp.src('../app/Resources/less/app/font.less')
         .pipe(base64({
             baseDir: '../web/',
@@ -87,7 +87,7 @@ gulp.task('build-styles-admin', function() {
             '../app/Resources/less/bootstrap/bootstrap.less',
             '../app/Resources/less/bootstrap/theme.less',
             '../app/Resources/less/admin-lte/AdminLTE.less',
-            '../app/Resources/less/admin-lte/skins/skin-green.less',
+            '../app/Resources/less/admin-lte/skins/skin-blue.less',
             '../app/Resources/less/app/*.less',
             '../app/Resources/assets/**/*.css',
             '../app/Resources/less/admin.less'

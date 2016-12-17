@@ -2,9 +2,9 @@
     font-family: BBCNassim;
     font-style: normal;
     font-weight: bold;
-    src: url('/assets/fonts/BBCNassim.eot');
-    src: url('/assets/fonts/BBCNassim.eot?#iefix') format('embedded-opentype'),  /* IE6-8 */
-    url('/assets/fonts/BBCNassim.woff2') format('woff2'),  /* FF39+,Chrome36+, Opera24+*/
-    url('/assets/fonts/BBCNassim.woff') format('woff'),  /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
-    url('/assets/fonts/BBCNassim.ttf') format('truetype');
+    src: url('/assets/fonts/bbcnassim/BBCNassim.eot');
+    src: url('/assets/fonts/bbcnassim/BBCNassim.eot?#iefix') format('embedded-opentype'),  /* IE6-8 */
+    url('/assets/fonts/bbcnassim/BBCNassim.woff2') format('woff2'),  /* FF39+,Chrome36+, Opera24+*/
+    url('/assets/fonts/bbcnassim/BBCNassim.woff') format('woff'),  /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+    url('/assets/fonts/bbcnassim/BBCNassim.ttf') format('truetype');
 }

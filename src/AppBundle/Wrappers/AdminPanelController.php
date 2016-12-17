@@ -9,7 +9,8 @@
 namespace AppBundle\Wrappers;
 
 
-use AppBundle\Provider\Menu;
+use AppBundle\Helper\Menu;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AdminPanelController extends BaseController
@@ -30,6 +31,42 @@ class AdminPanelController extends BaseController
         }
 
         return $menu->getMenus();
+    }
+
+    /**
+     * @param Request $request
+     * @param array $allowed_sorting_fields
+     * @return array
+     */
+    protected function getFilters(Request $request, $allowed_sorting_fields=[]){
+
+        $data = $request->request;
+
+        $filters = [
+            'search' => $data->get('search', null),
+            'page' => $data->getInt('page', 0),
+            'count' => $data->getInt('count', 10),
+            'order_by' => $data->get('order_by', 'id'),
+            'sort' => $data->get('sort', 'asc'),
+        ];
+
+        if($filters['page'] < 0){
+            $filters['page'] = 0;
+        }
+
+        if(!in_array($filters['count'], [10, 25, 50, 100])){
+            $filters['count'] = 10;
+        }
+
+        if(!in_array($filters['order_by'], $allowed_sorting_fields)){
+            $filters['order_by'] = null;
+        }else {
+            if (!in_array($filters['sort'], ['asc', 'desc'])) {
+                $filters['sort'] = 'asc';
+            }
+        }
+
+        return $filters;
     }
 
     /**

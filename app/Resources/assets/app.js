@@ -9,3 +9,14 @@ function showPassword(obj){
         }
     });
 }
+
+$(function() {
+    $(".enter_submit").keypress(function (e) {
+        if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+            $($(this).data('submit')).click();
+            return false;
+        } else {
+            return true;
+        }
+    });
+});

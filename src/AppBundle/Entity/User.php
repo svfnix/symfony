@@ -2,7 +2,7 @@
 
 namespace AppBundle\Entity;
 
-use Admin\Users\GroupBundle\Entity\Group;
+use AppBundle\Entity\UserGroup;
 use AppBundle\Traits\Base;
 use AppBundle\Traits\Enabled;
 use AppBundle\Traits\Metadata;
@@ -109,10 +109,10 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Admin\Users\GroupBundle\Entity\Group", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\UserGroup", cascade={"persist"})
      * @ORM\JoinTable(name="users_groups",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="user_group_id", referencedColumnName="id")}
      *      )
      */
     private $groups;
@@ -312,10 +312,10 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * Add group
      *
-     * @param Group $group
+     * @param UserGroup $group
      * @return User
      */
-    public function addGroup(Group $group)
+    public function addGroup(UserGroup $group)
     {
         $this->groups[] = $group;
 
@@ -324,9 +324,9 @@ class User implements AdvancedUserInterface, \Serializable
 
     /**
      * Remove group
-     * @param Group $group
+     * @param UserGroup $group
      */
-    public function removeGroup(Group $group)
+    public function removeGroup(UserGrou $group)
     {
         $this->groups->removeElement($group);
     }

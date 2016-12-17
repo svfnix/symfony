@@ -6,11 +6,13 @@ parameters:
 services:
 
     app.service:
-        class:        AppBundle\Service\App
+        class:        AppBundle\Helper\App
         arguments:    ['@service_container']
         tags:
             - {name: kernel.event_listener, event: kernel.controller, method: onKernelController}
 
-    admin_users_group_group:
-        class: Admin\Users\GroupBundle\Datatables\GroupDatatable
-        parent: sg_datatables.datatable.abstract
+    app.twig_extension:
+        class: AppBundle\Twig\Extensions\AppExtension
+        public: true
+        tags:
+            - { name: twig.extension }
