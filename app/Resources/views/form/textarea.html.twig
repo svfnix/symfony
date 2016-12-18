@@ -1,6 +1,6 @@
 <div class="form-group{{ field.vars.valid == false ? ' has-error' : '' }}">
     <label>{{ title }}</label>
-    <textarea name="{{ name }}" class="form-control" rows="3" placeholder="{{ placeholder }}"></textarea>
+    <textarea name="{{ name }}" class="form-control" rows="3" placeholder="{{ placeholder }}">{{ data }}</textarea>
 </div>
 {% if field.vars.errors|length %}
     <ul class="list-style-none padding-right-0px red">

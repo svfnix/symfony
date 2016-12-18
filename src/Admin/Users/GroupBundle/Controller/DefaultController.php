@@ -85,15 +85,46 @@ class DefaultController extends AdminPanelController
         $form = $this->createForm(UserGroupType::class, $group);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isValid()) {
             $em = $this->getDoctrine()->getEntityManager();
             $em->persist($group);
             $em->flush();
 
-            //return $this->redirectToRoute('task_success');
+            $this->addFlash(self::FLASH_SUCCESS, 'عملیات با موفقیت انجام شد');
+
+            return $this->redirectToRoute('admin_users_group');
         }
 
         return $this->render('AdminUsersGroupBundle:Default:add.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $form->getErrors()
+        ]);
+    }
+
+    /**
+     * @param UserGroup $group
+     * @param Request $request
+     * @return string
+     * @Route("/edit/{id}", name="admin_users_group_edit", requirements={"id": "\d+"})
+     */
+    public function edit(UserGroup $group, Request $request)
+    {
+        $this->breadcrumb()->actionEdit();
+
+        $form = $this->createForm(UserGroupType::class, $group);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getEntityManager();
+            $em->merge($group);
+            $em->flush();
+
+            $this->addFlash(self::FLASH_NOTICE, 'عملیات با موفقیت انجام شد');
+
+            return $this->redirectToRoute('admin_users_group');
+        }
+
+        return $this->render('AdminUsersGroupBundle:Default:edit.html.twig', [
             'form' => $form->createView(),
             'errors' => $form->getErrors()
         ]);

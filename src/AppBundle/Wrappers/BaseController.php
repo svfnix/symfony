@@ -16,6 +16,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class BaseController extends Controller
 {
+    const FLASH_ERROR = 'error';
+    const FLASH_WARNING = 'warning';
+    const FLASH_NOTICE = 'notice';
+    const FLASH_SUCCESS = 'success';
+
     private $user_permissions = null;
     private $breadcrumb;
 
