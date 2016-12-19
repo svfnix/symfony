@@ -10,7 +10,6 @@ use Symfony\Component\Routing\Router;
 
 class AdminUsersGroupBundle extends Bundle
 {
-
     /**
      * @return AdminUsersGroupBreadcrumb
      */

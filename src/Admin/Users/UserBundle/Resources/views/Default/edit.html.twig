@@ -1,21 +1,21 @@
 {% extends 'theme/admin.html.twig' %}
 
 {% block commandbar %}
-    <a href="{{ path('admin_users_group') }}" class="btn btn-default">انصراف و بازگشت</a>
+    <a href="{{ path('admin_users_user') }}" class="btn btn-default">انصراف و بازگشت</a>
 {% endblock %}
 
 {% block body %}
     {{ errors }}
     <div class="box box-success">
         <div class="box-header with-border">
-            <h3 class="box-title bold">ویرایش مشخصات گروه</h3>
+            <h3 class="box-title bold">ویرایش مشخصات کاربر</h3>
         </div>
         <!-- /.box-header -->
         <form role="form" method="post">
             <div class="box-body">
 
-                {% include ':field:title.html.twig' with { "form": form } %}
-                {% include ':field:name.html.twig' with { "form": form } %}
+                {% include ':field:email.html.twig' with { "form": form } %}
+                {% include ':field:password.html.twig' with { "form": form } %}
                 {% include ':field:memo.html.twig' with {"form": form } %}
 
             </div>

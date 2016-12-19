@@ -12,19 +12,19 @@
             <div class="box">
 
                 <div class="box-header with-border">
-                    <h3 class="box-title bold">گروه های کاربری</h3>
+                    <h3 class="box-title bold">{{ datagrid_title }}</h3>
                     <div class="box-tools">
-                        <table>
+                        <table class="datagrid-toolbar">
                             <tr>
+                                {% block datagrid_custom_toolbar %}{% endblock %}
                                 <td>
-                                    <select name="example_length" class="form-control input-sm" onchange="ajax_count($(this).val())">
+                                    <select id="datagrip-count" class="form-control input-sm" onchange="ajax_count($(this).val())">
                                         <option value="10">۱۰ سطر</option>
                                         <option value="25">۲۵ سطر</option>
                                         <option value="50">۵۰ سطر</option>
                                         <option value="100">۱۰۰ سطر</option>
                                     </select>
                                 </td>
-                                <td>&nbsp;</td>
                                 <td>
                                     <div class="input-group input-group-sm" style="width: 150px;">
                                         <input name="datagrid_table_search" id="datagrid_table_search" data-submit="#datagrid_table_search_submit" class="form-control pull-right enter_submit" placeholder="جستجو ..." type="text">
@@ -54,6 +54,7 @@
         var _page = 0;
         var _order_by = '';
         var _sort = '';
+        var _filters = {};
 
         function ajax_request(url, data, events) {
 
@@ -107,7 +108,7 @@
         function ajax_refresh_list() {
             ajax_request(
                 "{{ datagrid_url }}",
-                {search: _search, count: _count, page: _page, order_by: _order_by, sort: _sort}
+                {search: _search, count: _count, page: _page, order_by: _order_by, sort: _sort, filters: _filters}
             );
         }
 
@@ -148,6 +149,17 @@
                 _sort = 'asc';
             }
             _page = 0;
+
+            ajax_refresh_list();
+        }
+
+        function ajax_filter(name, value){
+
+            if(value) {
+                _filters[name] = value;
+            } else {
+                delete _filters[name];
+            }
 
             ajax_refresh_list();
         }

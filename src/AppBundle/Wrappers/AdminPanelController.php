@@ -48,6 +48,7 @@ class AdminPanelController extends BaseController
             'count' => $data->getInt('count', 10),
             'order_by' => $data->get('order_by', 'id'),
             'sort' => $data->get('sort', 'asc'),
+            'filters' => $data->get('filters', []),
         ];
 
         if($filters['page'] < 0){

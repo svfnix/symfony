@@ -1,0 +1,7 @@
+{% include ':form:input_text.html.twig' with {
+    "title": "نام و نام خانوادگی",
+    "placeholder": "نام و نام خانوادگی را وارد نمایید ...",
+    "name": "fullname",
+    "field": form.fullname,
+    "data": form.vars.value.fullname
+} only %}

@@ -3,6 +3,7 @@
 namespace AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -137,5 +138,70 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     {
         return $this->getEntityName() === $class
         || is_subclass_of($class, $this->getEntityName());
+    }
+
+
+    /**
+     * @param $search
+     * @param $page
+     * @param $count
+     * @param $order_by
+     * @param $sort
+     * @return Paginator
+     */
+    public function filter($search, $page, $count, $order_by, $sort, $filters)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->select('u')
+            ->from('AppBundle:User', 'u')
+        ;
+
+        if(!empty($search)) {
+
+            $search = explode(' ', $search);
+            foreach ($search as $q) {
+                $qb->andWhere($qb->expr()->like('CONCAT(' . implode(", ' ', ", [
+                        'u.username',
+                        'u.email',
+                        'u.name',
+                        'u.mobile'
+                    ]) . ')', $qb->expr()->literal('%' . $q . '%')));
+            }
+        }
+
+        if(isset($filters['usergroup'])) {
+
+            $qb
+                ->join('u.groups', 'ug')
+                ->where('ug.name = :name')
+                ->setParameter('name', $filters['usergroup'])
+            ;
+        }
+
+        if(!empty($order_by)) {
+            $qb->orderBy("ug.{$order_by}", $sort);
+        }
+
+        $qb
+            ->setFirstResult($page * $count)
+            ->setMaxResults($count)
+        ;
+
+        return new Paginator($qb->getQuery());
+    }
+
+    /**
+     * @param $ids
+     */
+    public function bulkDelete($ids)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->delete('AppBundle:UserGroup', 'ug')
+            ->where($qb->expr()->in('ug.id', $ids))
+            ->getQuery()
+            ->execute()
+        ;
     }
 }

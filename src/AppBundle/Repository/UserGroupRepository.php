@@ -17,19 +17,13 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 class UserGroupRepository extends EntityRepository
 {
     /**
-     * @param $id
-     * @return UserGroup|null
+     * @param $search
+     * @param $page
+     * @param $count
+     * @param $order_by
+     * @param $sort
+     * @return Paginator
      */
-    public function findOneById($id)
-    {
-        return $this
-            ->createQueryBuilder('g')
-            ->where('g.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
-
     public function filter($search, $page, $count, $order_by, $sort)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -41,12 +35,11 @@ class UserGroupRepository extends EntityRepository
         if(!empty($search)) {
 
             $search = explode(' ', $search);
-
-            $q = array_shift($search);
-            $qb->where($qb->expr()->like("CONCAT(ug.title, ' ', ug.name)", $qb->expr()->literal('%' . $q . '%')));
-
             foreach ($search as $q) {
-                $qb->andWhere($qb->expr()->like("CONCAT(ug.title, ' ', ug.name)", $qb->expr()->literal('%' . $q . '%')));
+                $qb->andWhere($qb->expr()->like('CONCAT(' . implode(", ' ', ", [
+                        'ug.title',
+                        'ug.name'
+                    ]) . ')', $qb->expr()->literal('%' . $q . '%')));
             }
         }
 
@@ -62,6 +55,9 @@ class UserGroupRepository extends EntityRepository
         return new Paginator($qb->getQuery());
     }
 
+    /**
+     * @param $ids
+     */
     public function bulkDelete($ids)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();

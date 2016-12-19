@@ -85,15 +85,15 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @Assert\NotBlank(message="نام و نام خانوادگی را وارد نمایید")
-     * @ORM\Column(name="name", type="string", length=128, nullable=true)
+     * @ORM\Column(name="fullname", type="string", length=128, nullable=true)
      */
-    private $name;
+    private $fullname;
 
     /**
      * @var string
      *
      * @Assert\NotBlank(message="شماره موبایل را وارد نمایید")
-     * @ORM\Column(name="mobile", type="string", length=16, nullable=true)asswd
+     * @ORM\Column(name="mobile", type="string", length=16, nullable=true)
      *
      * @Assert\Regex(pattern="/^09[0-9]{9}$/", message="شماره وارد شده معتبر نمی باشد")
      */
@@ -236,13 +236,13 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @param string $name
-     *
+     * @param $fullname
      * @return User
+     *
      */
-    public function setName($name)
+    public function setFullname($fullname)
     {
-        $this->name = $name;
+        $this->fullname = $fullname;
 
         return $this;
     }
@@ -250,9 +250,9 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @return string
      */
-    public function getName()
+    public function getFullname()
     {
-        return $this->name;
+        return $this->fullname;
     }
 
     /**
@@ -325,10 +325,13 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * Remove group
      * @param UserGroup $group
+     * @return $this
      */
-    public function removeGroup(UserGrou $group)
+    public function removeGroup(UserGroup $group)
     {
         $this->groups->removeElement($group);
+
+        return $this;
     }
 
     /**

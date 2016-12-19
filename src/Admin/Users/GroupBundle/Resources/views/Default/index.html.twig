@@ -1,5 +1,6 @@
 {% extends 'theme/admin/datagrid.html.twig' %}
 
+{% set datagrid_title = 'گروه های کاربری' %}
 {% set datagrid_url = path('admin_users_group_remote_list') %}
 
 {% block commandbar %}
@@ -21,6 +22,9 @@
                 done: function(data){
                     if(data.response == 1){
                         modalConfirm.done();
+                        setTimeout(function () {
+                            modalConfirm.hide();
+                        }, 500);
                         ajax_refresh_list();
                     } else {
                         modalConfirm.show('پاسخ دریافت شده معتبر نمی باشد', 'باشه', 'default', function(){

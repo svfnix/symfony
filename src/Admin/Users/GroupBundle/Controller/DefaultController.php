@@ -4,18 +4,11 @@ namespace Admin\Users\GroupBundle\Controller;
 
 use AppBundle\Entity\UserGroup;
 use Admin\Users\GroupBundle\Form\UserGroupType;
-use AppBundle\Helper\App;
 use AppBundle\Wrappers\AdminPanelController;
-use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\Paginator;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use AppBundle\Twig\Extensions\AppExtension;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class DefaultController extends AdminPanelController
 {
@@ -79,7 +72,6 @@ class DefaultController extends AdminPanelController
      */
     public function add(Request $request)
     {
-        $this->breadcrumb()->actionAdd();
 
         $group = new UserGroup();
         $form = $this->createForm(UserGroupType::class, $group);
@@ -90,11 +82,10 @@ class DefaultController extends AdminPanelController
             $em->persist($group);
             $em->flush();
 
-            $this->addFlash(self::FLASH_SUCCESS, 'عملیات با موفقیت انجام شد');
-
-            return $this->redirectToRoute('admin_users_group');
+            $this->returnSuccess('admin_users_group');
         }
 
+        $this->breadcrumb()->actionAdd();
         return $this->render('AdminUsersGroupBundle:Default:add.html.twig', [
             'form' => $form->createView(),
             'errors' => $form->getErrors()
@@ -109,21 +100,19 @@ class DefaultController extends AdminPanelController
      */
     public function edit(UserGroup $group, Request $request)
     {
-        $this->breadcrumb()->actionEdit();
-
         $form = $this->createForm(UserGroupType::class, $group);
 
         $form->handleRequest($request);
         if ($form->isValid()) {
+
             $em = $this->getDoctrine()->getEntityManager();
             $em->merge($group);
             $em->flush();
 
-            $this->addFlash(self::FLASH_NOTICE, 'عملیات با موفقیت انجام شد');
-
-            return $this->redirectToRoute('admin_users_group');
+            $this->returnSuccess('admin_users_group');
         }
 
+        $this->breadcrumb()->actionEdit();
         return $this->render('AdminUsersGroupBundle:Default:edit.html.twig', [
             'form' => $form->createView(),
             'errors' => $form->getErrors()

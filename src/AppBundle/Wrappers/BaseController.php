@@ -95,4 +95,9 @@ class BaseController extends Controller
         ];
     }
 
+    protected function returnSuccess($path){
+        $this->addFlash(self::FLASH_NOTICE, 'عملیات با موفقیت انجام شد');
+        return $this->redirectToRoute($path);
+    }
+
 }
