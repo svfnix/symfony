@@ -82,7 +82,7 @@ class DefaultController extends AdminPanelController
             $em->persist($group);
             $em->flush();
 
-            $this->returnSuccess('admin_users_group');
+            return $this->returnSuccess('admin_users_group');
         }
 
         $this->breadcrumb()->actionAdd();
@@ -109,7 +109,7 @@ class DefaultController extends AdminPanelController
             $em->merge($group);
             $em->flush();
 
-            $this->returnSuccess('admin_users_group');
+            return $this->returnSuccess('admin_users_group');
         }
 
         $this->breadcrumb()->actionEdit();

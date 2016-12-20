@@ -14,9 +14,9 @@
         <form role="form" method="post">
             <div class="box-body">
 
-                {% include ':field:title.html.twig' with { "form": form } %}
-                {% include ':field:name.html.twig' with { "form": form } %}
-                {% include ':field:memo.html.twig' with {"form": form } %}
+                {% include ':field:title.html.twig' with { "form": form } only %}
+                {% include ':field:name.html.twig' with { "form": form } only %}
+                {% include ':field:memo.html.twig' with {"form": form } only %}
 
             </div>
             <div class="box-footer no-border">

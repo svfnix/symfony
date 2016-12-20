@@ -4,6 +4,7 @@ namespace Admin\Users\UserBundle\Controller;
 
 use Admin\Users\UserBundle\Form\UserType;
 use AppBundle\Entity\User;
+use AppBundle\Helper\App;
 use AppBundle\Wrappers\AdminPanelController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,10 +87,11 @@ class DefaultController extends AdminPanelController
         $form->handleRequest($request);
         if ($form->isValid()) {
 
+            $user->setPassword(App::getInstance()->encodePassword($user, $user->getPassword()));
             $em->persist($user);
             $em->flush();
 
-            $this->returnSuccess('admin_users_user');
+            return $this->returnSuccess('admin_users_user');
         }
 
         $this->breadcrumb()->actionAdd();
@@ -116,16 +118,18 @@ class DefaultController extends AdminPanelController
         $form->handleRequest($request);
         if ($form->isValid()) {
 
+            $user->setPassword(App::getInstance()->encodePassword($user, $user->getPassword()));
             $em->merge($user);
             $em->flush();
 
-            $this->returnSuccess('admin_users_user');
+            return $this->returnSuccess('admin_users_user');
         }
 
         $this->breadcrumb()->actionEdit();
         return $this->render('AdminUsersUserBundle:Default:edit.html.twig', [
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
+            'user' => $user,
             'usergroup' => $repo->findAll()
         ]);
     }

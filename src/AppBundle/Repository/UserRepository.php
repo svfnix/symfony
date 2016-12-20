@@ -147,6 +147,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @param $count
      * @param $order_by
      * @param $sort
+     * @param $filters
      * @return Paginator
      */
     public function filter($search, $page, $count, $order_by, $sort, $filters)
@@ -173,7 +174,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if(isset($filters['usergroup'])) {
 
             $qb
-                ->join('u.groups', 'ug')
+                ->join('u.usergroup', 'ug')
                 ->where('ug.name = :name')
                 ->setParameter('name', $filters['usergroup'])
             ;

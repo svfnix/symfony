@@ -28,7 +28,7 @@
             <td>{{ (loop.index + start)|pnum }}</td>
             <td>{{ item.email }}</td>
             <td>
-                <a class="btn btn-xs btn-default" href="{{ path('admin_users_group_edit', {id: item.id}) }}"><i class="fa fa-edit margin-3px"></i></a>
+                <a class="btn btn-xs btn-default" href="{{ path('admin_users_user_edit', {id: item.id}) }}"><i class="fa fa-edit margin-3px"></i></a>
                 <a class="btn btn-xs btn-default" href="javascript:void(0)" onclick="do_delete({{ item.id }})"><i class="fa fa-remove margin-3px"></i></a>
             </td>
         </tr>

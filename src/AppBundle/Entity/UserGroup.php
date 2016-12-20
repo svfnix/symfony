@@ -20,7 +20,7 @@ use AppBundle\Traits\Timestampable;
 /**
  * Group
  *
- * @ORM\Table(name="user_group")
+ * @ORM\Table(name="usergroup")
  *
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserGroupRepository")
  * @UniqueEntity("name")
@@ -55,6 +55,13 @@ class UserGroup
      * @ORM\Column(name="permissions", type="json_array")
      */
     private $permissions = array();
+
+    /**
+     * @return string
+     */
+    public function __toString() {
+        return $this->title;
+    }
 
     /**
      * @return int

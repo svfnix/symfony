@@ -14,9 +14,12 @@
         <form role="form" method="post">
             <div class="box-body">
 
-                {% include ':field:email.html.twig' with { "form": form } %}
-                {% include ':field:password.html.twig' with { "form": form } %}
-                {% include ':field:memo.html.twig' with {"form": form } %}
+                {% include ':field:fullname.html.twig' with { "form": form } only %}
+                {% include ':field:mobile.html.twig' with { "form": form } only %}
+                {% include ':field:email.html.twig' with { "form": form } only %}
+                {% include ':field:password.html.twig' with { "form": form } only %}
+                {% include ':field:list_usergroup.html.twig' with {"form": form, "usergroup" : usergroup } only %}
+                {% include ':field:memo.html.twig' with {"form": form} only %}
 
             </div>
             <div class="box-footer no-border">

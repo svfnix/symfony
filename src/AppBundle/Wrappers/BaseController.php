@@ -12,6 +12,7 @@ use AppBundle\Helper\Breadcrumb;
 use AppBundle\Helper\App;
 use AppBundle\Helper\PermissionManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 
 class BaseController extends Controller
@@ -95,8 +96,12 @@ class BaseController extends Controller
         ];
     }
 
+    /**
+     * @param $path
+     * @return RedirectResponse
+     */
     protected function returnSuccess($path){
-        $this->addFlash(self::FLASH_NOTICE, 'عملیات با موفقیت انجام شد');
+        $this->addFlash(self::FLASH_SUCCESS, 'عملیات با موفقیت انجام شد');
         return $this->redirectToRoute($path);
     }
 

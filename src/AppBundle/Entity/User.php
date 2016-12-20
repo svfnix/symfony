@@ -32,6 +32,7 @@ class User implements AdvancedUserInterface, \Serializable
     {
         $this->roles = array();
         $this->groups = new ArrayCollection();
+        $this->createdAt = new \DateTime();
     }
 
     /**
@@ -110,12 +111,12 @@ class User implements AdvancedUserInterface, \Serializable
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\UserGroup", cascade={"persist"})
-     * @ORM\JoinTable(name="users_groups",
+     * @ORM\JoinTable(name="user_usergroup",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="user_group_id", referencedColumnName="id")}
+     *      inverseJoinColumns={@ORM\JoinColumn(name="usergroup_id", referencedColumnName="id")}
      *      )
      */
-    private $groups;
+    private $usergroup;
 
     /**
      * @return int
@@ -312,24 +313,24 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * Add group
      *
-     * @param UserGroup $group
+     * @param \AppBundle\Entity\UserGroup $usergroup
      * @return User
      */
-    public function addGroup(UserGroup $group)
+    public function addUsergroup(UserGroup $usergroup)
     {
-        $this->groups[] = $group;
+        $this->usergroup[] = $usergroup;
 
         return $this;
     }
 
     /**
      * Remove group
-     * @param UserGroup $group
+     * @param \AppBundle\Entity\UserGroup $usergroup
      * @return $this
      */
-    public function removeGroup(UserGroup $group)
+    public function removeUsergroup(UserGroup $usergroup)
     {
-        $this->groups->removeElement($group);
+        $this->usergroup->removeElement($usergroup);
 
         return $this;
     }
@@ -337,9 +338,9 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @return ArrayCollection
      */
-    public function getGroups()
+    public function getUsergroup()
     {
-        return $this->groups;
+        return $this->usergroup;
     }
 
     /**
