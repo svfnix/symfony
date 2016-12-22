@@ -2,7 +2,7 @@
 
 namespace Admin\Users\UserBundle\Controller;
 
-use Admin\Users\UserBundle\Form\UserType;
+use Admin\Users\UserBundle\Form\Type\UserType;
 use AppBundle\Entity\User;
 use AppBundle\Helper\App;
 use AppBundle\Wrappers\AdminPanelController;
@@ -74,9 +74,9 @@ class DefaultController extends AdminPanelController
     /**
      * @param Request $request
      * @return string
-     * @Route("/add", name="admin_users_user_add")
+     * @Route("/add/{tab}", defaults={"tab": "profile"}, name="admin_users_user_add")
      */
-    public function add(Request $request)
+    public function add(Request $request, $tab)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:UserGroup');
@@ -85,19 +85,25 @@ class DefaultController extends AdminPanelController
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
 
-            $user->setPassword(App::getInstance()->encodePassword($user, $user->getPassword()));
-            $em->persist($user);
-            $em->flush();
+                $user->setPassword(App::getInstance()->encodePassword($user, $user->getPassword()));
+                $em->persist($user);
+                $em->flush();
 
-            return $this->returnSuccess('admin_users_user');
+                return $this->returnSuccess('admin_users_user');
+            } else {
+                $this->addFlash(self::FLASH_ERROR, 'عملیات با خطا مواجه شد');
+            }
         }
 
         $this->breadcrumb()->actionAdd();
         return $this->render('AdminUsersUserBundle:Default:add.html.twig', [
+            'tab' => $tab,
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
+            'user' => $user,
             'usergroup' => $repo->findAll()
         ]);
     }
@@ -105,10 +111,11 @@ class DefaultController extends AdminPanelController
     /**
      * @param User $user
      * @param Request $request
+     * @param $tab
      * @return string
-     * @Route("/edit/{id}", name="admin_users_user_edit", requirements={"id": "\d+"})
+     * @Route("/edit/{id}/{tab}", name="admin_users_user_edit", defaults={"tab": "profile"}, requirements={"id": "\d+"})
      */
-    public function edit(User $user, Request $request)
+    public function edit(User $user, Request $request, $tab)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:UserGroup');
@@ -116,17 +123,24 @@ class DefaultController extends AdminPanelController
         $form = $this->createForm(UserType::class, $user);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
 
-            $user->setPassword(App::getInstance()->encodePassword($user, $user->getPassword()));
-            $em->merge($user);
-            $em->flush();
+                $user->setPassword(App::getInstance()->encodePassword($user, $user->getPassword()));
+                $em->merge($user);
+                $em->flush();
 
-            return $this->returnSuccess('admin_users_user');
+                return $this->returnSuccess('admin_users_user');
+            } else {
+                $this->addFlash(self::FLASH_ERROR, 'عملیات با خطا مواجه شد');
+            }
+        } else {
+            $form->get('password')->setData('');
         }
 
         $this->breadcrumb()->actionEdit();
         return $this->render('AdminUsersUserBundle:Default:edit.html.twig', [
+            'tab' => $tab,
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'user' => $user,

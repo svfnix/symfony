@@ -1,7 +1,8 @@
 <?php
 
-namespace Admin\Users\UserBundle\Form;
+namespace Admin\Users\UserBundle\Form\Type;
 
+use Admin\Users\UserBundle\Form\EventListener\UpdatePasswordSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,6 +23,8 @@ class UserType extends AbstractType
             ->add('usergroup')
             ->add('memo')
         ;
+
+        $builder->addEventSubscriber(new UpdatePasswordSubscriber());
     }
     
     /**

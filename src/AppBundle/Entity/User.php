@@ -31,7 +31,7 @@ class User implements AdvancedUserInterface, \Serializable
     function __construct()
     {
         $this->roles = array();
-        $this->groups = new ArrayCollection();
+        $this->usergroup = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 
@@ -311,7 +311,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Add group
+     * Add UserGroup
      *
      * @param \AppBundle\Entity\UserGroup $usergroup
      * @return User
@@ -324,7 +324,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * Remove group
+     * Remove UserGroup
      * @param \AppBundle\Entity\UserGroup $usergroup
      * @return $this
      */
@@ -433,7 +433,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->name,
             $this->mobile,
             $this->roles,
-            $this->groups,
+            $this->usergroup,
         ));
     }
 
@@ -459,7 +459,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->name,
             $this->mobile,
             $this->roles,
-            $this->groups,
+            $this->usergroup,
             ) = unserialize($serialized);
     }
 }
