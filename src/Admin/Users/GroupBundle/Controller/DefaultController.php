@@ -96,9 +96,9 @@ class DefaultController extends AdminPanelController
      * @param UserGroup $group
      * @param Request $request
      * @return string
-     * @Route("/edit/{id}", name="admin_users_group_edit", requirements={"id": "\d+"})
+     * @Route("/edit/{id}/{tab}", name="admin_users_group_edit", defaults={"tab": "profile"}, requirements={"id": "\d+"})
      */
-    public function edit(UserGroup $group, Request $request)
+    public function edit(UserGroup $group, Request $request, $tab)
     {
         $form = $this->createForm(UserGroupType::class, $group);
 
@@ -114,8 +114,10 @@ class DefaultController extends AdminPanelController
 
         $this->breadcrumb()->actionEdit();
         return $this->render('AdminUsersGroupBundle:Default:edit.html.twig', [
+            'tab' => $tab,
             'form' => $form->createView(),
-            'errors' => $form->getErrors()
+            'errors' => $form->getErrors(),
+            'group' => $group
         ]);
     }
 }

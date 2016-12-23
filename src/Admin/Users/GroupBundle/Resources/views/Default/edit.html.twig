@@ -1,7 +1,7 @@
 {% extends 'theme/admin.html.twig' %}
 
 {% block commandbar %}
-    <a href="{{ path('admin_users_group') }}" class="btn btn-default">انصراف و بازگشت</a>
+    <a href="{{ path('admin_users_group') }}" class="btn btn-warning">انصراف و بازگشت</a>
 {% endblock %}
 
 {% block body %}
@@ -11,12 +11,26 @@
             <h3 class="box-title bold">ویرایش مشخصات گروه</h3>
         </div>
         <!-- /.box-header -->
-        <form role="form" method="post">
+        <form role="form" method="post" id="form_update">
             <div class="box-body">
 
-                {% include ':field:title.html.twig' with { "form": form } only %}
-                {% include ':field:name.html.twig' with { "form": form } only %}
-                {% include ':field:memo.html.twig' with {"form": form } only %}
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" {% if tab == 'profile' %} class="active"{% endif %}><a href="#profile" onclick="$('#form_update').prop('action', '{{ path('admin_users_group_edit', {'id': group.id, 'tab': 'profile'}) }}')" aria-controls="profile" role="tab" data-toggle="tab">ویرایش پروفایل</a></li>
+                    <li role="presentation" {% if tab == 'access' %} class="active"{% endif %}><a href="#access" onclick="$('#form_update').prop('action', '{{ path('admin_users_group_edit', {'id': group.id, 'tab': 'access'}) }}')" aria-controls="access" role="tab" data-toggle="tab">مدیریت دسترسی ها</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'profile' %} active{% endif %}" id="profile">
+                        {% include ':field:title.html.twig' with { "form": form } only %}
+                        {% include ':field:name.html.twig' with { "form": form } only %}
+                        {% include ':field:memo.html.twig' with {"form": form } only %}
+                    </div>
+                    <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'access' %} active{% endif %}" id="access">
+                    </div>
+                </div>
+
 
             </div>
             <div class="box-footer no-border">

@@ -22,6 +22,10 @@ class BaseController extends Controller
     const FLASH_NOTICE = 'notice';
     const FLASH_SUCCESS = 'success';
 
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_USER = 'ROLE_USER';
+    const ROLE_BLOCKED = 'ROLE_BLOCKED';
+
     private $user_permissions = null;
     private $breadcrumb;
 
@@ -54,6 +58,14 @@ class BaseController extends Controller
         }
 
         return new PermissionManager($user_permissions);
+    }
+
+    protected function getRoles(){
+        return [
+            'ROLE_ADMIN' => 'مدیر سایت',
+            'ROLE_USER' => 'کاربر عادی',
+            'ROLE_BLOCKED' => 'تحریم شده'
+        ];
     }
 
     /**

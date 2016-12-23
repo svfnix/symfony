@@ -30,7 +30,6 @@ class User implements AdvancedUserInterface, \Serializable
 
     function __construct()
     {
-        $this->roles = array();
         $this->usergroup = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
@@ -55,8 +54,8 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=128, unique=true)
-     * @Assert\NotBlank(message="آدرس ایمیل معتبر نمی باشد")
-     * @Assert\Email
+     * @Assert\NotBlank(groups={"add", "update"}, message="آدرس ایمیل معتبر نمی باشد")
+     * @Assert\Email(groups={"add", "update"})
      */
     private $email;
 
@@ -71,7 +70,7 @@ class User implements AdvancedUserInterface, \Serializable
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=64)
-     * @Assert\NotBlank(message="رمز عبور معتبر نمی باشد")
+     * @Assert\NotBlank(groups={"add"}, message="رمز عبور معتبر نمی باشد")
      */
     private $password;
 
@@ -85,27 +84,28 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @var string
      *
-     * @Assert\NotBlank(message="نام و نام خانوادگی را وارد نمایید")
      * @ORM\Column(name="fullname", type="string", length=128, nullable=true)
+     * @Assert\NotBlank(groups={"add", "update"}, message="نام و نام خانوادگی را وارد نمایید")
      */
     private $fullname;
 
     /**
      * @var string
      *
-     * @Assert\NotBlank(message="شماره موبایل را وارد نمایید")
      * @ORM\Column(name="mobile", type="string", length=16, nullable=true)
      *
-     * @Assert\Regex(pattern="/^09[0-9]{9}$/", message="شماره وارد شده معتبر نمی باشد")
+     * @Assert\NotBlank(groups={"add", "update"}, message="شماره موبایل را وارد نمایید")
+     * @Assert\Regex(groups={"add", "update"}, pattern="/^09[0-9]{9}$/", message="شماره وارد شده معتبر نمی باشد")
      */
     private $mobile;
 
     /**
-     * @var array
+     * @var string
      *
-     * @ORM\Column(name="roles", type="json_array")
+     * @ORM\Column(name="role", type="string", length=32)
+     * @Assert\NotBlank(groups={"add", "update"}, message="نقشی انتخاب نشده است")
      */
-    private $roles;
+    private $role;
 
     /**
      * @var ArrayCollection
@@ -277,25 +277,13 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @param array $roles
-     *
-     * @return User
-     */
-    public function setRoles(array $roles)
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }
-
-    /**
      * @param $role
      *
      * @return User
      */
-    public function addRoles($role)
+    public function setRole($role)
     {
-        $this->roles[] = $role;
+        $this->role = $role;
 
         return $this;
     }
@@ -303,11 +291,19 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @return array
      */
-    public function getRoles(){
-        $roles = $this->roles;
-        $roles[] = 'ROLE_USER';
+    public function getRoles()
+    {
 
-        return array_unique($roles);
+        return [$this->role];
+    }
+
+    /**
+     * @return string
+     */
+    public function getRole()
+    {
+
+        return $this->role;
     }
 
     /**

@@ -11,10 +11,18 @@
 
 {% block datagrid_custom_toolbar %}
     <td>
+        <select id="filter-role" class="form-control input-sm" onchange="do_filter()">
+            <option value="">همه نقش ها</option>
+            {% for role,title in roles %}
+                <option value="{{ role }}">{{ title }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td>
         <select id="filter-group" class="form-control input-sm" onchange="do_filter()">
             <option value="">همه گروه های کاربری</option>
             {% for group in usergroup %}
-            <option value="{{ group.id }}">{{ group.title }}</option>
+                <option value="{{ group.id }}">{{ group.title }}</option>
             {% endfor %}
         </select>
     </td>
@@ -61,12 +69,20 @@
     }
     
     function do_filter() {
+        ajax_filter('role', $('#filter-role option:selected').val());
         ajax_filter('usergroup', $('#filter-group option:selected').val());
+
+        ajax_refresh_list();
+    }
+
+    function filter_role_reset() {
+        $('#filter-role').val('');
+        do_filter()
     }
 
     function filter_usergroup_reset() {
         $('#filter-group').val('');
-        ajax_filter('usergroup', null);
+        do_filter()
     }
     
     do_filter();

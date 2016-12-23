@@ -1,7 +1,7 @@
 {% extends 'theme/admin.html.twig' %}
 
 {% block commandbar %}
-    <a href="{{ path('admin_users_user') }}" class="btn btn-default">انصراف و بازگشت</a>
+    <a href="{{ path('admin_users_user') }}" class="btn btn-warning">انصراف و بازگشت</a>
 {% endblock %}
 
 {% block body %}
@@ -11,14 +11,14 @@
             <h3 class="box-title bold">افزودن کاربر جدید</h3>
         </div>
         <!-- /.box-header -->
-        <form role="form" method="post">
+        <form role="form" method="post" id="form_add">
             <div class="box-body">
 
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" {% if tab == 'profile' %} class="active"{% endif %}><a href="#profile" onclick="$('#form_update').prop('action', '{{ path('admin_users_user_add', {'id': user.id, 'tab': 'profile'}) }}')" aria-controls="profile" role="tab" data-toggle="tab">پروفایل</a></li>
-                    <li role="presentation" {% if tab == 'roles' %} class="active"{% endif %}><a href="#roles" onclick="$('#form_update').prop('action', '{{ path('admin_users_user_add', {'id': user.id, 'tab': 'roles'}) }}')" aria-controls="roles" role="tab" data-toggle="tab">نقش ها</a></li>
-                    <li role="presentation" {% if tab == 'credentials' %} class="active"{% endif %}><a href="#credentials" onclick="$('#form_update').prop('action', '{{ path('admin_users_user_add', {'id': user.id, 'tab': 'credentials'}) }}')" aria-controls="credentials" role="tab" data-toggle="tab">رمز عبور</a></li>
+                    <li role="presentation" {% if tab == 'profile' %} class="active"{% endif %}><a href="#profile" onclick="$('#form_add').prop('action', '{{ path('admin_users_user_add', {'id': user.id, 'tab': 'profile'}) }}')" aria-controls="profile" role="tab" data-toggle="tab">ویرایش پروفایل</a></li>
+                    <li role="presentation" {% if tab == 'roles' %} class="active"{% endif %}><a href="#roles" onclick="$('#form_add').prop('action', '{{ path('admin_users_user_add', {'id': user.id, 'tab': 'roles'}) }}')" aria-controls="roles" role="tab" data-toggle="tab">مدیریت نقش ها</a></li>
+                    <li role="presentation" {% if tab == 'credentials' %} class="active"{% endif %}><a href="#credentials" onclick="$('#form_add').prop('action', '{{ path('admin_users_user_add', {'id': user.id, 'tab': 'credentials'}) }}')" aria-controls="credentials" role="tab" data-toggle="tab">بروزرسانی رمز عبور</a></li>
                 </ul>
 
                 <!-- Tab panes -->
@@ -30,7 +30,8 @@
                         {% include ':field:memo.html.twig' with {"form": form} only %}
                     </div>
                     <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'roles' %} active{% endif %}" id="roles">
-                        {% include ':field:list.usergroup.html.twig' with {"form": form, "usergroup": usergroup, "user": user } only %}
+                        {% include ':field:role.html.twig' with {"form": form, "usergroup": usergroup, "user": user, "roles": roles, "default": true } only %}
+                        {% include ':field:usergroup.html.twig' with {"form": form, "usergroup": usergroup, "user": user } only %}
                     </div>
                     <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'credentials' %} active{% endif %}" id="credentials">
                         {% include ':field:password.html.twig' with { "form": form } only %}

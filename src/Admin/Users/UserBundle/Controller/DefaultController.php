@@ -2,7 +2,7 @@
 
 namespace Admin\Users\UserBundle\Controller;
 
-use Admin\Users\UserBundle\Form\Type\UserType;
+use Admin\Users\UserBundle\Form\UserType;
 use AppBundle\Entity\User;
 use AppBundle\Helper\App;
 use AppBundle\Wrappers\AdminPanelController;
@@ -67,6 +67,7 @@ class DefaultController extends AdminPanelController
 
         $this->breadcrumb()->actionDefault();
         return $this->render('AdminUsersUserBundle:Default:index.html.twig', [
+            'roles' => $this->getRoles(),
             'usergroup' => $repo->findAll()
         ]);
     }
@@ -82,7 +83,9 @@ class DefaultController extends AdminPanelController
         $repo = $em->getRepository('AppBundle:UserGroup');
 
         $user = new User();
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user, [
+            'validation_groups' => ['add']
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -104,7 +107,8 @@ class DefaultController extends AdminPanelController
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'user' => $user,
-            'usergroup' => $repo->findAll()
+            'usergroup' => $repo->findAll(),
+            'roles' => $this->getRoles()
         ]);
     }
 
@@ -120,13 +124,22 @@ class DefaultController extends AdminPanelController
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:UserGroup');
 
-        $form = $this->createForm(UserType::class, $user);
+        $default_password = $user->getPassword();
+        $form = $this->createForm(UserType::class, $user, [
+            'validation_groups' => ['update']
+        ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
             if ($form->isValid()) {
 
-                $user->setPassword(App::getInstance()->encodePassword($user, $user->getPassword()));
+                $update_password = $user->getPassword();
+                if(empty($update_password)){
+                    $user->setPassword($default_password);
+                }else{
+                    $user->setPassword(App::getInstance()->encodePassword($user, $update_password));
+                }
+
                 $em->merge($user);
                 $em->flush();
 
@@ -135,7 +148,8 @@ class DefaultController extends AdminPanelController
                 $this->addFlash(self::FLASH_ERROR, 'عملیات با خطا مواجه شد');
             }
         } else {
-            $form->get('password')->setData('');
+            $user->setPassword(null);
+            $form->setData($user);
         }
 
         $this->breadcrumb()->actionEdit();
@@ -144,7 +158,8 @@ class DefaultController extends AdminPanelController
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'user' => $user,
-            'usergroup' => $repo->findAll()
+            'usergroup' => $repo->findAll(),
+            'roles' => $this->getRoles()
         ]);
     }
 }

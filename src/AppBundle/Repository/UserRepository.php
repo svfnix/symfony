@@ -158,6 +158,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->from('AppBundle:User', 'u')
         ;
 
+        if(isset($filters['usergroup'])) {
+
+            $qb
+                ->join('u.usergroup', 'ug')
+                ->where('ug.id = :id')
+                ->setParameter('id', $filters['usergroup'])
+            ;
+        }
+
         if(!empty($search)) {
 
             $search = explode(' ', $search);
@@ -165,23 +174,22 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 $qb->andWhere($qb->expr()->like('CONCAT(' . implode(", ' ', ", [
                         'u.username',
                         'u.email',
-                        'u.name',
+                        'u.fullname',
                         'u.mobile'
                     ]) . ')', $qb->expr()->literal('%' . $q . '%')));
             }
         }
 
-        if(isset($filters['usergroup'])) {
+        if(isset($filters['role'])) {
 
             $qb
-                ->join('u.usergroup', 'ug')
-                ->where('ug.name = :name')
-                ->setParameter('name', $filters['usergroup'])
+                ->andWhere('u.role = :role')
+                ->setParameter('role', $filters['role'])
             ;
         }
 
         if(!empty($order_by)) {
-            $qb->orderBy("ug.{$order_by}", $sort);
+            $qb->orderBy("u.{$order_by}", $sort);
         }
 
         $qb

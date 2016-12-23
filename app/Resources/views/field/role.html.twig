@@ -1,0 +1,23 @@
+<div class="form-group{{ form.role.vars.valid == false ? ' has-error' : '' }}">
+    <label>نقش</label>
+    <select class="form-control" name="role">
+
+        {% set userroles = user.getRoles() %}
+
+        {% if default is defined and default %}
+        <option value="" {% if userroles|length == 0 %} selected="selected"{% endif %}>-- انتخاب نقش --</option>
+        {% endif %}
+
+        {% for role,title in roles %}
+        <option value="{{ role }}" {% if role in userroles %} selected="selected"{% endif %}>{{ title }}</option>
+        {% endfor %}
+
+    </select>
+</div>
+{% if form.role.vars.errors|length %}
+    <ul class="list-style-none padding-right-0px red">
+        {% for error in form.role.vars.errors %}
+            <li>{{ error.message|trans }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
