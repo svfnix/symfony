@@ -14,7 +14,7 @@ use AppBundle\Helper\App;
 
 class AdminUsersUserMenu
 {
-    public function createAdminMenu(Menu $menu){
+    public function inflateAdminMenu(Menu $menu){
 
         $router = App::getInstance()->getRouter();
 

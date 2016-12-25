@@ -9,6 +9,7 @@
 namespace AppBundle\Wrappers;
 
 
+use AppBundle\Helper\AccessList;
 use AppBundle\Helper\Menu;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +32,23 @@ class AdminPanelController extends BaseController
         }
 
         return $menu->getMenus();
+    }
+
+    /**
+     * @return array
+     */
+    protected function adminAccessList(){
+
+        $accessList = new AccessList();
+        $bundles = $this->getParameter('kernel.bundles');
+        foreach ($bundles as $bundle){
+            $bundle = new $bundle;
+            if(method_exists($bundle, 'inflateAccessList')){
+                $bundle->inflateAccessList($accessList);
+            }
+        }
+
+        return $accessList->getAccessList();
     }
 
     /**

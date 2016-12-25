@@ -24,6 +24,6 @@ class AdminUsersUserBundle extends Bundle
     public function inflateAdminMenu(Menu $menu)
     {
         $admin_menu = new AdminUsersUserMenu();
-        $admin_menu->createAdminMenu($menu);
+        $admin_menu->inflateAdminMenu($menu);
     }
 }
