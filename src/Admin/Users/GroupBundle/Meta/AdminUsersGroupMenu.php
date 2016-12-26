@@ -14,7 +14,7 @@ use AppBundle\Helper\App;
 
 class AdminUsersGroupMenu
 {
-    public function inflateAdminMenu(Menu $menu){
+    public function inflateAdminMenus(Menu $menu){
 
         $router = App::getInstance()->getRouter();
 
@@ -28,6 +28,7 @@ class AdminUsersGroupMenu
         $sub_menu_1->setSort(100);
         $sub_menu_1->setUrl($router->generate('admin_users_group'));
         $sub_menu_1->setIcon('circle-o');
+        $sub_menu_1->addPermission('admin_users_group');
         $sub_menu_1->setTags([
             'admin_users_group',
             'admin_users_group_add',

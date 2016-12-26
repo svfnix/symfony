@@ -27,7 +27,7 @@ trait Enabled
      *
      * @param string $enabled
      *
-     * @return User
+     * @return Object
      */
     public function setEnabled($enabled)
     {

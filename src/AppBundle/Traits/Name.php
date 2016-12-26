@@ -16,7 +16,8 @@ trait Name
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255, nullable=true)
+     * @ORM\Column(name="name", type="string", length=255)
+     * @Assert\NotBlank(message="نام را وارد نمایید")
      */
     private $name;
 
@@ -26,7 +27,7 @@ trait Name
      *
      * @param string $name
      *
-     * @return Cat
+     * @return Object
      */
     public function setName($name)
     {

@@ -17,6 +17,7 @@ class UserGroupType extends AbstractType
             ->add('title')
             ->add('name')
             ->add('memo')
+            ->add('permissions')
         ;
     }
     

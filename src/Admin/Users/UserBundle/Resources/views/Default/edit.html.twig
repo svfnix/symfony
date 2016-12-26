@@ -30,8 +30,8 @@
                         {% include ':field:memo.html.twig' with {"form": form} only %}
                     </div>
                     <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'roles' %} active{% endif %}" id="roles">
-                        {% include ':field:role.html.twig' with {"form": form, "usergroup": usergroup, "user": user, "roles": roles } only %}
-                        {% include ':field:usergroup.html.twig' with {"form": form, "usergroup": usergroup, "user": user } only %}
+                        {% include ':field:role.html.twig' with {"form": form, "user": user, "roles": roles } only %}
+                        {% include ':field:usergroups.html.twig' with {"form": form, "usergroups": usergroups, "user": user } only %}
                     </div>
                     <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'credentials' %} active{% endif %}" id="credentials">
                         {% include ':field:password.html.twig' with { "form": form } only %}

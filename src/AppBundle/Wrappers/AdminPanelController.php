@@ -9,8 +9,8 @@
 namespace AppBundle\Wrappers;
 
 
-use AppBundle\Helper\AccessList;
 use AppBundle\Helper\Menu;
+use AppBundle\Helper\Permission;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -20,14 +20,14 @@ class AdminPanelController extends BaseController
     /**
      * @return array
      */
-    protected function adminMenu(){
+    protected function adminMenus(){
 
         $menu = new Menu();
         $bundles = $this->getParameter('kernel.bundles');
         foreach ($bundles as $bundle){
             $bundle = new $bundle;
-            if(method_exists($bundle, 'inflateAdminMenu')){
-                $bundle->inflateAdminMenu($menu);
+            if(method_exists($bundle, 'inflateAdminMenus')){
+                $bundle->inflateAdminMenus($menu);
             }
         }
 
@@ -37,18 +37,18 @@ class AdminPanelController extends BaseController
     /**
      * @return array
      */
-    protected function adminAccessList(){
+    protected function adminPermissions(){
 
-        $accessList = new AccessList();
+        $permissions = new Permission();
         $bundles = $this->getParameter('kernel.bundles');
         foreach ($bundles as $bundle){
             $bundle = new $bundle;
-            if(method_exists($bundle, 'inflateAccessList')){
-                $bundle->inflateAccessList($accessList);
+            if(method_exists($bundle, 'inflateAdminPermissions')){
+                $bundle->inflateAdminPermissions($permissions);
             }
         }
 
-        return $accessList->getAccessList();
+        return $permissions->getPermissionGroups();
     }
 
     /**
@@ -98,8 +98,9 @@ class AdminPanelController extends BaseController
     {
         return parent::render($view, array_merge(
             $parameters, [
-                'sidebar_menu' => $this->adminMenu(),
-                'breadcrumb' => $this->breadcrumb()->getBreadcrumb()
+                'theme_sidebar_menu' => $this->adminMenus(),
+                'theme_breadcrumb' => $this->breadcrumb()->getBreadcrumb(),
+                'theme_user_permissions' => $this->getUserPermissions()
             ]));
     }
 }

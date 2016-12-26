@@ -66,7 +66,7 @@ class ResetController extends BaseController
                         $user->getEmail(),
                         $this->get('translator')->trans('Verification link'),
                         $this->renderView('mail/reset_password_verification.html.twig', [
-                            'name' => $user->getname(),
+                            'fullname' => $user->getFullname(),
                             'token' => $e_token,
                         ])
                     );
@@ -137,7 +137,7 @@ class ResetController extends BaseController
                 $user->getEmail(),
                 $this->get('translator')->trans('رمز عبور شما تغییر یافت'),
                 $this->renderView('mail/reset_password_done.html.twig', [
-                    'name' => $user->getname()
+                    'fullname' => $user->getFullname()
                 ])
             );
 

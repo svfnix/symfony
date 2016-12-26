@@ -16,6 +16,7 @@ use AppBundle\Traits\Base;
 use AppBundle\Traits\Enabled;
 use AppBundle\Traits\Metadata;
 use AppBundle\Traits\Timestampable;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Group
@@ -36,8 +37,8 @@ class UserGroup
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer")
      * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
@@ -45,7 +46,8 @@ class UserGroup
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=256, nullable=true)
+     * @ORM\Column(name="title", type="string", length=256)
+     * @Assert\NotBlank(message="عنوان گروه وارد نشده است")
      */
     private $title;
 
@@ -54,7 +56,7 @@ class UserGroup
      *
      * @ORM\Column(name="permissions", type="json_array")
      */
-    private $permissions = array();
+    private $permissions = [];
 
     /**
      * @return string
@@ -94,20 +96,11 @@ class UserGroup
      * @param array $permissions
      * @return $this
      */
-    public function setPermissions(array $permissions)
+    public function setPermissions($permissions)
     {
-        $this->permissions = $permissions;
-
-        return $this;
-    }
-
-    /**
-     * @param $permission
-     * @return $this
-     */
-    public function addPermission($permission)
-    {
-        $this->permissions[] = $permission;
+        if(is_array($permissions)) {
+            $this->permissions = $permissions;
+        }
 
         return $this;
     }

@@ -40,6 +40,6 @@ class UserPanelController extends BaseController
      */
     protected function render($view, array $parameters = array(), Response $response = null)
     {
-        return parent::render($view, array_merge($parameters, ['sidebar_menu' => $this->userMenu()]));
+        return parent::render($view, array_merge($parameters, ['theme_sidebar_menu' => $this->userMenu()]));
     }
 }

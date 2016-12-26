@@ -26,6 +26,7 @@ class AppExtension extends Twig_Extension
     {
         return array(
             'grid_column' => new Twig_Function_Method($this, 'grid_column'),
+            'has_access' => new Twig_Function_Method($this, 'has_access'),
         );
     }
 
@@ -75,6 +76,18 @@ class AppExtension extends Twig_Extension
         }
 
         return $title;
+    }
+
+    /**
+     * @param $needed
+     * @param $permissions
+     * @return bool
+     */
+    public function has_access($needed, $permissions)
+    {
+        $intersect = array_intersect($needed, $permissions);
+
+        return $intersect;
     }
 
 }

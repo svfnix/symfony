@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class RegisterController extends BaseController
@@ -18,12 +19,12 @@ class RegisterController extends BaseController
      * @Route("/register", name="register")
      * @Template()
      * @param Request $request
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return array|RedirectResponse
      */
     public function index(Request $request)
     {
         $form = $this->createFormBuilder(new User())
-            ->add('name', TextType::class)
+            ->add('fullname', TextType::class)
             ->add('mobile', TextType::class)
             ->add('email', EmailType::class)
             ->add('password', PasswordType::class)
@@ -44,7 +45,7 @@ class RegisterController extends BaseController
                 $user->getEmail(),
                 $this->get('translator')->trans('ثبت نام با موفقیت انجام شد'),
                 $this->renderView('mail/register_done.html.twig', [
-                    'name' => $user->getname()
+                    'fullname' => $user->getFullname()
                 ])
             );
 

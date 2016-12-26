@@ -66,9 +66,12 @@ class Menu
 
     /**
      * @param $name
+     * @return $this
      */
     function removeMenu($name){
         unset($this->stack[$name]);
+
+        return $this;
     }
 
     /**
@@ -92,10 +95,13 @@ class Menu
 
     /**
      * @param mixed $parent
+     * @return $this
      */
     public function setParent($parent)
     {
         $this->parent = $parent;
+
+        return $this;
     }
 
     /**
@@ -121,6 +127,7 @@ class Menu
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -134,10 +141,13 @@ class Menu
 
     /**
      * @param mixed $sort
+     * @return $this
      */
     public function setSort($sort)
     {
         $this->sort = $sort;
+
+        return $this;
     }
 
     /**
@@ -150,10 +160,13 @@ class Menu
 
     /**
      * @param mixed $url
+     * @return $this
      */
     public function setUrl($url)
     {
         $this->url = $url;
+
+        return $this;
     }
 
     /**
@@ -166,10 +179,13 @@ class Menu
 
     /**
      * @param mixed $icon
+     * @return $this
      */
     public function setIcon($icon)
     {
         $this->icon = $icon;
+
+        return $this;
     }
 
     /**
@@ -182,10 +198,13 @@ class Menu
 
     /**
      * @param mixed $target
+     * @return $this
      */
     public function setTarget($target)
     {
         $this->target = $target;
+
+        return $this;
     }
 
     /**
@@ -199,6 +218,7 @@ class Menu
     /**
      * @param $title
      * @param $color
+     * @return $this
      */
     public function setLabel($title, $color)
     {
@@ -206,14 +226,19 @@ class Menu
             'title' => $title,
             'color' => $color
         ];
+
+        return $this;
     }
 
     /**
      * @param mixed $labels
+     * @return $this
      */
     public function setLabels($labels)
     {
         $this->labels = $labels;
+
+        return $this;
     }
 
     /**
@@ -226,10 +251,13 @@ class Menu
 
     /**
      * @param array $stack
+     * @return $this
      */
     public function setStack(array $stack)
     {
         $this->stack = $stack;
+
+        return $this;
     }
 
     /**
@@ -240,6 +268,9 @@ class Menu
         return $this->tags;
     }
 
+    /**
+     * @return $this
+     */
     public function refreshTags()
     {
         $this->tags = [];
@@ -247,10 +278,13 @@ class Menu
         foreach($this->stack as $menu){
             $this->tags = array_merge($this->tags, $menu->tags);
         }
+
+        return $this;
     }
 
     /**
      * @param $tag
+     * @return $this
      */
     public function addTag($tag)
     {
@@ -259,10 +293,13 @@ class Menu
         if($this->parent){
             $this->parent->addTag($tag);
         }
+
+        return $this;
     }
 
     /**
      * @param mixed $tags
+     * @return $this
      */
     public function setTags($tags)
     {
@@ -271,6 +308,8 @@ class Menu
         if($this->parent){
             $this->parent->refreshTags();
         }
+
+        return $this;
     }
 
     /**
@@ -282,19 +321,46 @@ class Menu
     }
 
     /**
-     * @param array $permission
-     * @internal param array $permissions
+     * @return $this
      */
-    public function setPermission(array $permission)
+    public function refreshPermissions()
+    {
+        $this->permissions = [];
+
+        foreach($this->stack as $menu){
+            $this->permissions = array_merge($this->permissions, $menu->permissions);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param $permission
+     * @return $this
+     */
+    public function addPermission($permission)
     {
         $this->permissions[] = $permission;
+
+        if($this->parent){
+            $this->parent->refreshPermissions();
+        }
+
+        return $this;
     }
 
     /**
      * @param array $permissions
+     * @return $this
      */
     public function setPermissions(array $permissions)
     {
         $this->permissions = $permissions;
+
+        if($this->parent){
+            $this->parent->refreshPermissions();
+        }
+
+        return $this;
     }
 }

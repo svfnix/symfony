@@ -17,12 +17,12 @@
 
                 <form action="{{ path('register') }}" method="post" novalidate="novalidate">
 
-                    <div class="form-group{{ form.name.vars.valid == false ? ' has-error' : '' }}">
+                    <div class="form-group{{ form.fullname.vars.valid == false ? ' has-error' : '' }}">
                         <label>نام و نام خانوادگی</label>
-                        {% if form.name.vars.errors|length > 0 %}
+                        {% if form.fullname.vars.errors|length > 0 %}
                             <div class="alert alert-flat alert-danger-flat" role="alert">
                                 <ul class="list-style-none padding-right-5px">
-                                    {% for error in form.name.vars.errors %}
+                                    {% for error in form.fullname.vars.errors %}
                                         <li><i class="fa fa-quote-right margin-left-5px"></i> {{ error.message|trans }}</li>
                                     {% endfor %}
                                 </ul>
@@ -30,7 +30,7 @@
                         {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
-                            <input type="text" class="form-control" id="name" name="{{ form.name.vars.full_name }}" value="{{ form.name.vars.value }}" placeholder="نام و نام خانوادگی را وارد نمایید" />
+                            <input type="text" class="form-control" id="fullname" name="fullname" value="{{ form.fullname.vars.value }}" placeholder="نام و نام خانوادگی را وارد نمایید" />
                         </div>
                     </div>
 
@@ -47,7 +47,7 @@
                         {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-mobile"></i></div>
-                            <input type="text" class="form-control" id="mobile" name="{{ form.mobile.vars.full_name }}" value="{{ form.mobile.vars.value }}" placeholder="شماره موبایل را وارد نمایید" />
+                            <input type="text" class="form-control" id="mobile" name="mobile" value="{{ form.mobile.vars.value }}" placeholder="شماره موبایل را وارد نمایید" />
                         </div>
                     </div>
 
@@ -64,7 +64,7 @@
                         {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-envelope"></i></div>
-                            <input type="text" class="form-control" id="email" name="{{ form.email.vars.full_name }}" value="{{ form.email.vars.value }}" placeholder="آدرس ایمیل را وارد نمایید" />
+                            <input type="text" class="form-control" id="email" name="email" value="{{ form.email.vars.value }}" placeholder="آدرس ایمیل را وارد نمایید" />
                         </div>
                     </div>
 
@@ -81,7 +81,7 @@
                         {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-hashtag"></i></div>
-                            <input type="password" class="form-control" id="password" name="{{ form.password.vars.full_name }}" placeholder="کلمه عبور را وارد نمایید" />
+                            <input type="password" class="form-control" id="password" name="password" placeholder="کلمه عبور را وارد نمایید" />
                             <i class="fa fa-eye-slash form-control-feedback padding-10px mouse-hand pointer-events-inherit password-key gray-hover"></i>
                         </div>
                     </div>

@@ -30,7 +30,7 @@ class User implements AdvancedUserInterface, \Serializable
 
     function __construct()
     {
-        $this->usergroup = new ArrayCollection();
+        $this->usergroups = new ArrayCollection();
         $this->createdAt = new \DateTime();
     }
 
@@ -112,11 +112,11 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\UserGroup", cascade={"persist"})
      * @ORM\JoinTable(name="user_usergroup",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="usergroup_id", referencedColumnName="id")}
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="usergroup_id", referencedColumnName="id", onDelete="cascade")}
      *      )
      */
-    private $usergroup;
+    private $usergroups;
 
     /**
      * @return int
@@ -314,7 +314,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function addUsergroup(UserGroup $usergroup)
     {
-        $this->usergroup[] = $usergroup;
+        $this->usergroups[] = $usergroup;
 
         return $this;
     }
@@ -326,7 +326,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function removeUsergroup(UserGroup $usergroup)
     {
-        $this->usergroup->removeElement($usergroup);
+        $this->usergroups->removeElement($usergroup);
 
         return $this;
     }
@@ -334,9 +334,9 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @return ArrayCollection
      */
-    public function getUsergroup()
+    public function getUsergroups()
     {
-        return $this->usergroup;
+        return $this->usergroups;
     }
 
     /**
@@ -426,10 +426,10 @@ class User implements AdvancedUserInterface, \Serializable
             $this->salt,
             $this->password,
             $this->resetPasswordToken,
-            $this->name,
+            $this->fullname,
             $this->mobile,
-            $this->roles,
-            $this->usergroup,
+            $this->role,
+            $this->usergroups,
         ));
     }
 
@@ -452,10 +452,10 @@ class User implements AdvancedUserInterface, \Serializable
             $this->salt,
             $this->password,
             $this->resetPasswordToken,
-            $this->name,
+            $this->fullname,
             $this->mobile,
-            $this->roles,
-            $this->usergroup,
+            $this->role,
+            $this->usergroups,
             ) = unserialize($serialized);
     }
 }

@@ -30,6 +30,7 @@ class DefaultController extends AdminPanelController
 
         return $this->render('AdminUsersUserBundle:Default:remote/list.html.twig', [
             'items' => $response,
+            'roles' => $this->getRoles(),
             'filters' => $filters,
             'pagination' => $this->pagination($response->count(), $filters['page'], $filters['count'])
         ]);
@@ -68,7 +69,7 @@ class DefaultController extends AdminPanelController
         $this->breadcrumb()->actionDefault();
         return $this->render('AdminUsersUserBundle:Default:index.html.twig', [
             'roles' => $this->getRoles(),
-            'usergroup' => $repo->findAll()
+            'usergroups' => $repo->findAll()
         ]);
     }
 
@@ -107,7 +108,7 @@ class DefaultController extends AdminPanelController
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'user' => $user,
-            'usergroup' => $repo->findAll(),
+            'usergroups' => $repo->findAll(),
             'roles' => $this->getRoles()
         ]);
     }
@@ -158,7 +159,7 @@ class DefaultController extends AdminPanelController
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'user' => $user,
-            'usergroup' => $repo->findAll(),
+            'usergroups' => $repo->findAll(),
             'roles' => $this->getRoles()
         ]);
     }

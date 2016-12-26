@@ -2,16 +2,16 @@
 
 namespace AppBundle\Helper;
 
-class AccessList
+class Permission
 {
 
     private $priority;
     private $parent;
 
     private $title;
-    private $name;
     private $sort;
     private $stack = [];
+    private $permissions = [];
 
     /**
      * Menu constructor.
@@ -21,23 +21,24 @@ class AccessList
         $this->priority = $_priority;
         $this->sort = 0;
         $this->stack = [];
+        $this->permissions = [];
     }
 
     /**
      * @param $name
      * @param $_priority
-     * @return AccessList|mixed
+     * @return Permission|mixed
      */
-    function addAccessGroup($name, $_priority=0) {
+    function addPermissionGroup($name, $_priority=0) {
 
         if(isset($this->stack[$name])){
             if($this->stack[$name]->getPriority() >= $_priority){
                 return $this->stack[$name];
             }
-            $list = new AccessList($_priority);
+            $list = new Permission($_priority);
             $list->setStack($this->stack[$name]->getStack());
         } else {
-            $list = new AccessList($_priority);
+            $list = new Permission($_priority);
         }
 
         $list->setParent($this);
@@ -48,23 +49,23 @@ class AccessList
 
     /**
      * @param $name
-     * @return AccessList
+     * @return Permission
      */
-    function getAccessGroup($name){
+    function getPermissionGroup($name){
         return $this->stack[$name];
     }
 
     /**
      * @param $name
      */
-    function removeAccessGroup($name){
+    function removePermissionGroup($name){
         unset($this->stack[$name]);
     }
 
     /**
      * @return array
      */
-    function getAccessGroups(){
+    function getPermissionGroups(){
         usort($this->stack, function ($item1, $item2) {
             return $item1->getSort() <=> $item2->getSort();
         });
@@ -82,10 +83,13 @@ class AccessList
 
     /**
      * @param mixed $parent
+     * @return $this
      */
     public function setParent($parent)
     {
         $this->parent = $parent;
+
+        return $this;
     }
 
     /**
@@ -106,11 +110,12 @@ class AccessList
 
     /**
      * @param mixed $title
-     * @return Menu
+     * @return $this
      */
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -124,10 +129,13 @@ class AccessList
 
     /**
      * @param mixed $sort
+     * @return $this
      */
     public function setSort($sort)
     {
         $this->sort = $sort;
+
+        return $this;
     }
 
     /**
@@ -140,10 +148,13 @@ class AccessList
 
     /**
      * @param array $stack
+     * @return $this
      */
     public function setStack(array $stack)
     {
         $this->stack = $stack;
+
+        return $this;
     }
 
     /**
@@ -155,19 +166,25 @@ class AccessList
     }
 
     /**
-     * @param array $permission
-     * @internal param array $permissions
+     * @param $name
+     * @param $title
+     * @return $this
      */
-    public function setPermission(array $permission)
+    public function addPermission($name, $title)
     {
-        $this->permissions[] = $permission;
+        $this->permissions[$name] = $title;
+
+        return $this;
     }
 
     /**
      * @param array $permissions
+     * @return $this
      */
     public function setPermissions(array $permissions)
     {
         $this->permissions = $permissions;
+
+        return $this;
     }
 }

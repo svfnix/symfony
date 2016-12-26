@@ -17,7 +17,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" {% if tab == 'profile' %} class="active"{% endif %}><a href="#profile" onclick="$('#form_update').prop('action', '{{ path('admin_users_group_edit', {'id': group.id, 'tab': 'profile'}) }}')" aria-controls="profile" role="tab" data-toggle="tab">ویرایش پروفایل</a></li>
-                    <li role="presentation" {% if tab == 'access' %} class="active"{% endif %}><a href="#access" onclick="$('#form_update').prop('action', '{{ path('admin_users_group_edit', {'id': group.id, 'tab': 'access'}) }}')" aria-controls="access" role="tab" data-toggle="tab">مدیریت دسترسی ها</a></li>
+                    <li role="presentation" {% if tab == 'permissions' %} class="active"{% endif %}><a href="#permissions" onclick="$('#form_update').prop('action', '{{ path('admin_users_group_edit', {'id': group.id, 'tab': 'permissions'}) }}')" aria-controls="permissions" role="tab" data-toggle="tab">مدیریت دسترسی ها</a></li>
                 </ul>
 
                 <!-- Tab panes -->
@@ -27,10 +27,10 @@
                         {% include ':field:name.html.twig' with { "form": form } only %}
                         {% include ':field:memo.html.twig' with {"form": form } only %}
                     </div>
-                    <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'access' %} active{% endif %}" id="access">
+                    <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'permissions' %} active{% endif %}" id="permissions">
+                        {% include ':field:permissions.html.twig' with {"form": form, "permissions": permissions } only %}
                     </div>
                 </div>
-
 
             </div>
             <div class="box-footer no-border">

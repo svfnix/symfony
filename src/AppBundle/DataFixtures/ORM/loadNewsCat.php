@@ -6,7 +6,7 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use News\CategoryBundle\Entity\Cat;
 
-class LoadUserData implements FixtureInterface
+class LoadNewsCat implements FixtureInterface
 {
     public function load(ObjectManager $manager)
     {

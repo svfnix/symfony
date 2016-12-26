@@ -1,0 +1,35 @@
+<div class="form-group">
+    {% for permid,permission in permissions %}
+        <label><input type="checkbox" id="perm_{{ permid }}" /> {{ permission.title }}</label>
+        <div class="list-checkbox">
+                <div class="row">
+                    {% for name,title in permission.permissions %}
+                        <div class="col-sm-6 col-md-4 col-lg-3"><label><input type="checkbox" class="perm_{{ permid }}_item" name="permissions[]" value="{{ name }}" {% if name in form.vars.value.permissions %} checked="checked"{% endif %}> {{ title }}</label></div>
+                    {% endfor %}
+                </div>
+        </div>
+        <script>
+                $('#perm_{{ permid }}').change(function(){
+                    if($(this).is(':checked')){
+                        $('.perm_{{ permid }}_item').prop('checked', true);
+                    } else {
+                        $('.perm_{{ permid }}_item').prop('checked', false);
+                    }
+                });
+
+                $('.perm_{{ permid }}_item').change(function(){
+                    if($(".perm_{{ permid }}_item:not(:checked)").length){
+                        $('#perm_{{ permid }}').prop('checked', false);
+                    } else {
+                        $('#perm_{{ permid }}').prop('checked', true);
+                    }
+                });
+
+                if($(".perm_{{ permid }}_item:not(:checked)").length){
+                    $('#perm_{{ permid }}').prop('checked', false);
+                } else {
+                    $('#perm_{{ permid }}').prop('checked', true);
+                }
+        </script>
+    {% endfor %}
+</div>

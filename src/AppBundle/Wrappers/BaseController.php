@@ -30,41 +30,32 @@ class BaseController extends Controller
     private $breadcrumb;
 
     /**
-     * @param null $bundle
      * @return PermissionManager
      */
-    protected function getUserPermissions($bundle=null){
+    protected function getUserPermissions(){
 
         $app = App::getInstance();
         if(!$this->user_permissions){
 
-            $groups = $app->getUser()->getGroups();
+            $groups = $app->getUser()->getUsergroups();
 
-            $permissions = [];
+            $this->user_permissions = [];
             foreach ($groups as $group){
-                $permissions = array_merge($permissions, $group->getPermissions());
+                $this->user_permissions = array_merge($this->user_permissions, $group->getPermissions());
             }
-
-            $this->user_permissions = $permissions;
         }
 
-        if(!$bundle){
-            $bundle = $app->getBundle();
-        }
-
-        $user_permissions = [];
-        if(isset($this->user_permissions[$bundle])) {
-            $user_permissions = $this->user_permissions[$bundle];
-        }
-
-        return new PermissionManager($user_permissions);
+        return array_unique($this->user_permissions);
     }
 
+    /**
+     * @return array
+     */
     protected function getRoles(){
         return [
             'ROLE_ADMIN' => 'مدیر سایت',
             'ROLE_USER' => 'کاربر عادی',
-            'ROLE_BLOCKED' => 'تحریم شده'
+            'ROLE_BLOCKED' => 'کاربر تحریم شده'
         ];
     }
 

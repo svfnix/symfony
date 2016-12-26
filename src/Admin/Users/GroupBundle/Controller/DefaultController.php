@@ -67,34 +67,43 @@ class DefaultController extends AdminPanelController
 
     /**
      * @param Request $request
+     * @param $tab
      * @return string
-     * @Route("/add", name="admin_users_group_add")
+     * @Route("/add/{tab}", name="admin_users_group_add", defaults={"tab": "profile"})
      */
-    public function add(Request $request)
+    public function add(Request $request, $tab)
     {
 
         $group = new UserGroup();
         $form = $this->createForm(UserGroupType::class, $group);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->persist($group);
-            $em->flush();
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->persist($group);
+                $em->flush();
 
-            return $this->returnSuccess('admin_users_group');
+                return $this->returnSuccess('admin_users_group');
+            } else {
+                $this->addFlash(self::FLASH_ERROR, 'عملیات با خطا مواجه شد');
+            }
         }
 
         $this->breadcrumb()->actionAdd();
         return $this->render('AdminUsersGroupBundle:Default:add.html.twig', [
+            'tab' => $tab,
             'form' => $form->createView(),
-            'errors' => $form->getErrors()
+            'errors' => $form->getErrors(),
+            'group' => $group,
+            'permissions' => $this->adminPermissions()
         ]);
     }
 
     /**
      * @param UserGroup $group
      * @param Request $request
+     * @param $tab
      * @return string
      * @Route("/edit/{id}/{tab}", name="admin_users_group_edit", defaults={"tab": "profile"}, requirements={"id": "\d+"})
      */
@@ -103,13 +112,17 @@ class DefaultController extends AdminPanelController
         $form = $this->createForm(UserGroupType::class, $group);
 
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
 
-            $em = $this->getDoctrine()->getEntityManager();
-            $em->merge($group);
-            $em->flush();
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->merge($group);
+                $em->flush();
 
-            return $this->returnSuccess('admin_users_group');
+                return $this->returnSuccess('admin_users_group');
+            } else {
+                $this->addFlash(self::FLASH_ERROR, 'عملیات با خطا مواجه شد');
+            }
         }
 
         $this->breadcrumb()->actionEdit();
@@ -117,7 +130,8 @@ class DefaultController extends AdminPanelController
             'tab' => $tab,
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
-            'group' => $group
+            'group' => $group,
+            'permissions' => $this->adminPermissions()
         ]);
     }
 }

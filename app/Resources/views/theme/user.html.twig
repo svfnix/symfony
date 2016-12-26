@@ -302,7 +302,7 @@
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
 
-                        {% for menu in sidebar_menu %}
+                        {% for menu in theme_sidebar_menu %}
                             <li class="treeview{% if app.request.get('_route') in menu.getTags() %} active{% endif %}">
                                 <a href="#">
                                     <i class="fa fa-{{ menu.getIcon() }}"></i>
