@@ -159,7 +159,7 @@ class DefaultController extends AdminPanelController
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'user' => $user,
-            'usergroups' => $repo->findAll(),
+            'usergroup' => $repo->findAll(),
             'roles' => $this->getRoles()
         ]);
     }

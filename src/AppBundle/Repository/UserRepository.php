@@ -172,9 +172,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $search = explode(' ', $search);
             foreach ($search as $q) {
                 $qb->andWhere($qb->expr()->like('CONCAT(' . implode(", ' ', ", [
-                        'u.username',
-                        'u.email',
                         'u.fullname',
+                        'u.email',
                         'u.mobile'
                     ]) . ')', $qb->expr()->literal('%' . $q . '%')));
             }
