@@ -3,13 +3,11 @@
 {% block layout_body %}
 
     <div class="row margin-top-100px">
-        <div class="col-sm-4 col-sm-offset-4">
+        <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4">
 
-            {% if error %}
+            {% if error is defined  %}
                 <div class="alert alert-error-flat margin-bottom-15px" role="alert">
-                    <ul class="list-style-none padding-right-15px">
-                        <li><i class="fa fa-quote-right  margin-left-5px"></i> {{ error.message|trans }}</li>
-                    </ul>
+                    {{ error }}
                 </div>
             {% endif %}
 
@@ -19,71 +17,55 @@
 
                     <div class="form-group{{ form.fullname.vars.valid == false ? ' has-error' : '' }}">
                         <label>نام و نام خانوادگی</label>
-                        {% if form.fullname.vars.errors|length > 0 %}
-                            <div class="alert alert-flat alert-danger-flat" role="alert">
-                                <ul class="list-style-none padding-right-5px">
-                                    {% for error in form.fullname.vars.errors %}
-                                        <li><i class="fa fa-quote-right margin-left-5px"></i> {{ error.message|trans }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-user"></i></div>
                             <input type="text" class="form-control" id="fullname" name="fullname" value="{{ form.fullname.vars.value }}" placeholder="نام و نام خانوادگی را وارد نمایید" />
                         </div>
+                        {% if form.fullname.vars.errors|length > 0 %}
+                            <div class="field-error" role="alert">
+                                {{ form.fullname.vars.errors[0].message|trans }}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="form-group{{ form.mobile.vars.valid == false ? ' has-error' : '' }}">
                         <label>شماره موبایل</label>
-                        {% if form.mobile.vars.errors|length > 0 %}
-                            <div class="alert alert-flat alert-danger-flat" role="alert">
-                                <ul class="list-style-none padding-right-5px">
-                                    {% for error in form.mobile.vars.errors %}
-                                        <li><i class="fa fa-quote-right margin-left-5px"></i> {{ error.message|trans }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-mobile"></i></div>
                             <input type="text" class="form-control" id="mobile" name="mobile" value="{{ form.mobile.vars.value }}" placeholder="شماره موبایل را وارد نمایید" />
                         </div>
+                        {% if form.mobile.vars.errors|length > 0 %}
+                            <div class="field-error" role="alert">
+                                {{ form.mobile.vars.errors[0].message|trans }}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="form-group{{ form.email.vars.valid == false ? ' has-error' : '' }}">
                         <label>آدرس ایمیل</label>
-                        {% if form.email.vars.errors|length > 0 %}
-                            <div class="alert alert-flat alert-danger-flat" role="alert">
-                                <ul class="list-style-none padding-right-5px">
-                                    {% for error in form.email.vars.errors %}
-                                        <li><i class="fa fa-quote-right margin-left-5px"></i> {{ error.message|trans }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-envelope"></i></div>
                             <input type="text" class="form-control" id="email" name="email" value="{{ form.email.vars.value }}" placeholder="آدرس ایمیل را وارد نمایید" />
                         </div>
+                        {% if form.email.vars.errors|length > 0 %}
+                            <div class="field-error" role="alert">
+                                {{ form.email.vars.errors[0].message|trans }}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="form-group has-feedback form-password{{ form.password.vars.valid == false ? ' has-error' : '' }}">
                         <label>کلمه عبور </label>
-                        {% if form.password.vars.errors|length > 0 %}
-                            <div class="alert alert-flat alert-danger-flat" role="alert">
-                                <ul class="list-style-none padding-right-5px">
-                                    {% for error in form.password.vars.errors %}
-                                        <li><i class="fa fa-quote-right margin-left-5px"></i> {{ error.message|trans }}</li>
-                                    {% endfor %}
-                                </ul>
-                            </div>
-                        {% endif %}
                         <div class="input-group">
                             <div class="input-group-addon"><i class="fa fa-hashtag"></i></div>
                             <input type="password" class="form-control" id="password" name="password" placeholder="کلمه عبور را وارد نمایید" />
                             <i class="fa fa-eye-slash form-control-feedback padding-10px mouse-hand pointer-events-inherit password-key gray-hover"></i>
                         </div>
+                        {% if form.password.vars.errors|length > 0 %}
+                            <div class="field-error" role="alert">
+                                {{ form.password.vars.errors[0].message|trans }}
+                            </div>
+                        {% endif %}
                     </div>
 
                     <div class="margin-top-30px"></div>

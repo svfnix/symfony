@@ -23,19 +23,24 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
      */
     public function load(ObjectManager $manager)
     {
+
         $user = new User();
+        $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+
         $user
             ->setUsername('user')
             ->setEmail('user@domain.tld')
-            ->setPassword(App::getInstance()->encodePassword($user, 'passwd'));
+            ->setPassword($encoder->encodePassword($user, 'passwd'));
 
         $manager->persist($user);
 
         $admin = new User();
+        $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
+
         $admin
             ->setUsername('admin')
             ->setEmail('admin@domain.tld')
-            ->setPassword(App::getInstance()->encodePassword($admin, 'passwd'))
+            ->setPassword($encoder->encodePassword($admin, 'passwd'))
             ->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($admin);

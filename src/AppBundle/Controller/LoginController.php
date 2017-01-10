@@ -17,21 +17,19 @@ class LoginController extends BaseController
 
     /**
      * @Route("/login", name="login")
-     * @Template()
      */
     public function index()
     {
         $authenticationUtils = $this->get('security.authentication_utils');
 
-        return array(
+        return $this->render('AppBundle:Login:index.html.twig', [
             'last_username' => $authenticationUtils->getLastUsername(),
             'error'         => $authenticationUtils->getLastAuthenticationError()
-        );
+        ]);
     }
 
     /**
      * @Route("/logout", name="logout")
-     * @Template()
      */
     public function logout()
     {

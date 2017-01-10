@@ -1,3 +1,0 @@
-admin_users_user_homepage:
-    path:     /
-    defaults: { _controller: AdminUsersUserBundle:Default:index }

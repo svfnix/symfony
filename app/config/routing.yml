@@ -1,10 +1,12 @@
 src:
-    resource: routing_custom.yml
+  resource: routing_custom.yml
 
-app:
-  resource: "@AppBundle/Controller/"
-  type:     annotation
+AdminUserBundle:
+  resource: "@AdminUserBundle/Resources/config/routing.yml"
 
+AdminCommunicationBundle:
+  resource: "@AdminCommunicationBundle/Resources/config/routing.yml"
 
-
+UserSettingBundle:
+  resource: "@UserSettingBundle/Resources/config/routing.yml"
 

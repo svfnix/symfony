@@ -39,3 +39,38 @@ body{
    background: #FAFAFA;
    margin: 0px 0px 15px 0px;
  }
+
+.field-error{
+  background: #fff8d7;
+  border: 1px solid #ffe868;
+  padding: 10px 15px;
+  box-shadow: none;
+  line-height: 20px;
+  text-shadow: 0 1px 0 hsla(0, 0%, 100%, .2);
+  font-size: 14px;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 20px;
+  position: relative;
+}
+
+.field-error:before{
+  border: solid;
+  border-color: #ffe868 transparent;
+  border-width: 0px 10px 10px;
+  content: "";
+  position: absolute;
+  z-index: 20;
+  top: -10px;
+  right: 10px;
+}
+.field-error:after{
+  border: solid;
+  border-color: #fff8d7 transparent;
+  border-width: 0px 10px 10px;
+  content: "";
+  position: absolute;
+  z-index: 21;
+  top: -9px;
+  right: 10px;
+}

@@ -1,3 +1,0 @@
-news_category_homepage:
-    path:     /
-    defaults: { _controller: NewsCategoryBundle:Default:index }

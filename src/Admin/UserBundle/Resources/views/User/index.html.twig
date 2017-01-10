@@ -1,0 +1,96 @@
+{% extends 'theme/admin/datagrid.html.twig' %}
+
+{% set datagrid_title = 'لیست کاربران' %}
+{% set datagrid_url = path('admin_user_user_remote_list') %}
+
+{% block commandbar %}
+    {{ parent() }}
+    <a href="{{ path('admin_user_user_add') }}" class="btn btn-success">افزودن کاربر جدید</a>
+    <a href="javascript:void(0)" onclick="do_delete_all()" class="btn btn-danger">حذف انتخاب شده ها</a>
+{% endblock %}
+
+{% block datagrid_custom_toolbar %}
+    <td>
+        <select id="filter-role" class="form-control input-sm" onchange="do_filter()">
+            <option value="">همه نقش ها</option>
+            {% for role,title in roles %}
+                <option value="{{ role }}">{{ title }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td>
+        <select id="filter-group" class="form-control input-sm" onchange="do_filter()">
+            <option value="">همه گروه های کاربری</option>
+            {% for group in usergroups %}
+                <option value="{{ group.id }}">{{ group.title }}</option>
+            {% endfor %}
+        </select>
+    </td>
+{% endblock %}
+
+
+{% block footer %}
+{{ parent() }}
+<script>
+    function do_delete(id){
+        ajax_delete(function(){
+            ajax_request("{{ path('admin_user_user_remote_delete') }}", {ids: id}, {
+                beforeSend: function () {
+                    modalConfirm.wait();
+                },
+                done: function(data){
+                    if(data.response == 1){
+                        modalConfirm.done();
+                        setTimeout(function () {
+                            modalConfirm.hide();
+                        }, 500);
+                        ajax_refresh_list();
+                    } else {
+                        modalConfirm.show('پاسخ دریافت شده معتبر نمی باشد', 'باشه', 'default', function(){
+                            modalConfirm.hide();
+                        });
+                    }
+                }
+            });
+        });
+    }
+
+    function do_delete_all(){
+        var ids = $(".datagrid_check_all:checked").map(function(){
+            return $(this).val();
+        }).get();
+        if(ids == ''){
+            modalConfirm.show('حداقل یک سطر جهت حذف انتخاب نمایید.', 'باشه', 'default', function(){
+                modalConfirm.hide();
+            });
+        } else {
+            do_delete(ids);
+        }
+    }
+
+    function search_reset() {
+        $('#datagrid_table_search').val('');
+        ajax_search('');
+    }
+    
+    function do_filter() {
+        ajax_filter('role', $('#filter-role option:selected').val());
+        ajax_filter('usergroup', $('#filter-group option:selected').val());
+
+        ajax_refresh_list();
+    }
+
+    function filter_role_reset() {
+        $('#filter-role').val('');
+        do_filter()
+    }
+
+    function filter_usergroup_reset() {
+        $('#filter-group').val('');
+        do_filter()
+    }
+    
+    do_filter();
+</script>
+{% endblock %}
+

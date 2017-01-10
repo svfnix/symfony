@@ -77,7 +77,7 @@ class Menu
     /**
      * @return array
      */
-    function getMenus(){
+    function getSortedStack(){
         usort($this->stack, function ($item1, $item2) {
             return $item1->getSort() <=> $item2->getSort();
         });

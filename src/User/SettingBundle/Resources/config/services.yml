@@ -1,0 +1,4 @@
+services:
+#    user_setting.example:
+#        class: User\SettingBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

@@ -4,13 +4,6 @@ parameters:
 #    parameter_name: value
 
 services:
-
-    app.service:
-        class:        AppBundle\Helper\App
-        arguments:    ['@service_container']
-        tags:
-            - {name: kernel.event_listener, event: kernel.controller, method: onKernelController}
-
     app.twig_extension:
         class: AppBundle\Twig\Extensions\AppExtension
         public: true

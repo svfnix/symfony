@@ -262,10 +262,10 @@
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
                                         <div class="pull-right">
-                                            <a href="#" class="btn btn-default btn-flat">ویرایش پروفایل</a>
+                                            <a href="{{ path('user_setting_profile') }}" class="btn btn-success btn-flat">ویرایش پروفایل</a>
                                         </div>
                                         <div class="pull-left">
-                                            <a href="/logout" class="btn btn-default btn-flat">خروج از اشتراک</a>
+                                            <a href="{{ path('logout') }}" class="btn btn-danger btn-flat">خروج از اشتراک</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -283,7 +283,7 @@
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
                         {% for menu in theme_sidebar_menu %}
-                            {% if has_access(menu.getPermissions(), theme_user_permissions) %}
+                            {% if app.user.hasPermission(menu.getPermissions()) %}
                                 <li class="treeview{% if app.request.get('_route') in menu.getTags() %} active{% endif %}">
                                     <a href="javascript:void(0)">
                                         <i class="fa fa-{{ menu.getIcon() }}"></i>
@@ -301,8 +301,8 @@
                                         {% endif %}
                                     </a>
                                     <ul class="treeview-menu">
-                                        {% for submenu in menu.getMenus() %}
-                                            {% if has_access(submenu.getPermissions(), theme_user_permissions) %}
+                                        {% for submenu in menu.getSortedStack() %}
+                                            {% if app.user.hasPermission(submenu.getPermissions()) %}
                                                 <li{% if app.request.get('_route') in submenu.getTags() %} class="active"{% endif %}>
                                                     <a href="{{ submenu.getUrl() }}" target="{{ submenu.getTarget() }}"><i class="fa fa-{{ submenu.getIcon() }}"></i> {{ submenu.getTitle() }}
                                                         {% if submenu.labels|length > 0 %}

@@ -307,6 +307,14 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * @param $role
+     * @return bool
+     */
+    public function isRole($role){
+        return ($role ==  $this->role) ? true : false;
+    }
+
+    /**
      * Add UserGroup
      *
      * @param \AppBundle\Entity\UserGroup $usergroup
@@ -337,6 +345,39 @@ class User implements AdvancedUserInterface, \Serializable
     public function getUsergroups()
     {
         return $this->usergroups;
+    }
+
+    /**
+     * @return array
+     */
+    public function getPermissions(){
+
+        $groups = $this->getUsergroups();
+
+        $permissions = [];
+        foreach ($groups as $group){
+            $permissions = array_merge($permissions, $group->getPermissions());
+        }
+
+        return array_unique($permissions);
+    }
+
+    /**
+     * @param $permissions
+     * @return bool
+     */
+    public function hasPermission($permissions){
+
+        if($this->isRole('ROLE_SUPER_ADMIN')){
+            return true;
+        }
+
+        if(!is_array($permissions)){
+            $permissions = [$permissions];
+        }
+
+        $intersect = array_intersect($permissions, $this->getPermissions());
+        return count($intersect) ? true : false;
     }
 
     /**

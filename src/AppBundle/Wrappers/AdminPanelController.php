@@ -16,39 +16,54 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminPanelController extends BaseController
 {
-
     /**
      * @return array
      */
-    protected function adminMenus(){
+    protected function panelMenu(){
 
         $menu = new Menu();
         $bundles = $this->getParameter('kernel.bundles');
         foreach ($bundles as $bundle){
             $bundle = new $bundle;
-            if(method_exists($bundle, 'inflateAdminMenus')){
-                $bundle->inflateAdminMenus($menu);
+            $bundle->setContainer($this->container);
+            if(method_exists($bundle, 'inflateAdminMenu')){
+                $bundle->inflateAdminMenu($menu);
             }
         }
 
-        return $menu->getMenus();
+        return $menu->getSortedStack();
     }
 
     /**
      * @return array
      */
-    protected function adminPermissions(){
+    protected function adminPermission(){
 
         $permissions = new Permission();
         $bundles = $this->getParameter('kernel.bundles');
         foreach ($bundles as $bundle){
             $bundle = new $bundle;
-            if(method_exists($bundle, 'inflateAdminPermissions')){
-                $bundle->inflateAdminPermissions($permissions);
+            if(method_exists($bundle, 'inflateAdminPermission')){
+                $bundle->inflateAdminPermission($permissions);
             }
         }
 
-        return $permissions->getPermissionGroups();
+        return $permissions->getSortedStack();
+    }
+
+    /**
+     * @param $permission
+     * @return bool
+     */
+    protected function checkPermission($permission)
+    {
+        if(!$this->getUser()->hasPermission($permission)){
+            $this->container->get('security.token_storage')->setToken(null);
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -98,9 +113,8 @@ class AdminPanelController extends BaseController
     {
         return parent::render($view, array_merge(
             $parameters, [
-                'theme_sidebar_menu' => $this->adminMenus(),
-                'theme_breadcrumb' => $this->breadcrumb()->getBreadcrumb(),
-                'theme_user_permissions' => $this->getUserPermissions()
-            ]));
+            'theme_sidebar_menu' => $this->panelMenu(),
+            'theme_breadcrumb' => $this->breadcrumb()->getBreadcrumb()
+        ]));
     }
 }

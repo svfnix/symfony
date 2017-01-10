@@ -18,8 +18,9 @@ class AppKernel extends Kernel
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new AppBundle\AppBundle(),
-            new Admin\Users\GroupBundle\AdminUsersGroupBundle(),
-            new Admin\Users\UserBundle\AdminUsersUserBundle()
+            new Admin\UserBundle\AdminUserBundle(),
+            new Admin\CommunicationBundle\AdminCommunicationBundle(),
+            new User\SettingBundle\UserSettingBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

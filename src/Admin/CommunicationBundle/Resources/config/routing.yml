@@ -1,0 +1,5 @@
+_admin_communication_message:
+    resource: "@AdminCommunicationBundle/Controller/MessageController.php"
+    type: annotation
+    prefix: /admin/communication/message
+

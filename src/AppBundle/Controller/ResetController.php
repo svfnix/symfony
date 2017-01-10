@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Email as EmailConstraint;
@@ -20,35 +21,37 @@ class ResetController extends BaseController
 {
     /**
      * @Route("/reset", name="reset")
-     * @Template()
      * @param Request $request
-     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse
+     * @return string|RedirectResponse
      */
     public function index(Request $request)
     {
         $form = $this
-            ->createFormBuilder(new User())
+            ->createCustomFormBuilder(new User())
             ->add('email', EmailType::class)
-            ->getForm();
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 
-        $errors = null;
+        $error = null;
         if ($form->isSubmitted()){
 
             $data = $form->getData();
-            $errors = $this->get('validator')->validate($data->getEmail(), [
+            $validation = $this->get('validator')->validate($data->getEmail(), [
                 new Email(),
                 new NotBlank()
             ]);
 
-            if (!count($errors)) {
+            if (count($validation)) {
+                $error = $this->get('translator')->trans('آدرس ایمیل معتبر نمی باشد');
+            } else {
 
-                $em = App::getInstance()->getEntityManager();
-
+                $em = $this->getDoctrine()->getEntityManager();
                 $user = $em
                     ->getRepository('AppBundle:User')
-                    ->findOneByEmail($data->getEmail());
+                    ->findOneByEmail($data->getEmail())
+                ;
 
                 if (is_object($user)) {
 
@@ -62,7 +65,7 @@ class ResetController extends BaseController
                     $response->headers->setCookie(new Cookie('rps', $c_token, 0, '/', null, false, false));
                     $response->send();
 
-                    App::getInstance()->sendMail(
+                    $this->sendMail(
                         $user->getEmail(),
                         $this->get('translator')->trans('Verification link'),
                         $this->renderView('mail/reset_password_verification.html.twig', [
@@ -73,24 +76,29 @@ class ResetController extends BaseController
                 }
 
                 return $this->redirectToRoute('reset_success');
-            } else {
-                $errors = $this->get('translator')->trans('آدرس ایمیل معتبر نمی باشد');
             }
 
         }
 
-        return [
-            'error' => $errors,
+        return $this->render('AppBundle:Reset:index.html.twig', [
+            'error' => $error,
             'form' => $form->createView()
-        ];
+        ]);
+    }
+
+    /**
+     * @Route("/reset/success", name="reset_success")
+     */
+    public function success()
+    {
+        return $this->render('AppBundle:Reset:success.html.twig');
     }
 
     /**
      * @Route("/reset/token/{e_token}", name="reset_update")
-     * @Template()
      * @param Request $request
      * @param $e_token
-     * @return array
+     * @return string|RedirectResponse
      */
     public function update(Request $request, $e_token)
     {
@@ -103,20 +111,25 @@ class ResetController extends BaseController
 
         $token = password_hash($e_token, PASSWORD_BCRYPT, ['salt' => $c_token]);
 
-        $em = App::getInstance()->getEntityManager();
+        $em = $this->getDoctrine()->getEntityManager();
 
+        /**
+         * @var User $user
+         */
         $user = $em
             ->getRepository('AppBundle:User')
-            ->findOneByResetPasswordToken($token);
+            ->findOneByResetPasswordToken($token)
+        ;
 
         if(!is_object($user)){
             return $this->render('alert/error.html.twig', ['message' => 'درخواست معتبر نیست یا منقضی شده است']);
         }
 
         $form = $this
-            ->createFormBuilder(new User())
+            ->createCustomFormBuilder(new User())
             ->add('password', PasswordType::class)
-            ->getForm();
+            ->getForm()
+        ;
 
         $form->handleRequest($request);
 
@@ -125,7 +138,7 @@ class ResetController extends BaseController
             $data = $form->getData();
 
             $user->generateSalt();
-            $user->setPassword(App::getInstance()->encodePassword($user, $data->getPassword()));
+            $user->setPassword($this->encodePassword($user, $data->getPassword()));
             $user->setResetPasswordToken(null);
             $em->flush();
 
@@ -133,7 +146,7 @@ class ResetController extends BaseController
             $response->headers->clearCookie('rps');
             $response->send();
 
-            App::getInstance()->sendMail(
+            $this->sendMail(
                 $user->getEmail(),
                 $this->get('translator')->trans('رمز عبور شما تغییر یافت'),
                 $this->renderView('mail/reset_password_done.html.twig', [
@@ -142,30 +155,20 @@ class ResetController extends BaseController
             );
 
             return $this->redirectToRoute('reset_done');
-
         }
 
 
-        return [
-            'error' => null,
+        return $this->render('AppBundle:Reset:update_reset.html.twig', [
             'token' => $token,
             'form' => $form->createView()
-            ];
-    }
-
-    /**
-     * @Route("/reset/success", name="reset_success")
-     * @Template()
-     */
-    public function success()
-    {
+            ]);
     }
 
     /**
      * @Route("/reset/done", name="reset_done")
-     * @Template()
      */
     public function done()
     {
+        return $this->render('AppBundle:Reset:done.html.twig');
     }
 }

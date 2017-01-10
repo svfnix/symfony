@@ -61,7 +61,6 @@ gulp.task('build-styles-front', function() {
 });
 
 gulp.task('build-styles-user', function() {
-    return true;
     return gulp.src([
             '../app/Resources/less/bootstrap/bootstrap.less',
             '../app/Resources/less/bootstrap/theme.less',

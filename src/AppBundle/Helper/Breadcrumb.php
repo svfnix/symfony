@@ -14,25 +14,37 @@ class Breadcrumb
     /**
      * @var BreadcrumbItem
      */
-    protected $breadcrumb;
+    protected $head;
 
     /**
-     * @return BreadcrumbItem
+     * Breadcrumb constructor.
+     * @param $title
+     * @param null $link
      */
-    public function getBreadcrumb()
+    function __construct($title, $link = null)
     {
-        return $this->breadcrumb;
+        $this->head =  new BreadcrumbItem($title, $link);
+        return $this;
     }
 
     /**
      * @param $title
      * @param null $link
+     * @return $this
+     */
+    public function add($title, $link = null){
+        $next = new BreadcrumbItem($title, $link);
+        $next->setParent($this->head);
+        $this->head = $next;
+
+        return $this;
+    }
+
+    /**
      * @return BreadcrumbItem
      */
-    function createBreadcrumb($title, $link = null)
+    public function getHead()
     {
-        $this->breadcrumb = new BreadcrumbItem($title, $link);
-
-        return $this->breadcrumb;
+        return $this->head;
     }
 }

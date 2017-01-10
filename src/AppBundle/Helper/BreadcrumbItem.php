@@ -78,11 +78,4 @@ class BreadcrumbItem
 
         return $this;
     }
-
-    public function add($title, $link=null){
-        $next = new BreadcrumbItem($title, $link);
-        $next->setParent($this);
-
-        return $next;
-    }
 }

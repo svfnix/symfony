@@ -6,9 +6,8 @@ security:
         AppBundle\Entity\User: bcrypt
 
     role_hierarchy:
-        ROLE_USER: [ROLE_GUEST]
         ROLE_ADMIN: [ROLE_USER]
-        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN]
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
@@ -40,5 +39,5 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/user, roles: ROLE_USER }
-        - { path: ^/, roles: ROLE_GUEST }
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
