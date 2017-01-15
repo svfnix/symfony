@@ -9,12 +9,12 @@
         <!-- /.box-header -->
         <form role="form" method="post" id="form_update">
             <div class="box-body">
-                {% include ':field:fullname.html.twig' with { "form": form } only %}
-                {% include ':field:mobile.html.twig' with { "form": form } only %}
-                {% include ':field:email.html.twig' with { "form": form } only %}
+                {% include ':field:fullname.html.twig' with { 'form': form } only %}
+                {% include ':field:mobile.html.twig' with { 'form': form } only %}
+                {% include ':field:email.html.twig' with { 'form': form } only %}
             </div>
             <div class="box-footer no-border">
-                {% include ':form:update.html.twig' with { "form": form } %}
+                {% include ':form:update.html.twig' with { 'form': form } %}
             </div>
         </form>
         <!-- /.box-body -->

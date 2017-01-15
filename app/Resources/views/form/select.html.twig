@@ -1,0 +1,21 @@
+<div class="form-group{{ field.vars.valid == false ? ' has-error' : '' }}">
+    <label>{{ title }}</label>
+    <select name="{{ name }}" id="form_{{ name }}" class="form-control" placeholder="{{ placeholder }}" {{ extra }}>
+        {% for option in options %}
+            {% if option.value is iterable %}
+                <optgroup label="{{ option.title }}">
+                    {% for opt in option.value %}
+                        <option value="{{ opt.value }}" {% if data_id == opt.value %} selected="selected"{% endif %}>{{ opt.title }}</option>
+                    {% endfor %}
+                </optgroup>
+            {% else %}
+                <option value="{{ option.value }}">{{ option.title }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    {% if field.vars.errors|length > 0 %}
+        <div class="field-error" role="alert">
+            {{ field.vars.errors[0].message|trans }}
+        </div>
+    {% endif %}
+</div>

@@ -1,6 +1,6 @@
 <div class="form-group{{ field.vars.valid == false ? ' has-error' : '' }}">
     <label>{{ title }}</label>
-    <textarea name="{{ name }}" class="form-control" rows="3" placeholder="{{ placeholder }}">{{ data }}</textarea>
+    <textarea name="{{ name }}" id="form_{{ name }}" class="form-control" rows="3" placeholder="{{ placeholder }}">{{ data }}</textarea>
     {% if field.vars.errors|length > 0 %}
         <div class="field-error" role="alert">
             {{ field.vars.errors[0].message|trans }}

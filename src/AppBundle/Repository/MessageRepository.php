@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
 /**
  * MessageRepository
  *
@@ -10,4 +12,42 @@ namespace AppBundle\Repository;
  */
 class MessageRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param $search
+     * @param $page
+     * @param $count
+     * @param $order_by
+     * @param $sort
+     * @return Paginator
+     */
+    public function filter($search, $page, $count, $order_by, $sort)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->select('m')
+            ->from('AppBundle:Message', 'm')
+        ;
+
+        if(!empty($search)) {
+
+            $search = explode(' ', $search);
+            foreach ($search as $q) {
+                $qb->andWhere($qb->expr()->like('CONCAT(' . implode(", ' ', ", [
+                        'm.title',
+                        'm.message'
+                    ]) . ')', $qb->expr()->literal('%' . $q . '%')));
+            }
+        }
+
+        if(!empty($order_by)) {
+            $qb->orderBy("m.{$order_by}", $sort);
+        }
+
+        $qb
+            ->setFirstResult($page * $count)
+            ->setMaxResults($count)
+        ;
+
+        return new Paginator($qb->getQuery());
+    }
 }

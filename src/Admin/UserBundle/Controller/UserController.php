@@ -7,6 +7,7 @@ use AppBundle\Entity\User;
 use AppBundle\Helper\App;
 use AppBundle\Wrappers\AdminPanelController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -21,6 +22,9 @@ class UserController extends AdminPanelController
      */
     public function remote_list(Request $request)
     {
+        if(!$this->checkPermission('admin_user_user')){
+            return $this->redirectToLogin();
+        }
 
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:User');
@@ -39,10 +43,14 @@ class UserController extends AdminPanelController
     /**
      * @Route("/remote_delete", name="admin_user_user_remote_delete")
      * @param Request $request
-     * @return JsonResponse
+     * @return JsonResponse|Response
      */
     public function remote_delete(Request $request)
     {
+        if(!$this->checkPermission('admin_user_user_delete')){
+            return $this->redirectToLogin();
+        }
+
         $ids = $request->request->get('ids');
 
         if(!is_array($ids)){
@@ -53,16 +61,21 @@ class UserController extends AdminPanelController
         $repo = $em->getRepository('AppBundle:User');
         $repo->bulkDelete($ids);
 
-        return$this->json([
+        return $this->json([
             'response' => '1'
         ]);
     }
 
     /**
      * @Route("/", name="admin_user_user")
+     * @return RedirectResponse|Response
      */
     public function index()
     {
+        if(!$this->checkPermission('admin_user_user')){
+            return $this->redirectToLogin();
+        }
+
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:UserGroup');
 
@@ -75,11 +88,15 @@ class UserController extends AdminPanelController
 
     /**
      * @param Request $request
-     * @return string
      * @Route("/add/{tab}", defaults={"tab": "profile"}, name="admin_user_user_add")
+     * @return RedirectResponse|Response
      */
     public function add(Request $request, $tab)
     {
+        if(!$this->checkPermission('admin_user_user_add')){
+            return $this->redirectToLogin();
+        }
+
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:UserGroup');
 
@@ -117,11 +134,15 @@ class UserController extends AdminPanelController
      * @param User $user
      * @param Request $request
      * @param $tab
-     * @return string
      * @Route("/edit/{id}/{tab}", name="admin_user_user_edit", defaults={"tab": "profile"}, requirements={"id": "\d+"})
+     * @return RedirectResponse|Response
      */
     public function edit(User $user, Request $request, $tab)
     {
+        if(!$this->checkPermission('admin_user_user_edit')){
+            return $this->redirectToLogin();
+        }
+
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:UserGroup');
 

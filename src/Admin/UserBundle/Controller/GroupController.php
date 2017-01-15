@@ -19,6 +19,9 @@ class GroupController extends AdminPanelController
      */
     public function remote_list(Request $request)
     {
+        if(!$this->checkPermission('admin_user_group')){
+            return $this->redirectToLogin();
+        }
 
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:UserGroup');
@@ -40,6 +43,10 @@ class GroupController extends AdminPanelController
      */
     public function remote_delete(Request $request)
     {
+        if(!$this->checkPermission('admin_user_group_delete')){
+            return $this->redirectToLogin();
+        }
+
         $ids = $request->request->get('ids');
 
         if(!is_array($ids)){
@@ -60,6 +67,10 @@ class GroupController extends AdminPanelController
      */
     public function index()
     {
+        if(!$this->checkPermission('admin_user_group')){
+            return $this->redirectToLogin();
+        }
+
         $this->breadcrumb()->groupIndex();
         return $this->render('AdminUserBundle:Group:index.html.twig');
     }
@@ -111,6 +122,10 @@ class GroupController extends AdminPanelController
      */
     public function edit(UserGroup $group, Request $request, $tab)
     {
+        if(!$this->checkPermission('admin_user_group_edit')){
+            return $this->redirectToLogin();
+        }
+
         $form = $this->createForm(AdminUserGroupForm::class, $group);
 
         $form->handleRequest($request);

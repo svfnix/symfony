@@ -1,0 +1,63 @@
+{% include ':form:select.html.twig' with {
+    "title": "ارسال به",
+    "placeholder": "انتخاب دریافت کننده ...",
+    "name": "receiver",
+    "field": form.receiver,
+    "data": form.vars.value.receiver,
+    "options": [],
+    "extra" : ''
+} only %}
+
+<script>
+    $('#form_receiver').select2({
+        language: 'fa',
+        dir: 'rtl',
+        placeholder: 'انتخاب دریافت کننده ...',
+        ajax: {
+            url: '{{  source }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    query: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+
+                params.page = params.page || 1;
+
+                return {
+                    results: data.items,
+                    pagination: {
+                        more: (params.page * 10) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+        minimumInputLength: 1,
+        templateResult: function (repo) {
+
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            var markup = "<div class='select2-result-repository clearfix'>" +
+                "<div class='select2-result-repository__meta'>" +
+                "<div class='select2-result-repository__title'>" + repo.fullname + "</div>" +
+                "<div class='select2-result-repository__email'>" + repo.email + "</div>" +
+                "</div>" +
+                "</div>";
+
+            return markup;
+        },
+        templateSelection: function (repo) {
+            return repo.fullname || repo.text;
+        }
+    });
+
+</script>

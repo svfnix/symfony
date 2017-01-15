@@ -2,9 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Entity\User;
 use AppBundle\Traits\Base;
 use AppBundle\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Message
@@ -31,6 +33,7 @@ class Message
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Assert\NotBlank(message="عنوان پیام را وارد نمایید")
      */
     private $title;
 
@@ -38,20 +41,19 @@ class Message
      * @var string
      *
      * @ORM\Column(name="message", type="text")
+     * @Assert\NotBlank(message="متن پیام را وارد نمایید")
      */
     private $message;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="sender", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinColumn(name="sender_id", referencedColumnName="id")
      */
     private $sender;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="receiver", type="string", length=255)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
+     * @ORM\JoinColumn(name="receiver_id", referencedColumnName="id")
      */
     private $receiver;
 
@@ -124,11 +126,11 @@ class Message
     /**
      * Set sender
      *
-     * @param string $sender
+     * @param User $sender
      *
      * @return Message
      */
-    public function setSender($sender)
+    public function setSender(User $sender)
     {
         $this->sender = $sender;
 
@@ -138,7 +140,7 @@ class Message
     /**
      * Get sender
      *
-     * @return string
+     * @return User
      */
     public function getSender()
     {
@@ -148,11 +150,11 @@ class Message
     /**
      * Set receiver
      *
-     * @param string $receiver
+     * @param User $receiver
      *
      * @return Message
      */
-    public function setReceiver($receiver)
+    public function setReceiver(User $receiver)
     {
         $this->receiver = $receiver;
 
@@ -162,7 +164,7 @@ class Message
     /**
      * Get receiver
      *
-     * @return string
+     * @return User
      */
     public function getReceiver()
     {
