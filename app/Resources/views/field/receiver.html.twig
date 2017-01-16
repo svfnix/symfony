@@ -1,10 +1,17 @@
+{% set options = [] %}
+{% set data = '' %}
+{% if form.vars.value.receiver.id is defined %}
+    {% set options = [{"title": form.vars.value.receiver.fullname, "value": form.vars.value.receiver.id}] %}
+    {% set data = form.vars.value.receiver.id %}
+{% endif %}
+
 {% include ':form:select.html.twig' with {
     "title": "ارسال به",
     "placeholder": "انتخاب دریافت کننده ...",
     "name": "receiver",
     "field": form.receiver,
-    "data": form.vars.value.receiver,
-    "options": [],
+    "options": options,
+    "data": data,
     "extra" : ''
 } only %}
 

@@ -10,7 +10,8 @@
             <th id="_check" style="width: 25px;"><input type="checkbox" id="datagrid_check_all_key" value="1" /></th>
             <th id="_counter" style="width: 10px">#</th>
             <th id="title"><a href="javascript:void(0)" onclick="ajax_sort('title')">{{ grid_column('title', 'عنوان', filters)|raw }}</a></th>
-            <th id="name" style="width: 150px"><a href="javascript:void(0)" onclick="ajax_sort('sender')">{{ grid_column('sender', 'از طرف', filters)|raw }}</a></th>
+            <th id="sender" style="width: 150px"><a href="javascript:void(0)" onclick="ajax_sort('sender')">{{ grid_column('sender', 'از طرف', filters)|raw }}</a></th>
+            <th id="receiver" style="width: 150px"><a href="javascript:void(0)" onclick="ajax_sort('receiver')">{{ grid_column('receiver', 'ارسال به', filters)|raw }}</a></th>
             <th id="_action" style="width: 80px">مدیریت</th>
         </tr>
         </thead>
@@ -22,6 +23,7 @@
             <td>{{ (loop.index + start)|pnum }}</td>
             <td>{{ item.title }}</td>
             <td>{{ item.sender.fullname }}</td>
+            <td>{{ item.receiver.fullname }}</td>
             <td>
                 <a class="btn btn-xs btn-default" href="{{ path('admin_user_group_edit', {id: item.id}) }}"><i class="fa fa-edit margin-3px"></i></a>
                 <a class="btn btn-xs btn-default" href="javascript:void(0)" onclick="do_delete({{ item.id }})"><i class="fa fa-remove margin-3px"></i></a>

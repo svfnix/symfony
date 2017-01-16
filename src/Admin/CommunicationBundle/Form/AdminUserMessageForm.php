@@ -17,8 +17,8 @@ class AdminUserMessageForm extends AbstractType
         $builder
             ->add('title')
             ->add('message')
-            ->add('sender', EntityType::class, ['class' => "AppBundle:User", 'choice_label' => "id"])
-            ->add('receiver', EntityType::class, ['class' => "AppBundle:User", 'choice_label' => "id"])
+            ->add('sender')
+            ->add('receiver')
         ;
     }
     

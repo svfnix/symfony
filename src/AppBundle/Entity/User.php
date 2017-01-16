@@ -119,6 +119,13 @@ class User implements AdvancedUserInterface, \Serializable
     private $usergroups;
 
     /**
+     * @return string
+     */
+    public function __toString() {
+        return $this->fullname;
+    }
+
+    /**
      * @return int
      */
     public function getId()

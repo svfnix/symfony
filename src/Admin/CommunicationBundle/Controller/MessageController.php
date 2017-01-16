@@ -61,7 +61,10 @@ class MessageController extends AdminPanelController
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:Message');
 
-        $filters = $this->getFilters($request, $em->getClassMetadata(Message::class)->getFieldNames());
+        $filters = $this->getFilters($request, array_merge(
+            $em->getClassMetadata(Message::class)->getFieldNames(),
+            $em->getClassMetadata(Message::class)->getAssociationNames()
+        ));
         $response = call_user_func_array([$repo, 'filter'], $filters);
 
         return $this->render('AdminCommunicationBundle:Message:remote/list.html.twig', [

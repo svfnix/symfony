@@ -1,13 +1,20 @@
+{% set options = [] %}
+{% set data = '' %}
+{% if form.vars.value.sender.id is defined %}
+    {% set options = [{"title": form.vars.value.sender.fullname, "value": form.vars.value.sender.id}] %}
+    {% set data = form.vars.value.sender.id %}
+{% endif %}
+
 {% include ':form:select.html.twig' with {
     "title": "از طرف",
     "placeholder": "انتخاب ارسال کننده ...",
     "name": "sender",
     "field": form.sender,
-    "data": form.vars.value.sender,
-    "options": [],
+    "options": options,
+    "data": data,
     "extra" : ''
 } only %}
-{{ form.vars.value.sender.fullname }}
+
 <script>
     $('#form_sender').select2({
         language: 'fa',

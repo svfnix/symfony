@@ -71,8 +71,8 @@ class AdminPanelController extends BaseController
      * @param array $allowed_sorting_fields
      * @return array
      */
-    protected function getFilters(Request $request, $allowed_sorting_fields=[]){
-
+    protected function getFilters(Request $request, $allowed_sorting_fields=[])
+    {
         $data = $request->request;
 
         $filters = [
