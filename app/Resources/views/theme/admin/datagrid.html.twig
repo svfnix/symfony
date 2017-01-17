@@ -166,6 +166,12 @@
             modalConfirm.show('اطلاعات حذف شده قابل بازگشت نمی باشد. آیا مطمئنید ؟', 'حذف شود', 'danger', callback);
         }
 
+        function search_reset() {
+            $('#datagrid_table_search').val('');
+
+            ajax_search('');
+        }
+
         $('#datagrid_ajax_container').on('change', '#datagrid_check_all_key', function(){
             if($(this).is(':checked')){
                 $('.datagrid_check_all').prop('checked', true);

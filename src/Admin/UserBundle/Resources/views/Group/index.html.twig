@@ -20,7 +20,7 @@
                     modalConfirm.wait();
                 },
                 done: function(data){
-                    if(data.response == 1){
+                    if(data.success == 1){
                         modalConfirm.done();
                         setTimeout(function () {
                             modalConfirm.hide();
@@ -36,11 +36,6 @@
         });
     }
 
-    function search_reset() {
-        $('#datagrid_table_search').val('');
-        ajax_search('');
-    }
-
     function do_delete_all(){
         var ids = $(".datagrid_check_all:checked").map(function(){
             return $(this).val();
@@ -53,6 +48,7 @@
             do_delete(ids);
         }
     }
+
 </script>
 {% endblock %}
 

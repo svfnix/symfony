@@ -58,7 +58,7 @@ class GroupController extends AdminPanelController
         $repo->bulkDelete($ids);
 
         return$this->json([
-            'response' => '1'
+            'success' => '1'
         ]);
     }
 

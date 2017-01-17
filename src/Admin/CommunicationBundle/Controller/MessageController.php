@@ -2,11 +2,12 @@
 
 namespace Admin\CommunicationBundle\Controller;
 
-use Admin\CommunicationBundle\Form\AdminUserMessageForm;
+use Admin\CommunicationBundle\Form\AdminCommunicationMessageForm;
 use AppBundle\Entity\Message;
 use AppBundle\Wrappers\AdminPanelController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -75,6 +76,32 @@ class MessageController extends AdminPanelController
     }
 
     /**
+     * @Route("/remote_delete", name="admin_communication_message_delete")
+     * @param Request $request
+     * @return JsonResponse|Response
+     */
+    public function remote_delete(Request $request)
+    {
+        if(!$this->checkPermission('admin_communication_message_delete')){
+            return $this->redirectToLogin();
+        }
+
+        $ids = $request->request->get('ids');
+
+        if(!is_array($ids)){
+            $ids = [$ids];
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:Message');
+        $repo->bulkDelete($ids);
+
+        return$this->json([
+            'success' => '1'
+        ]);
+    }
+
+    /**
      * @Route("/", name="admin_communication_message")
      */
     public function index()
@@ -99,7 +126,7 @@ class MessageController extends AdminPanelController
         }
 
         $message = new Message();
-        $form = $this->createForm(AdminUserMessageForm::class, $message);
+        $form = $this->createForm(AdminCommunicationMessageForm::class, $message);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -116,6 +143,42 @@ class MessageController extends AdminPanelController
 
         $this->breadcrumb()->messageAdd();
         return $this->render('AdminCommunicationBundle:Message:add.html.twig', [
+            'form' => $form->createView(),
+            'errors' => $form->getErrors(),
+            'message' => $message
+        ]);
+    }
+
+    /**
+     * @param Message $message
+     * @param Request $request
+     * @return string
+     * @Route("/edit/{id}", name="admin_communication_message_edit", requirements={"id": "\d+"})
+     */
+    public function edit(Message $message, Request $request)
+    {
+        if(!$this->checkPermission('admin_communication_message_edit')){
+            return $this->redirectToLogin();
+        }
+
+        $form = $this->createForm(AdminCommunicationMessageForm::class, $message);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+
+                $em = $this->getDoctrine()->getEntityManager();
+                $em->merge($message);
+                $em->flush();
+
+                return $this->returnSuccess('admin_communication_message');
+            } else {
+                $this->addFlash(self::FLASH_ERROR, 'عملیات با خطا مواجه شد');
+            }
+        }
+
+        $this->breadcrumb()->messageEdit();
+        return $this->render('AdminCommunicationBundle:Message:edit.html.twig', [
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'message' => $message

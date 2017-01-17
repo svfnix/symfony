@@ -1,5 +1,10 @@
 {% extends 'theme/admin/datagrid.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    {% include ':vendor:select2.html.twig' %}
+{% endblock %}
+
 {% set datagrid_title = 'مدیریت پیام ها' %}
 {% set datagrid_url = path('admin_communication_message_remote_list') %}
 
@@ -9,18 +14,27 @@
     <a href="javascript:void(0)" onclick="do_delete_all()" class="btn btn-danger">حذف انتخاب شده ها</a>
 {% endblock %}
 
+{% block datagrid_custom_toolbar %}
+    <td style="width: 250px">
+        <select id="filter-sender" class="form-control input-sm" onchange="do_filter()"></select>
+    </td>
+    <td style="width: 250px">
+        <select id="filter-receiver" class="form-control input-sm" onchange="do_filter()"></select>
+    </td>
+{% endblock %}
+
 
 {% block footer %}
     {{ parent() }}
     <script>
         function do_delete(id){
             ajax_delete(function(){
-                ajax_request("{{ path('admin_user_group_remote_delete') }}", {ids: id}, {
+                ajax_request("{{ path('admin_communication_message_delete') }}", {ids: id}, {
                     beforeSend: function () {
                         modalConfirm.wait();
                     },
                     done: function(data){
-                        if(data.response == 1){
+                        if(data.success == 1){
                             modalConfirm.done();
                             setTimeout(function () {
                                 modalConfirm.hide();
@@ -36,11 +50,6 @@
             });
         }
 
-        function search_reset() {
-            $('#datagrid_table_search').val('');
-            ajax_search('');
-        }
-
         function do_delete_all(){
             var ids = $(".datagrid_check_all:checked").map(function(){
                 return $(this).val();
@@ -53,6 +62,131 @@
                 do_delete(ids);
             }
         }
+
+        function filter_sender_reset() {
+            $('#filter-sender').html('');;
+            do_filter()
+        }
+
+        function filter_receiver_reset() {
+            $('#filter-receiver').html('');;
+            do_filter()
+        }
+
+        function do_filter() {
+            ajax_filter('sender', $('#filter-sender').val());
+            ajax_filter('receiver', $('#filter-receiver').val());
+            ajax_refresh_list();
+        }
+
+        do_filter();
+
+    </script>
+
+    <script>
+
+        $('#filter-sender').select2({
+            language: 'fa',
+            dir: 'rtl',
+            placeholder: 'ارسال کننده',
+            ajax: {
+                url: '{{  path('admin_communication_message_remote_users') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        query: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data.items,
+                        pagination: {
+                            more: (params.page * 10) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            minimumInputLength: 1,
+            templateResult: function (repo) {
+
+                if (repo.loading) {
+                    return repo.text;
+                }
+
+                var markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div class='select2-result-repository__meta'>" +
+                    "<div class='select2-result-repository__title'>" + repo.fullname + "</div>" +
+                    "<div class='select2-result-repository__email'>" + repo.email + "</div>" +
+                    "</div>" +
+                    "</div>";
+
+                return markup;
+            },
+            templateSelection: function (repo) {
+                return repo.fullname || repo.text;
+            }
+        });
+
+        $('#filter-receiver').select2({
+            language: 'fa',
+            dir: 'rtl',
+            placeholder: 'دریافت کننده',
+            ajax: {
+                url: '{{  path('admin_communication_message_remote_users') }}',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        query: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data.items,
+                        pagination: {
+                            more: (params.page * 10) < data.total_count
+                        }
+                    };
+                },
+                cache: true
+            },
+            escapeMarkup: function (markup) {
+                return markup;
+            },
+            minimumInputLength: 1,
+            templateResult: function (repo) {
+
+                if (repo.loading) {
+                    return repo.text;
+                }
+
+                var markup = "<div class='select2-result-repository clearfix'>" +
+                    "<div class='select2-result-repository__meta'>" +
+                    "<div class='select2-result-repository__title'>" + repo.fullname + "</div>" +
+                    "<div class='select2-result-repository__email'>" + repo.email + "</div>" +
+                    "</div>" +
+                    "</div>";
+
+                return markup;
+            },
+            templateSelection: function (repo) {
+                return repo.fullname || repo.text;
+            }
+        });
+
     </script>
 {% endblock %}
 

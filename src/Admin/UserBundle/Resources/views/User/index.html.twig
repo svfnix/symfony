@@ -39,7 +39,7 @@
                     modalConfirm.wait();
                 },
                 done: function(data){
-                    if(data.response == 1){
+                    if(data.success == 1){
                         modalConfirm.done();
                         setTimeout(function () {
                             modalConfirm.hide();
@@ -68,18 +68,6 @@
         }
     }
 
-    function search_reset() {
-        $('#datagrid_table_search').val('');
-        ajax_search('');
-    }
-    
-    function do_filter() {
-        ajax_filter('role', $('#filter-role option:selected').val());
-        ajax_filter('usergroup', $('#filter-group option:selected').val());
-
-        ajax_refresh_list();
-    }
-
     function filter_role_reset() {
         $('#filter-role').val('');
         do_filter()
@@ -88,6 +76,12 @@
     function filter_usergroup_reset() {
         $('#filter-group').val('');
         do_filter()
+    }
+
+    function do_filter() {
+        ajax_filter('role', $('#filter-role option:selected').val());
+        ajax_filter('usergroup', $('#filter-group option:selected').val());
+        ajax_refresh_list();
     }
     
     do_filter();

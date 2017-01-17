@@ -18,14 +18,17 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
      * @param $count
      * @param $order_by
      * @param $sort
+     * @param $filters
      * @return Paginator
      */
-    public function filter($search, $page, $count, $order_by, $sort)
+    public function filter($search, $page, $count, $order_by, $sort, $filters)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb
             ->select('m')
             ->from('AppBundle:Message', 'm')
+            ->join('m.sender', 'sender')
+            ->join('m.receiver', 'receiver')
         ;
 
         if(!empty($search)) {
@@ -39,8 +42,28 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
             }
         }
 
+        if(isset($filters['sender'])) {
+
+            $qb
+                ->andWhere('sender.id = :sender')
+                ->setParameter('sender', $filters['sender'])
+            ;
+        }
+
+        if(isset($filters['receiver'])) {
+
+            $qb
+                ->andWhere('receiver.id = :receiver')
+                ->setParameter('receiver', $filters['receiver'])
+            ;
+        }
+
         if(!empty($order_by)) {
-            $qb->orderBy("m.{$order_by}", $sort);
+            if(in_array($order_by, ['sender', 'receiver'])){
+                $qb->orderBy("{$order_by}.fullname", $sort);
+            } else {
+                $qb->orderBy("m.{$order_by}", $sort);
+            }
         }
 
         $qb
@@ -49,5 +72,19 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
         ;
 
         return new Paginator($qb->getQuery());
+    }
+
+    /**
+     * @param $ids
+     */
+    public function bulkDelete($ids)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->delete('AppBundle:Message', 'm')
+            ->where($qb->expr()->in('m.id', $ids))
+            ->getQuery()
+            ->execute()
+        ;
     }
 }
