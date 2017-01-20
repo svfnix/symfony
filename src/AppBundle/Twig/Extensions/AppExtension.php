@@ -2,9 +2,11 @@
 
 namespace AppBundle\Twig\Extensions;
 
+use Fisharebest\ExtCalendar\GregorianCalendar;
+use Fisharebest\ExtCalendar\PersianCalendar;
 use Twig_Extension;
-use Twig_Filter_Method;
-use Twig_Function_Method;
+use Twig_Filter;
+use Twig_Function;
 
 /**
  * Created by PhpStorm.
@@ -14,26 +16,39 @@ use Twig_Function_Method;
  */
 class AppExtension extends Twig_Extension
 {
+    /**
+     * @return array
+     */
     public function getFilters()
     {
-        return array(
-            'pnum' => new Twig_Filter_Method($this, 'pnum'),
-            'enum' => new Twig_Filter_Method($this, 'enum'),
-        );
+        return [
+            new Twig_Filter('pnum', [$this, 'pnum']),
+            new Twig_Filter('enum', [$this, 'enum']),
+        ];
     }
 
+    /**
+     * @return array
+     */
     public function getFunctions()
     {
-        return array(
-            'grid_column' => new Twig_Function_Method($this, 'grid_column'),
-        );
+        return [
+            new Twig_Function('grid_column', [$this, 'grid_column']),
+        ];
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'app_extension';
     }
 
+    /**
+     * @param $input
+     * @return mixed
+     */
     public function pnum($input)
     {
 
@@ -52,6 +67,10 @@ class AppExtension extends Twig_Extension
 
     }
 
+    /**
+     * @param $input
+     * @return mixed
+     */
     public function enum($input)
     {
         $input = str_replace('۱', '1', $input);
@@ -69,6 +88,12 @@ class AppExtension extends Twig_Extension
 
     }
 
+    /**
+     * @param $name
+     * @param $title
+     * @param $filters
+     * @return string
+     */
     public function grid_column($name, $title, $filters){
         if($filters['order_by'] == $name){
             return $title . ' <i class="fa fa-caret-'.(($filters['sort'] == 'asc') ? 'up' : 'down').'"></i>';

@@ -1,3 +1,4 @@
+{% import "macros/breadcrumbtoli.html.twig" as bc %}
 <!DOCTYPE html>
 <html dir="rtl" lang="fa">
     <head>
@@ -326,22 +327,15 @@
             </aside>
 
             <!-- Content Wrapper. Contains page content -->
-            {% macro breadcrumbtoli(item, first) %}
-                {% if item.parent %}{{ _self.breadcrumbtoli(item.parent, false) }}{% endif %}
-                {% if(first) %}
-                    <li class="active">{{ item.title }}</li>
-                {% else %}
-                    <li>{% if(item.link) %}<a href="{{ item.link }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</li>
-                {% endif %}
-            {% endmacro %}
+
             <div class="content-wrapper">
                 <!-- Content Header (Page header) -->
                 <section class="content-header">
                     <ol class="breadcrumb">
                         <li><a href="javascript:void(0)"><i class="fa fa-home"></i> خانه</a></li>
-                        {{ _self.breadcrumbtoli(theme_breadcrumb, true) }}
+                        {{ bc.breadcrumbtoli(theme_breadcrumb, true) }}
                     </ol>
-                    <div class="commandbar">{{ block('commandbar') }}</div>
+                    <div class="commandbar">{% block commandbar %}{% endblock %}</div>
                 </section>
 
                 {% for flashMessage in app.session.flashbag.get('error') %}

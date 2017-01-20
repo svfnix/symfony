@@ -337,7 +337,7 @@
                 <li><a href="javascript:void(0)"><i class="fa fa-home"></i> خانه</a></li>
                 {{ _self.breadcrumbtoli(theme_breadcrumb, true) }}
             </ol>
-            <div class="commandbar">{{ block('commandbar') }}</div>
+            <div class="commandbar">{% block commandbar %}{% endblock %}</div>
         </section>
 
         {% for flashMessage in app.session.flashbag.get('error') %}

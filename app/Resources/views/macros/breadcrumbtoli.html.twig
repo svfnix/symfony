@@ -1,0 +1,9 @@
+{% macro breadcrumbtoli(item, first) %}
+    {% import _self as bc %}
+    {% if item.parent %}{{ bc.breadcrumbtoli(item.parent, false) }}{% endif %}
+    {% if(first) %}
+        <li class="active">{{ item.title }}</li>
+    {% else %}
+        <li>{% if(item.link) %}<a href="{{ item.link }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</li>
+    {% endif %}
+{% endmacro %}

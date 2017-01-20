@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new \Svfnix\JalaliDateBundle\SvfnixJalaliDateBundle(),
             new AppBundle\AppBundle(),
             new Admin\UserBundle\AdminUserBundle(),
             new Admin\CommunicationBundle\AdminCommunicationBundle(),

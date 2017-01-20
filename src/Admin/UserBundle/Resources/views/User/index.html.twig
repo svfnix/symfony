@@ -83,8 +83,9 @@
         ajax_filter('usergroup', $('#filter-group option:selected').val());
         ajax_refresh_list();
     }
-    
-    do_filter();
+
+    ajax_search($('#datagrid_table_search').val());
+
 </script>
 {% endblock %}
 

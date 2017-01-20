@@ -79,12 +79,6 @@
             ajax_refresh_list();
         }
 
-        do_filter();
-
-    </script>
-
-    <script>
-
         $('#filter-sender').select2({
             language: 'fa',
             dir: 'rtl',
@@ -186,6 +180,8 @@
                 return repo.fullname || repo.text;
             }
         });
+
+        ajax_search($('#datagrid_table_search').val());
 
     </script>
 {% endblock %}
