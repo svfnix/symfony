@@ -47,5 +47,17 @@ class AdminCommunicationMenu
             'admin_communication_message_add',
             'admin_communication_message_edit'
         ]);
+
+        $sub_menu_2 = $main_menu->addMenu('notification');
+        $sub_menu_2->setTitle('مدیریت اطلاعیه ها');
+        $sub_menu_2->setSort(200);
+        $sub_menu_2->setUrl($this->router->generate('admin_communication_notification'));
+        $sub_menu_2->setIcon('circle-o');
+        $sub_menu_2->addPermission('admin_communication_notification');
+        $sub_menu_2->setTags([
+            'admin_communication_notification',
+            'admin_communication_notification_add',
+            'admin_communication_notification_edit'
+        ]);
     }
 }

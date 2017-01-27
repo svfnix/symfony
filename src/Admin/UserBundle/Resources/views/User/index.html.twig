@@ -1,4 +1,5 @@
-{% extends 'theme/admin/datagrid.html.twig' %}
+{% set theme_base = 'admin' %}
+{% extends 'block/datagrid.html.twig' %}
 
 {% set datagrid_title = 'لیست کاربران' %}
 {% set datagrid_url = path('admin_user_user_remote_list') %}

@@ -58,6 +58,14 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
             ;
         }
 
+        if(isset($filters['status'])) {
+
+            $qb
+                ->andWhere('m.status = :status')
+                ->setParameter('status', $filters['status'])
+            ;
+        }
+
         if(!empty($order_by)) {
             if(in_array($order_by, ['sender', 'receiver'])){
                 $qb->orderBy("{$order_by}.fullname", $sort);

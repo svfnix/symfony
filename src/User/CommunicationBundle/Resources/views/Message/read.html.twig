@@ -1,0 +1,25 @@
+{% extends 'theme/user.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="/vendor/jquery/extensions/waiting-spinner.js"></script>
+{% endblock %}
+
+{% block commandbar %}
+    {{ parent() }}
+    <a href="{{ path('user_communication_message') }}" class="btn btn-default">بازگشت</a>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <h4>{{ message.title }}</h4>
+                <div style="color:#454545">ارسال شده توسط {{ message.sender.fullname }} در تاریخ {{ message.createdAt|jdate('Y/m/d ساعت H:i') }}</div>
+                <hr/>
+                <div>{{ message.message|raw }}</div>
+            </div>
+            <!-- /.box -->
+        </div>
+    </div>
+{% endblock %}

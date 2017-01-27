@@ -38,13 +38,11 @@ trait Timestampable
     /**
      * Set createdAt
      *
-     * @param \Datetime $createdAt
-     *
      * @return Object
      */
-    public function setCreatedAt(\DateTime $createdAt)
+    public function setCreatedAt()
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTime();
 
         return $this;
     }
@@ -62,13 +60,11 @@ trait Timestampable
     /**
      * Set updatedAt
      *
-     * @param \Datetime $updatedAt
-     *
      * @return Object
      */
-    public function setUpdatedAt(\DateTime $updatedAt)
+    public function setUpdatedAt()
     {
-        $this->updatedAt = $updatedAt;
+        $this->updatedAt = DateTime();
 
         return $this;
     }

@@ -1,0 +1,3 @@
+imports:
+    - { resource: "@AppBundle/Resources/listeners/message.yml" }
+    - { resource: "@AppBundle/Resources/listeners/user.yml" }

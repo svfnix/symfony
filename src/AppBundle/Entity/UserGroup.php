@@ -59,6 +59,14 @@ class UserGroup
     private $permissions = [];
 
     /**
+     * UserGroup constructor.
+     */
+    function __construct()
+    {
+        $this->setCreatedAt();
+    }
+
+    /**
      * @return string
      */
     public function __toString() {

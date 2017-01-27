@@ -1,4 +1,5 @@
-{% extends 'theme/admin/datagrid.html.twig' %}
+{% set theme_base = 'admin' %}
+{% extends 'block/datagrid.html.twig' %}
 
 {% block javascripts %}
     {{ parent() }}
@@ -20,6 +21,13 @@
     </td>
     <td style="width: 250px">
         <select id="filter-receiver" class="form-control input-sm" onchange="do_filter()"></select>
+    </td>
+    <td>
+        <select id="datagrip-message-state" class="form-control input-sm" onchange="do_filter()">
+            <option value="">همه پیام ها</option>
+            <option value="read">خوانده شده</option>
+            <option value="unread">خوانده نشده</option>
+        </select>
     </td>
 {% endblock %}
 
@@ -73,7 +81,13 @@
             do_filter()
         }
 
+        function filter_status_reset() {
+            $('#datagrip-message-state').val('');
+            do_filter()
+        }
+
         function do_filter() {
+            ajax_filter('status', $('#datagrip-message-state option:selected').val());
             ajax_filter('sender', $('#filter-sender').val());
             ajax_filter('receiver', $('#filter-receiver').val());
             ajax_refresh_list();

@@ -1,0 +1,15 @@
+services:
+
+    user.counter.notification:
+        class: AppBundle\Listener\UserListener
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: notification.read, method: updateNotificationCount }
+
+    user.counter.message:
+        class: AppBundle\Listener\UserListener
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: message.read, method: updateMessageCount }

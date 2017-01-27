@@ -9,12 +9,12 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
-class AppGenerateRoutesCommand extends ContainerAwareCommand
+class AppUpdateRoutesCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
-            ->setName('app:generate-routes')
+            ->setName('app:update-routes')
             ->setDescription('dynamically map bundles to routes')
         ;
     }
@@ -31,7 +31,7 @@ class AppGenerateRoutesCommand extends ContainerAwareCommand
         $bundles = $kernel->getBundles();
 
         $config = "{$root}/app/config/routing.yml";
-        file_put_contents($config, "src:\n  resource: routing_custom.yml\n\n");
+        file_put_contents($config, "custom:\n  resource: routing_custom.yml\n\n");
 
         foreach ($bundles as $name => $bundle) {
             if ($name != 'AppBundle') {

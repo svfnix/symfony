@@ -1,4 +1,4 @@
-src:
+custom:
   resource: routing_custom.yml
 
 AdminUserBundle:
@@ -9,4 +9,7 @@ AdminCommunicationBundle:
 
 UserSettingBundle:
   resource: "@UserSettingBundle/Resources/config/routing.yml"
+
+UserCommunicationBundle:
+  resource: "@UserCommunicationBundle/Resources/config/routing.yml"
 

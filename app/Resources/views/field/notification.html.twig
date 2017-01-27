@@ -1,0 +1,7 @@
+{% include ':form:textarea.html.twig' with {
+    "title": "اطلاعیه",
+    "placeholder": "متن اطلاعیه را وارد نمایید ...",
+    "name": "notification",
+    "field": form.notification,
+    "data": form.vars.value.notification
+} only %}

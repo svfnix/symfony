@@ -49,4 +49,28 @@ class AdminCommunicationBreadcrumb extends BreadcrumbWrapper
     {
         return $this->messageIndex()->add('ویرایش پیام');
     }
+
+    /**
+     * @return Breadcrumb
+     */
+    public function notificationIndex()
+    {
+        return $this->add('مدیریت اطلاعیه ها', $this->router->generate('admin_communication_notification'));
+    }
+
+    /**
+     * @return Breadcrumb
+     */
+    public function notificationAdd()
+    {
+        return $this->notificationIndex()->add('ارسال اطلاعیه جدید');
+    }
+
+    /**
+     * @return Breadcrumb
+     */
+    public function notificationEdit()
+    {
+        return $this->notificationIndex()->add('ویرایش اطلاعیه');
+    }
 }

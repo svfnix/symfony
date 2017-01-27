@@ -28,12 +28,6 @@ class User implements AdvancedUserInterface, \Serializable
         Timestampable,
         Metadata;
 
-    function __construct()
-    {
-        $this->usergroups = new ArrayCollection();
-        $this->createdAt = new \DateTime();
-    }
-
     /**
      * @var int
      *
@@ -117,6 +111,29 @@ class User implements AdvancedUserInterface, \Serializable
      *      )
      */
     private $usergroups;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="meta_message_count", type="integer")
+     */
+    private $meta_message_count;
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="meta_notification_count", type="integer")
+     */
+    private $meta_notification_count;
+
+    /**
+     * User constructor.
+     */
+    function __construct()
+    {
+        $this->usergroups = new ArrayCollection();
+        $this->setCreatedAt();
+    }
 
     /**
      * @return string
@@ -236,7 +253,7 @@ class User implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getResetPasswordToken()
     {
@@ -385,6 +402,42 @@ class User implements AdvancedUserInterface, \Serializable
 
         $intersect = array_intersect($permissions, $this->getPermissions());
         return count($intersect) ? true : false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetaMessageCount()
+    {
+        return $this->meta_message_count;
+    }
+
+    /**
+     * @param mixed $meta_message_count
+     * @return $this
+     */
+    public function setMetaMessageCount($meta_message_count)
+    {
+        $this->meta_message_count = $meta_message_count;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMetaNotificationCount()
+    {
+        return $this->meta_notification_count;
+    }
+
+    /**
+     * @param mixed $meta_notification_count
+     * @return $this
+     */
+    public function setMetaNotificationCount($meta_notification_count)
+    {
+        $this->meta_notification_count = $meta_notification_count;
+        return $this;
     }
 
     /**

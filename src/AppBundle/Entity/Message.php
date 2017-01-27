@@ -20,6 +20,9 @@ class Message
     use Base,
         Timestampable;
 
+    const STATUS_READ = 'read';
+    const STATUS_UNREAD = 'unread';
+
     /**
      * @var int
      *
@@ -62,10 +65,17 @@ class Message
     /**
      * @var string
      *
-     * @ORM\Column(name="status", type="string", columnDefinition="enum('unread', 'read')")
+     * @ORM\Column(name="status", type="string", length=32)
      */
-    private $status;
+    private $status = 'unread';
 
+    /**
+     * Message constructor.
+     */
+    function __construct()
+    {
+        $this->setCreatedAt();
+    }
 
     /**
      * Get id

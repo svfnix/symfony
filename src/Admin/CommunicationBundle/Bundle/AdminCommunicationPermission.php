@@ -23,5 +23,10 @@ class AdminCommunicationPermission
         $section->addPermission('admin_communication_message_edit', 'ویرایش پیام');
         $section->addPermission('admin_communication_message_delete', 'حذف پیام');
 
+        $section->addPermission('admin_communication_notification', 'مشاهده لیست اطلاعیه ها');
+        $section->addPermission('admin_communication_notification_add', 'ارسال اطلاعیه جدید');
+        $section->addPermission('admin_communication_notification_edit', 'ویرایش اطلاعیه');
+        $section->addPermission('admin_communication_notification_delete', 'حذف اطلاعیه');
+
     }
 }
