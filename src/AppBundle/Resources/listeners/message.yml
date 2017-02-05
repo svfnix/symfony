@@ -1,7 +1,0 @@
-services:
-    message.read:
-        class: AppBundle\Listener\MessageListener
-        arguments:
-            em: "@doctrine.orm.entity_manager"
-        tags:
-            - { name: kernel.event_listener, event: message.read, method: readAction }

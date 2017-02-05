@@ -2,6 +2,9 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Message;
+use AppBundle\Entity\Notification;
+use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -211,5 +214,44 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->getQuery()
             ->execute()
         ;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function sync(User $user)
+    {
+        $em = $this->getEntityManager();
+        $message_repo = $em->getRepository('AppBundle:Message');
+        $messages_count =
+            $message_repo
+                ->createQueryBuilder('m')
+                ->select('count(m.id)')
+                ->where('m.status = :unread')
+                ->andWhere('m.receiver = :id')
+                ->setParameter('id', $user->getId())
+                ->setParameter('unread', Message::STATUS_UNREAD)
+                ->getQuery()
+                ->getSingleScalarResult();
+
+
+        $notification_repo = $em->getRepository('AppBundle:Notification');
+        $notification_count =
+            $notification_repo
+                ->createQueryBuilder('m')
+                ->select('count(m.id)')
+                ->where('m.status = :unseen')
+                ->andWhere('m.receiver = :id')
+                ->setParameter('id', $user->getId())
+                ->setParameter('unseen', Notification::STATUS_UNSEEN)
+                ->getQuery()
+                ->getSingleScalarResult();
+
+        $user->setMetaMessageCount($messages_count);
+        $user->setMetaNotificationCount($notification_count);
+
+        $em->merge($user);
+        $em->flush();
+
     }
 }

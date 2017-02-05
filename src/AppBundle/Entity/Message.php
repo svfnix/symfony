@@ -35,7 +35,7 @@ class Message
     /**
      * @var string
      *
-     * @ORM\Column(name="title", type="string", length=255)
+     * @ORM\Column(name="title", type="string", length=256)
      * @Assert\NotBlank(message="عنوان پیام را وارد نمایید")
      */
     private $title;
@@ -75,6 +75,7 @@ class Message
     function __construct()
     {
         $this->setCreatedAt();
+        $this->setStatus(self::STATUS_UNREAD);
     }
 
     /**

@@ -33,8 +33,15 @@ class Notification
     /**
      * @var string
      *
-     * @ORM\Column(name="notification", type="text", length=512)
+     * @ORM\Column(name="type", type="text", length=512)
      * @Assert\NotNull(message="متن اطلاعیه را مشخص نمایید")
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notification", type="text", length=16)
      */
     private $notification;
 
@@ -59,6 +66,7 @@ class Notification
     function __construct()
     {
         $this->setCreatedAt();
+        $this->setStatus(self::STATUS_UNSEEN);
     }
 
     /**
@@ -67,6 +75,24 @@ class Notification
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Notification
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+        return $this;
     }
 
     /**

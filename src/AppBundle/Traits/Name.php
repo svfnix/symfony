@@ -16,7 +16,7 @@ trait Name
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=256)
      * @Assert\NotBlank(message="نام را وارد نمایید")
      */
     private $name;

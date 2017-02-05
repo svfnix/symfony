@@ -21,12 +21,12 @@ class MessageListener
     /**
      * @param MessageEvent $event
      */
-    function readAction(MessageEvent $event)
+    function onMessageRead(MessageEvent $event)
     {
         $message = $event->getMessage();
         $message->setStatus(Message::STATUS_READ);
+        $message->setUpdatedAt();
 
-        $this->em->getRepository('AppBundle:Message');
         $this->em->merge($message);
         $this->em->flush();
     }

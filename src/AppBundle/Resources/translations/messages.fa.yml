@@ -1,3 +1,5 @@
 Bad credentials. : نام کاربری یا کلمه عبور معتبر نمی باشد.
 read : <span class="status_read">خوانده شده</span>
 unread : <span class="status_unread">خوانده نشده</span>
+seen : <span class="status_read">مشاهده شده</span>
+unseen : <span class="status_unread">مشاهده نشده</span>

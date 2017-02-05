@@ -34,22 +34,20 @@ class AppUpdateServicesCommand extends ContainerAwareCommand
         file_put_contents($config, "imports:");
 
         foreach ($bundles as $name => $bundle) {
-            if ($name != 'AppBundle') {
-                $path = $bundle->getPath();
-                $path_array = explode('/', ltrim(substr($path, strlen($root)), '/'));
+            $path = $bundle->getPath();
+            $path_array = explode('/', ltrim(substr($path, strlen($root)), '/'));
 
-                if ($path_array[0] == 'src') {
+            if ($path_array[0] == 'src') {
 
-                    $output->writeln("- {$name} [{$path}]");
+                $output->writeln("- {$name} [{$path}]");
 
-                    $service_file = $kernel->locateResource("@{$name}/Resources/config/services.yml");
-                    if (file_exists($service_file)) {
-                        file_put_contents(
-                            $config,
-                            "\n    - { resource: \"@{$name}/Resources/config/services.yml\" }",
-                            FILE_APPEND
-                        );
-                    }
+                $service_file = $kernel->locateResource("@{$name}/Resources/config/services.yml");
+                if (file_exists($service_file)) {
+                    file_put_contents(
+                        $config,
+                        "\n    - { resource: \"@{$name}/Resources/config/services.yml\" }",
+                        FILE_APPEND
+                    );
                 }
             }
         }

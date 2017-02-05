@@ -27,9 +27,8 @@ class AppBuildCommand extends ContainerAwareCommand
         $output->writeln(str_repeat('-', 30));
 
         foreach ([
-            //'app:update-services',
-            'app:update-routes',
-            'app:update-listeners'
+            'app:update-services',
+            'app:update-routes'
                 ] as $command){
 
             $output->writeln("\ncmd: {$command}");

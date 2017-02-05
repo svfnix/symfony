@@ -1,0 +1,15 @@
+_admin_notice_news:
+    resource: "@AdminNoticeBundle/Controller/NewsController.php"
+    type: annotation
+    prefix: /admin/notice/news
+
+_admin_notice_notification:
+    resource: "@AdminNoticeBundle/Controller/NotificationController.php"
+    type: annotation
+    prefix: /admin/notice/notification
+
+_admin_notice_message:
+    resource: "@AdminNoticeBundle/Controller/MessageController.php"
+    type: annotation
+    prefix: /admin/notice/message
+

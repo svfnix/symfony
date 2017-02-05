@@ -15,7 +15,7 @@ trait Metadata
     /**
      * @var String
      *
-     * @ORM\Column(name="meta_memo", type="string", length=255, nullable=true)
+     * @ORM\Column(name="meta_memo", type="string", length=256, nullable=true)
      */
     private $memo;
 

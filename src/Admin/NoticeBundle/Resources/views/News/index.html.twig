@@ -1,0 +1,77 @@
+{% set theme_base = 'admin' %}
+{% extends 'block/datagrid.html.twig' %}
+
+{% set datagrid_title = 'مدیریت خبر ها' %}
+{% set datagrid_url = path('admin_notice_news_remote_list') %}
+
+{% block commandbar %}
+    {{ parent() }}
+    <a href="{{ path('admin_notice_news_add') }}" class="btn btn-success">ارسال خبر جدید</a>
+    <a href="javascript:void(0)" onclick="do_delete_all()" class="btn btn-danger">حذف انتخاب شده ها</a>
+{% endblock %}
+
+{% block datagrid_custom_toolbar %}
+    <td>
+        <select id="datagrip-news-state" class="form-control input-sm" onchange="do_filter()">
+            <option value="">همه خبر ها</option>
+            <option value="read">خوانده شده</option>
+            <option value="unread">خوانده نشده</option>
+        </select>
+    </td>
+{% endblock %}
+
+
+{% block footer %}
+    {{ parent() }}
+    <script>
+        function do_delete(id){
+            ajax_delete(function(){
+                ajax_request("{{ path('admin_notice_news_delete') }}", {ids: id}, {
+                    beforeSend: function () {
+                        modalConfirm.wait();
+                    },
+                    done: function(data){
+                        if(data.success == 1){
+                            modalConfirm.done();
+                            setTimeout(function () {
+                                modalConfirm.hide();
+                            }, 500);
+                            ajax_refresh_list();
+                        } else {
+                            modalConfirm.show('پاسخ دریافت شده معتبر نمی باشد', 'باشه', 'default', function(){
+                                modalConfirm.hide();
+                            });
+                        }
+                    }
+                });
+            });
+        }
+
+        function do_delete_all(){
+            var ids = $(".datagrid_check_all:checked").map(function(){
+                return $(this).val();
+            }).get();
+            if(ids == ''){
+                modalConfirm.show('حداقل یک سطر جهت حذف انتخاب نمایید.', 'باشه', 'default', function(){
+                    modalConfirm.hide();
+                });
+            } else {
+                do_delete(ids);
+            }
+        }
+
+        function filter_status_reset() {
+            $('#datagrip-news-state').val('');
+            do_filter()
+        }
+
+        function do_filter() {
+            ajax_filter('status', $('#datagrip-news-state option:selected').val());
+            ajax_refresh_list();
+        }
+
+        ajax_search($('#datagrid_table_search').val());
+
+    </script>
+{% endblock %}
+

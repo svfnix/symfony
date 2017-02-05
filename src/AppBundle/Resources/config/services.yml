@@ -1,0 +1,25 @@
+services:
+
+    message.listener:
+        class: AppBundle\Listener\MessageListener
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: message.read, method: onMessageRead }
+
+    notification.seen:
+        class: AppBundle\Listener\NotificationListener
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: notification.seen.bulk, method: onNotificationSeenBulk }
+
+    user.listener:
+        class: AppBundle\Listener\UserListener
+        arguments:
+            em: "@doctrine.orm.entity_manager"
+        tags:
+            - { name: kernel.event_listener, event: user.sync, method: onUserSync,  priority: -1 }
+            - { name: kernel.event_listener, event: message.sent, method: onMessageSent }
+            - { name: kernel.event_listener, event: message.read, method: onMessageRead }
+            - { name: kernel.event_listener, event: notification.sent, method: onNotificationSent }

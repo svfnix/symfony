@@ -1,64 +1,63 @@
 <?php
 namespace AppBundle\Listener;
 
+use AppBundle\Entity\Notification;
+use AppBundle\Event\BulkEvent;
 use AppBundle\Event\MessageEvent;
+use AppBundle\Event\NotificationEvent;
 use AppBundle\Event\UserEvent;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class UserListener
 {
-    private $em;
+    private $_em;
 
     /**
      * UserListener constructor.
-     * @param EntityManager $em
+     * @param EntityManager $_em
      */
-    function __construct(EntityManager $em)
+    function __construct(EntityManager $_em)
     {
-        $this->em = $em;
+        $this->_em = $_em;
     }
 
     /**
      * @param UserEvent $event
      */
-    function updateNotificationCount(UserEvent $event)
+    function onUserSync(UserEvent $event)
     {
-        $user = $event->getUser();
-        $repo = $this->em->getRepository('AppBundle:Notification');
-        $notification_count =
-            $repo
-                ->createQueryBuilder('n')
-                ->select('count(n.id)')
-                ->where('n.status = unseen')
-                ->andWhere('n.receiver = :id')
-                ->setParameter('id', $user->getId())
-                ->getQuery()
-                ->getSingleScalarResult();
-
-        $user->setMetaMessageCount($notification_count);
-        $this->em->merge($user);
-        $this->em->flush();
+        $repo = $this->_em->getRepository('AppBundle:User');
+        $repo->sync($event->getUser());
     }
 
     /**
      * @param MessageEvent $event
      */
-    function updateMessageCount(MessageEvent $event)
+    function onMessageSent(MessageEvent $event)
     {
         $user = $event->getMessage()->getReceiver();
-        $repo = $this->em->getRepository('AppBundle:Message');
-        $messages_count =
-            $repo
-                ->createQueryBuilder('m')
-                ->select('count(m.id)')
-                ->where('m.status = unread')
-                ->andWhere('m.receiver = :id')
-                ->setParameter('id', $user->getId())
-                ->getQuery()
-                ->getSingleScalarResult();
+        $repo = $this->_em->getRepository('AppBundle:User');
+        $repo->sync($user);
+    }
 
-        $user->setMetaMessageCount($messages_count);
-        $this->em->merge($user);
-        $this->em->flush();
+    /**
+     * @param MessageEvent $event
+     */
+    function onMessageRead(MessageEvent $event)
+    {
+        $user = $event->getMessage()->getReceiver();
+        $repo = $this->_em->getRepository('AppBundle:User');
+        $repo->sync($user);
+    }
+
+    /**
+     * @param NotificationEvent $event
+     */
+    function onNotificationSent(NotificationEvent $event)
+    {
+        $user = $event->getNotification()->getReceiver();
+        $repo = $this->_em->getRepository('AppBundle:User');
+        $repo->sync($user);
     }
 }

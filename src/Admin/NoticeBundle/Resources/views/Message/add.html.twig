@@ -1,0 +1,35 @@
+{% extends 'theme/admin.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% include ':vendor:tinymce.html.twig' %}
+    {% include ':vendor:select2.html.twig' %}
+{% endblock %}
+
+{% block commandbar %}
+    <a href="{{ path('admin_notice_message') }}" class="btn btn-default">انصراف و بازگشت</a>
+{% endblock %}
+
+{% block body %}
+    {{ errors }}
+    <div class="box box-success">
+        <div class="box-header with-border">
+            <h3 class="box-title bold">ارسال پیام جدید</h3>
+        </div>
+        <!-- /.box-header -->
+        <form role="form" method="post" id="form_add">
+            <div class="box-body">
+
+                {% include ':field:title.html.twig' with { 'form': form } only %}
+                {% include ':field:sender.html.twig' with { 'form': form, 'source': path('admin_notice_message_remote_users') } only %}
+                {% include ':field:receiver.html.twig' with { 'form': form, 'source': path('admin_notice_message_remote_users') } only %}
+                {% include ':field:message.html.twig' with { 'form': form } only %}
+
+            </div>
+            <div class="box-footer no-border">
+                {% include ':form:submit.html.twig' with { 'form': form } %}
+            </div>
+        </form>
+        <!-- /.box-body -->
+    </div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% include ':form:textarea.html.twig' with {
+    "title": "خلاصه خبر",
+    "placeholder": "خلاصه خبر را وارد نمایید ...",
+    "name": "summary",
+    "field": form.summary,
+    "data": form.vars.value.summary
+} only %}

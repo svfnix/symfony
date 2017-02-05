@@ -1,0 +1,35 @@
+{% set theme_base = 'user' %}
+{% extends ':block:datagrid.html.twig' %}
+
+{% set datagrid_title = 'مدیریت اطلاعیه ها' %}
+{% set datagrid_url = path('user_notice_notification_remote_list') %}
+
+{% block datagrid_custom_toolbar %}
+    <td>
+        <select id="datagrip-notification-state" class="form-control input-sm" onchange="do_filter()">
+            <option value="">همه اطلاعیه ها</option>
+            <option value="seen">مشاهده شده</option>
+            <option value="unseen">مشاهده نشده</option>
+        </select>
+    </td>
+{% endblock %}
+
+{% block footer %}
+    {{ parent() }}
+    <script>
+
+        function filter_status_reset() {
+            $('#datagrip-notification-state').val('');
+            do_filter()
+        }
+
+        function do_filter() {
+            ajax_filter('status', $('#datagrip-notification-state option:selected').val());
+            ajax_refresh_list();
+        }
+
+        ajax_search($('#datagrid_table_search').val());
+
+    </script>
+{% endblock %}
+

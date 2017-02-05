@@ -4,12 +4,12 @@ custom:
 AdminUserBundle:
   resource: "@AdminUserBundle/Resources/config/routing.yml"
 
-AdminCommunicationBundle:
-  resource: "@AdminCommunicationBundle/Resources/config/routing.yml"
+AdminNoticeBundle:
+  resource: "@AdminNoticeBundle/Resources/config/routing.yml"
 
 UserSettingBundle:
   resource: "@UserSettingBundle/Resources/config/routing.yml"
 
-UserCommunicationBundle:
-  resource: "@UserCommunicationBundle/Resources/config/routing.yml"
+UserNoticeBundle:
+  resource: "@UserNoticeBundle/Resources/config/routing.yml"
 

@@ -1,0 +1,24 @@
+{% include ':form:textarea.html.twig' with {
+    "title": "خبر",
+    "placeholder": "متن خبر را وارد نمایید ...",
+    "name": "news",
+    "field": form.news,
+    "data": form.vars.value.news
+} only %}
+
+<script>
+    $(function () {
+        tinymce.init({
+            selector: '#form_news',
+            height: 250,
+            menubar: false,
+            directionality:'rtl',
+            plugins: [
+                'advlist directionality autolink lists link image charmap print preview anchor',
+                'searchreplace visualblocks code fullscreen',
+                'insertdatetime media table contextmenu paste code'
+            ],
+            toolbar: 'undo redo | ltr rtl  | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image'
+        });
+    });
+</script>

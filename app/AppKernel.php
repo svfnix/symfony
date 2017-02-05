@@ -17,12 +17,12 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-            new \Svfnix\JalaliDateBundle\SvfnixJalaliDateBundle(),
+            new Svfnix\JalaliDateBundle\SvfnixJalaliDateBundle(),
             new AppBundle\AppBundle(),
             new Admin\UserBundle\AdminUserBundle(),
-            new Admin\CommunicationBundle\AdminCommunicationBundle(),
+            new Admin\NoticeBundle\AdminNoticeBundle(),
             new User\SettingBundle\UserSettingBundle(),
-            new User\CommunicationBundle\UserCommunicationBundle(),
+            new User\NoticeBundle\UserNoticeBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
