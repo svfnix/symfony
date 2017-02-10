@@ -11,81 +11,24 @@
 {% endblock %}
 
 {% block datagrid_custom_toolbar %}
-    <td>
-        <select id="filter-role" class="form-control input-sm" onchange="do_filter()">
-            <option value="">همه نقش ها</option>
-            {% for role,title in roles %}
-                <option value="{{ role }}">{{ title }}</option>
-            {% endfor %}
-        </select>
-    </td>
-    <td>
-        <select id="filter-group" class="form-control input-sm" onchange="do_filter()">
-            <option value="">همه گروه های کاربری</option>
-            {% for group in usergroup %}
-                <option value="{{ group.id }}">{{ group.title }}</option>
-            {% endfor %}
-        </select>
-    </td>
+    {% include ':filter:role.html.twig' with{'roles' : roles} only %}
+    {% include ':filter:usergroup.html.twig' with{'usergroup' : usergroup} only %}
 {% endblock %}
 
 
 {% block footer %}
 {{ parent() }}
 <script>
+
     function do_delete(id){
-        ajax_delete(function(){
-            ajax_request("{{ path('admin_user_user_remote_delete') }}", {ids: id}, {
-                beforeSend: function () {
-                    modalConfirm.wait();
-                },
-                done: function(data){
-                    if(data.success == 1){
-                        modalConfirm.done();
-                        setTimeout(function () {
-                            modalConfirm.hide();
-                        }, 500);
-                        ajax_refresh_list();
-                    } else {
-                        modalConfirm.show('پاسخ دریافت شده معتبر نمی باشد', 'باشه', 'default', function(){
-                            modalConfirm.hide();
-                        });
-                    }
-                }
-            });
-        });
-    }
-
-    function do_delete_all(){
-        var ids = $(".datagrid_check_all:checked").map(function(){
-            return $(this).val();
-        }).get();
-        if(ids == ''){
-            modalConfirm.show('حداقل یک سطر جهت حذف انتخاب نمایید.', 'باشه', 'default', function(){
-                modalConfirm.hide();
-            });
-        } else {
-            do_delete(ids);
-        }
-    }
-
-    function filter_role_reset() {
-        $('#filter-role').val('');
-        do_filter()
-    }
-
-    function filter_usergroup_reset() {
-        $('#filter-group').val('');
-        do_filter()
+        ajax_delete("{{ path('admin_user_user_remote_delete') }}", {ids : id});
     }
 
     function do_filter() {
         ajax_filter('role', $('#filter-role option:selected').val());
-        ajax_filter('usergroup', $('#filter-group option:selected').val());
+        ajax_filter('usergroup', $('#filter-usergroup option:selected').val());
         ajax_refresh_list();
     }
-
-    ajax_search($('#datagrid_table_search').val());
 
 </script>
 {% endblock %}

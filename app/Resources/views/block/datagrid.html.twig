@@ -112,6 +112,10 @@
             );
         }
 
+        function ajax_delete(){
+
+        }
+
         function ajax_search(search) {
 
             _search = search;
@@ -162,14 +166,46 @@
             }
         }
 
-        function ajax_delete(callback){
-            modalConfirm.show('اطلاعات حذف شده قابل بازگشت نمی باشد. آیا مطمئنید ؟', 'حذف شود', 'danger', callback);
+        function ajax_delete(url, data){
+            modalConfirm.show('اطلاعات حذف شده قابل بازگشت نمی باشد. آیا مطمئنید ؟', 'حذف شود', 'danger', function(){
+                ajax_request(url, data, {
+                    beforeSend: function () {
+                        modalConfirm.wait();
+                    },
+                    done: function(data){
+                        if(data.success == 1){
+                            modalConfirm.done();
+                            setTimeout(function () {
+                                modalConfirm.hide();
+                            }, 500);
+                            ajax_refresh_list();
+                        } else {
+                            modalConfirm.show('پاسخ دریافت شده معتبر نمی باشد', 'باشه', 'default', function(){
+                                modalConfirm.hide();
+                            });
+                        }
+                    }
+                });
+            });
         }
 
         function search_reset() {
             $('#datagrid_table_search').val('');
 
             ajax_search('');
+        }
+
+        function do_delete_all(){
+            var ids = $(".datagrid_check_all:checked").map(function(){
+                return $(this).val();
+            }).get();
+            if(ids == ''){
+                modalConfirm.show('حداقل یک سطر جهت حذف انتخاب نمایید.', 'باشه', 'default', function(){
+                    modalConfirm.hide();
+                });
+            } else {
+                do_delete(ids);
+            }
         }
 
         $('#datagrid_ajax_container').on('change', '#datagrid_check_all_key', function(){
@@ -187,5 +223,7 @@
                 $('#datagrid_check_all_key').prop('checked', true);
             }
         });
+
+        ajax_search($('#datagrid_table_search').val());
     </script>
 {% endblock %}

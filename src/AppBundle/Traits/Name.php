@@ -27,7 +27,7 @@ trait Name
      *
      * @param string $name
      *
-     * @return Object
+     * @return $this
      */
     public function setName($name)
     {

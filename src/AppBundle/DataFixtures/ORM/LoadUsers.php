@@ -29,6 +29,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
         $user
             ->setUsername('user')
+            ->setFullname('user')
             ->setEmail('user@domain.tld')
             ->setPassword($encoder->encodePassword('passwd', $user->getSalt()))
             ->setRole('ROLE_USER');
@@ -39,6 +40,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
         $admin
             ->setUsername('admin')
+            ->setFullname('admin')
             ->setEmail('admin@domain.tld')
             ->setPassword($encoder->encodePassword('passwd', $user->getSalt()))
             ->setRole('ROLE_ADMIN');
@@ -49,6 +51,7 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($super_admin);
         $super_admin
             ->setUsername('super_admin')
+            ->setFullname('super_admin')
             ->setEmail('super_admin@domain.tld')
             ->setPassword($encoder->encodePassword('passwd', $super_admin->getSalt()))
             ->setRole('ROLE_SUPER_ADMIN');

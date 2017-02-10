@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\Message;
 use AppBundle\Entity\Notification;
 use AppBundle\Entity\User;
+use AppBundle\Helper\Dictionary;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
@@ -165,8 +166,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
             $qb
                 ->join('u.usergroup', 'ug')
-                ->where('ug.id = :id')
-                ->setParameter('id', $filters['usergroup'])
+                ->where('ug.id = :usergroup')
+                ->setParameter('usergroup', $filters['usergroup'])
             ;
         }
 
@@ -227,10 +228,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $message_repo
                 ->createQueryBuilder('m')
                 ->select('count(m.id)')
-                ->where('m.status = :unread')
+                ->where('m.status_read = :status_read')
                 ->andWhere('m.receiver = :id')
                 ->setParameter('id', $user->getId())
-                ->setParameter('unread', Message::STATUS_UNREAD)
+                ->setParameter('status_read', Dictionary::STATUS_READ_UNREAD)
                 ->getQuery()
                 ->getSingleScalarResult();
 
@@ -240,10 +241,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $notification_repo
                 ->createQueryBuilder('m')
                 ->select('count(m.id)')
-                ->where('m.status = :unseen')
+                ->where('m.status_see = :status_see')
                 ->andWhere('m.receiver = :id')
                 ->setParameter('id', $user->getId())
-                ->setParameter('unseen', Notification::STATUS_UNSEEN)
+                ->setParameter('status_see', Dictionary::STATUS_SEE_UNSEEN)
                 ->getQuery()
                 ->getSingleScalarResult();
 

@@ -11,13 +11,7 @@
 {% endblock %}
 
 {% block datagrid_custom_toolbar %}
-    <td>
-        <select id="datagrip-news-state" class="form-control input-sm" onchange="do_filter()">
-            <option value="">همه خبر ها</option>
-            <option value="read">خوانده شده</option>
-            <option value="unread">خوانده نشده</option>
-        </select>
-    </td>
+    {% include ':filter:enable.html.twig' %}
 {% endblock %}
 
 

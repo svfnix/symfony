@@ -1,0 +1,13 @@
+<td>
+    <select id="filter-status-see" class="form-control input-sm" onchange="do_filter()">
+        <option value="">همه موارد</option>
+        <option value="seen">مشاهده شده</option>
+        <option value="unseen">مشاهده نشده</option>
+    </select>
+    <script>
+        function filter_status_see_reset() {
+            $('#filter-status-see').val('');
+            do_filter()
+        }
+    </script>
+</td>

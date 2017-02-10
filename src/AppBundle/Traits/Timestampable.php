@@ -38,7 +38,7 @@ trait Timestampable
     /**
      * Set createdAt
      *
-     * @return Object
+     * @return $this
      */
     public function setCreatedAt()
     {
@@ -60,7 +60,7 @@ trait Timestampable
     /**
      * Set updatedAt
      *
-     * @return Object
+     * @return $this
      */
     public function setUpdatedAt()
     {

@@ -16,16 +16,8 @@
 {% endblock %}
 
 {% block datagrid_custom_toolbar %}
-    <td style="width: 250px">
-        <select id="filter-receiver" class="form-control input-sm" onchange="do_filter()"></select>
-    </td>
-    <td>
-        <select id="datagrip-notification-state" class="form-control input-sm" onchange="do_filter()">
-            <option value="">همه اطلاعیه ها</option>
-            <option value="seen">مشاهده شده</option>
-            <option value="unseen">مشاهده نشده</option>
-        </select>
-    </td>
+    {% include ':filter:receiver.html.twig' with {'path' : path('admin_notice_message_remote_users')} only %}
+    {% include ':filter:see.html.twig' %}
 {% endblock %}
 
 

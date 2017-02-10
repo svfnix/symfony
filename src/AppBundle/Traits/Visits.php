@@ -26,7 +26,7 @@ trait Visits
      *
      * @param integer $visits
      *
-     * @return Object
+     * @return $this
      */
     public function setVisits($visits)
     {

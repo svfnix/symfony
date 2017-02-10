@@ -14,43 +14,10 @@
 {% block footer %}
 {{ parent() }}
 <script>
+
     function do_delete(id){
-        ajax_delete(function(){
-            ajax_request("{{ path('admin_user_group_remote_delete') }}", {ids: id}, {
-                beforeSend: function () {
-                    modalConfirm.wait();
-                },
-                done: function(data){
-                    if(data.success == 1){
-                        modalConfirm.done();
-                        setTimeout(function () {
-                            modalConfirm.hide();
-                        }, 500);
-                        ajax_refresh_list();
-                    } else {
-                        modalConfirm.show('پاسخ دریافت شده معتبر نمی باشد', 'باشه', 'default', function(){
-                            modalConfirm.hide();
-                        });
-                    }
-                }
-            });
-        });
+        ajax_delete("{{ path('admin_user_group_remote_delete') }}", {ids : id});
     }
-
-    function do_delete_all(){
-        var ids = $(".datagrid_check_all:checked").map(function(){
-            return $(this).val();
-        }).get();
-        if(ids == ''){
-            modalConfirm.show('حداقل یک سطر جهت حذف انتخاب نمایید.', 'باشه', 'default', function(){
-                modalConfirm.hide();
-            });
-        } else {
-            do_delete(ids);
-        }
-    }
-
-    ajax_search($('#datagrid_table_search').val());
 
 </script>
 {% endblock %}

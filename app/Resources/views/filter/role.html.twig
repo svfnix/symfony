@@ -1,0 +1,14 @@
+<td>
+    <select id="filter-role" class="form-control input-sm" onchange="do_filter()">
+        <option value="">همه نقش ها</option>
+        {% for role,title in roles %}
+            <option value="{{ role }}">{{ title }}</option>
+        {% endfor %}
+    </select>
+    <script>
+        function filter_role_reset() {
+            $('#filter-role').val('');
+            do_filter()
+        }
+    </script>
+</td>

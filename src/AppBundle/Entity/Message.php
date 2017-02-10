@@ -3,7 +3,9 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Entity\User;
+use AppBundle\Helper\Dictionary;
 use AppBundle\Traits\Base;
+use AppBundle\Traits\StatusRead;
 use AppBundle\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,10 +20,8 @@ class Message
 {
 
     use Base,
-        Timestampable;
-
-    const STATUS_READ = 'read';
-    const STATUS_UNREAD = 'unread';
+        Timestampable,
+        StatusRead;
 
     /**
      * @var int
@@ -63,19 +63,12 @@ class Message
     private $receiver;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="status", type="string", length=32)
-     */
-    private $status = 'unread';
-
-    /**
      * Message constructor.
      */
     function __construct()
     {
         $this->setCreatedAt();
-        $this->setStatus(self::STATUS_UNREAD);
+        $this->setStatusReadUnread();
     }
 
     /**
@@ -182,30 +175,6 @@ class Message
     public function getReceiver()
     {
         return $this->receiver;
-    }
-
-    /**
-     * Set status
-     *
-     * @param string $status
-     *
-     * @return Message
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    /**
-     * Get status
-     *
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
     }
 }
 

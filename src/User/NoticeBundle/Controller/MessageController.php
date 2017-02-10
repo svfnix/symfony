@@ -5,6 +5,7 @@ namespace User\NoticeBundle\Controller;
 use AppBundle\Entity\Message;
 use AppBundle\Event\MessageEvent;
 use AppBundle\Event\UserEvent;
+use AppBundle\Helper\Dictionary;
 use AppBundle\Wrappers\UserPanelController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -54,7 +55,7 @@ class MessageController extends UserPanelController
      */
     public function read(Message $message)
     {
-        if($message->getStatus() == Message::STATUS_UNREAD) {
+        if($message->getStatus() == Dictionary::STATUS_READ_UNREAD) {
 
             $eventDispatcher = $this->get('event_dispatcher');
             $eventDispatcher->dispatch('message.read', new MessageEvent($message));

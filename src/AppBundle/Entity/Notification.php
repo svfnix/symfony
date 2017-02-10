@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use AppBundle\Traits\Base;
+use AppBundle\Traits\StatusSee;
 use AppBundle\Traits\Timestampable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Notification
 {
     use Base,
-        Timestampable;
+        Timestampable,
+        StatusSee;
 
     const STATUS_SEEN = 'seen';
     const STATUS_UNSEEN = 'unseen';
@@ -66,7 +68,7 @@ class Notification
     function __construct()
     {
         $this->setCreatedAt();
-        $this->setStatus(self::STATUS_UNSEEN);
+        $this->setStatusSeeUnseen();
     }
 
     /**
@@ -128,24 +130,6 @@ class Notification
     public function setReceiver(User $receiver)
     {
         $this->receiver = $receiver;
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    /**
-     * @param string $status
-     * @return Notification
-     */
-    public function setStatus($status)
-    {
-        $this->status = $status;
         return $this;
     }
 

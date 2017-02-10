@@ -1,0 +1,13 @@
+<td>
+    <select id="filter-status-read" class="form-control input-sm" onchange="do_filter()">
+        <option value="">همه موارد</option>
+        <option value="read">خوانده شده</option>
+        <option value="unread">خوانده نشده</option>
+    </select>
+    <script>
+        function filter_status_read_reset() {
+            $('#filter-status-read').val('');
+            do_filter()
+        }
+    </script>
+</td>

@@ -284,11 +284,11 @@
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
                         {% for menu in theme_sidebar_menu %}
-                            {% if app.user.hasPermission(menu.getPermissions()) %}
-                                <li class="treeview{% if app.request.get('_route') in menu.getTags() %} active{% endif %}">
+                            {% if app.user.hasPermission(menu.getPermissions) %}
+                                <li class="treeview{% if app.request.get('_route') in menu.getTags %} active{% endif %}">
                                     <a href="javascript:void(0)">
-                                        <i class="fa fa-{{ menu.getIcon() }}"></i>
-                                        <span class="sidebar-menu-header">{{ menu.getTitle() }}</span>
+                                        <i class="fa fa-{{ menu.getIcon }}"></i>
+                                        <span class="sidebar-menu-header">{{ menu.getTitle }}</span>
                                         {% if menu.labels|length > 0 %}
                                             <span class="pull-left-container">
                                             {% for label in menu.labels %}
@@ -302,10 +302,10 @@
                                         {% endif %}
                                     </a>
                                     <ul class="treeview-menu">
-                                        {% for submenu in menu.getSortedStack() %}
-                                            {% if app.user.hasPermission(submenu.getPermissions()) %}
-                                                <li{% if app.request.get('_route') in submenu.getTags() %} class="active"{% endif %}>
-                                                    <a href="{{ submenu.getUrl() }}" target="{{ submenu.getTarget() }}"><i class="fa fa-{{ submenu.getIcon() }}"></i> {{ submenu.getTitle() }}
+                                        {% for submenu in menu.getSortedStack %}
+                                            {% if app.user.hasPermission(submenu.getPermissions) %}
+                                                <li{% if app.request.get('_route') in submenu.getTags %} class="active"{% endif %}>
+                                                    <a href="{{ submenu.getUrl }}" target="{{ submenu.getTarget }}"><i class="fa fa-{{ submenu.getIcon }}"></i> {{ submenu.getTitle }}
                                                         {% if submenu.labels|length > 0 %}
                                                             <span class="pull-left-container">
                                                                 {% for label in submenu.labels %}

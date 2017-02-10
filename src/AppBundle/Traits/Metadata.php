@@ -24,7 +24,7 @@ trait Metadata
      *
      * @param \Datetime $memo
      *
-     * @return Object
+     * @return $this
      */
     public function setMemo($memo)
     {

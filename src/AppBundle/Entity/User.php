@@ -117,14 +117,14 @@ class User implements AdvancedUserInterface, \Serializable
      *
      * @ORM\Column(name="meta_message_count", type="integer")
      */
-    private $meta_message_count = 0;
+    private $meta_message_count;
 
     /**
      * @var int
      *
      * @ORM\Column(name="meta_notification_count", type="integer")
      */
-    private $meta_notification_count = 0;
+    private $meta_notification_count;
 
     /**
      * User constructor.
@@ -136,13 +136,14 @@ class User implements AdvancedUserInterface, \Serializable
 
         $this->setMetaMessageCount(0);
         $this->setMetaNotificationCount(0);
+
     }
 
     /**
      * @return string
      */
     public function __toString() {
-        return $this->fullname;
+        return "{$this->fullname}";
     }
 
     /**

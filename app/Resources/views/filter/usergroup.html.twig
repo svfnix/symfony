@@ -1,0 +1,14 @@
+<td>
+    <select id="filter-usergroup" class="form-control input-sm" onchange="do_filter()">
+        <option value="">همه گروه های کاربری</option>
+        {% for group in usergroup %}
+            <option value="{{ group.id }}">{{ group.title }}</option>
+        {% endfor %}
+    </select>
+    <script>
+        function filter_usergroup_reset() {
+            $('#filter-usergroup').val('');
+            do_filter()
+        }
+    </script>
+</td>

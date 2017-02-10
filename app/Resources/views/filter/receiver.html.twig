@@ -1,0 +1,59 @@
+<td style="width: 250px">
+    <select id="filter-receiver" class="form-control input-sm" onchange="do_filter()"></select>
+</td>
+<script>
+    $('#filter-receiver').select2({
+        language: 'fa',
+        dir: 'rtl',
+        placeholder: 'دریافت کننده',
+        ajax: {
+            url: '{{  path }}',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    query: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function (data, params) {
+
+                params.page = params.page || 1;
+
+                return {
+                    results: data.items,
+                    pagination: {
+                        more: (params.page * 10) < data.total_count
+                    }
+                };
+            },
+            cache: true
+        },
+        escapeMarkup: function (markup) {
+            return markup;
+        },
+        minimumInputLength: 1,
+        templateResult: function (repo) {
+
+            if (repo.loading) {
+                return repo.text;
+            }
+
+            var markup = "<div class='select2-result-repository clearfix'>" +
+                "<div class='select2-result-repository__meta'>" +
+                "<div class='select2-result-repository__title'>" + repo.fullname + "</div>" +
+                "<div class='select2-result-repository__email'>" + repo.email + "</div>" +
+                "</div>" +
+                "</div>";
+
+            return markup;
+        },
+        templateSelection: function (repo) {
+            return repo.fullname || repo.text;
+        }
+    });
+    function filter_receiver_reset() {
+        $('#filter-receiver').html('');;
+        do_filter()
+    }
+</script>
