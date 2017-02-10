@@ -57,13 +57,19 @@ class AdminPanelController extends BaseController
      */
     protected function checkPermission($permission)
     {
-        if(!$this->getUser()->hasPermission($permission)){
-            $this->container->get('security.token_storage')->setToken(null);
+        $user = $this->getUser();
 
-            return false;
+        if($user->isRole('ROLE_SUPER_ADMIN')){
+            return true;
         }
 
-        return true;
+        if($user->hasPermission($permission)){
+            return true;
+        }
+
+        $this->container->get('security.token_storage')->setToken(null);
+
+        return false;
     }
 
     /**

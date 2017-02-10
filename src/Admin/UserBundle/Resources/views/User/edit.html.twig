@@ -17,7 +17,7 @@
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
                     <li role="presentation" {% if tab == 'profile' %} class="active"{% endif %}><a href="#profile" onclick="$('#form_update').prop('action', '{{ path('admin_user_user_edit', {'id': user.id, 'tab': 'profile'}) }}')" aria-controls="profile" role="tab" data-toggle="tab">ویرایش پروفایل</a></li>
-                    <li role="presentation" {% if tab == 'roles' %} class="active"{% endif %}><a href="#roles" onclick="$('#form_update').prop('action', '{{ path('admin_user_user_edit', {'id': user.id, 'tab': 'roles'}) }}')" aria-controls="roles" role="tab" data-toggle="tab">مدیریت نقش ها</a></li>
+                    <li role="presentation" {% if tab == 'roles' %} class="active"{% endif %}><a href="#roles" onclick="$('#form_update').prop('action', '{{ path('admin_user_user_edit', {'id': user.id, 'tab': 'roles'}) }}')" aria-controls="roles" role="tab" data-toggle="tab">نقش و گروه های کاربری</a></li>
                     <li role="presentation" {% if tab == 'credentials' %} class="active"{% endif %}><a href="#credentials" onclick="$('#form_update').prop('action', '{{ path('admin_user_user_edit', {'id': user.id, 'tab': 'credentials'}) }}')" aria-controls="credentials" role="tab" data-toggle="tab">بروزرسانی رمز عبور</a></li>
                 </ul>
 
@@ -31,7 +31,7 @@
                     </div>
                     <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'roles' %} active{% endif %}" id="roles">
                         {% include ':field:role.html.twig' with {"form": form, "user": user, "roles": roles } only %}
-                        {% include ':field:usergroups.html.twig' with {"form": form, "usergroups": usergroups, "user": user } only %}
+                        {% include ':field:usergroup.html.twig' with {"form": form, "usergroup": usergroup, "user": user } only %}
                     </div>
                     <div role="tabpanel" class="tab-pane padding-5px padding-top-25px{% if tab == 'credentials' %} active{% endif %}" id="credentials">
                         {% include ':field:password.html.twig' with { 'form': form } only %}

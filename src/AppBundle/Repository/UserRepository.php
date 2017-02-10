@@ -164,7 +164,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if(isset($filters['usergroup'])) {
 
             $qb
-                ->join('u.usergroups', 'ug')
+                ->join('u.usergroup', 'ug')
                 ->where('ug.id = :id')
                 ->setParameter('id', $filters['usergroup'])
             ;

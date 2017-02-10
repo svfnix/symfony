@@ -110,29 +110,32 @@ class User implements AdvancedUserInterface, \Serializable
      *      inverseJoinColumns={@ORM\JoinColumn(name="usergroup_id", referencedColumnName="id", onDelete="cascade")}
      *      )
      */
-    private $usergroups;
+    private $usergroup;
 
     /**
      * @var int
      *
      * @ORM\Column(name="meta_message_count", type="integer")
      */
-    private $meta_message_count;
+    private $meta_message_count = 0;
 
     /**
      * @var int
      *
      * @ORM\Column(name="meta_notification_count", type="integer")
      */
-    private $meta_notification_count;
+    private $meta_notification_count = 0;
 
     /**
      * User constructor.
      */
     function __construct()
     {
-        $this->usergroups = new ArrayCollection();
+        $this->usergroup = new ArrayCollection();
         $this->setCreatedAt();
+
+        $this->setMetaMessageCount(0);
+        $this->setMetaNotificationCount(0);
     }
 
     /**
@@ -346,7 +349,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function addUsergroup(UserGroup $usergroup)
     {
-        $this->usergroups[] = $usergroup;
+        $this->usergroup[] = $usergroup;
 
         return $this;
     }
@@ -358,7 +361,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function removeUsergroup(UserGroup $usergroup)
     {
-        $this->usergroups->removeElement($usergroup);
+        $this->usergroup->removeElement($usergroup);
 
         return $this;
     }
@@ -366,9 +369,9 @@ class User implements AdvancedUserInterface, \Serializable
     /**
      * @return ArrayCollection
      */
-    public function getUsergroups()
+    public function getUsergroup()
     {
-        return $this->usergroups;
+        return $this->usergroup;
     }
 
     /**
@@ -376,7 +379,7 @@ class User implements AdvancedUserInterface, \Serializable
      */
     public function getPermissions(){
 
-        $groups = $this->getUsergroups();
+        $groups = $this->getUsergroup();
 
         $permissions = [];
         foreach ($groups as $group){
@@ -530,7 +533,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->fullname,
             $this->mobile,
             $this->role,
-            $this->usergroups,
+            $this->usergroup,
         ));
     }
 
@@ -556,7 +559,7 @@ class User implements AdvancedUserInterface, \Serializable
             $this->fullname,
             $this->mobile,
             $this->role,
-            $this->usergroups,
+            $this->usergroup,
             ) = unserialize($serialized);
     }
 }

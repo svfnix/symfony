@@ -22,7 +22,7 @@
     <td>
         <select id="filter-group" class="form-control input-sm" onchange="do_filter()">
             <option value="">همه گروه های کاربری</option>
-            {% for group in usergroups %}
+            {% for group in usergroup %}
                 <option value="{{ group.id }}">{{ group.title }}</option>
             {% endfor %}
         </select>

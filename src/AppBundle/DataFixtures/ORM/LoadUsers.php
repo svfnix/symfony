@@ -25,25 +25,34 @@ class LoadUsers implements FixtureInterface, ContainerAwareInterface
     {
 
         $user = new User();
+        $user->generateSalt();
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-
         $user
             ->setUsername('user')
             ->setEmail('user@domain.tld')
-            ->setPassword($encoder->encodePassword($user, 'passwd'));
-
+            ->setPassword($encoder->encodePassword('passwd', $user->getSalt()))
+            ->setRole('ROLE_USER');
         $manager->persist($user);
 
         $admin = new User();
+        $admin->generateSalt();
         $encoder = $this->container->get('security.encoder_factory')->getEncoder($user);
-
         $admin
             ->setUsername('admin')
             ->setEmail('admin@domain.tld')
-            ->setPassword($encoder->encodePassword($admin, 'passwd'))
-            ->setRoles(['ROLE_ADMIN']);
-
+            ->setPassword($encoder->encodePassword('passwd', $user->getSalt()))
+            ->setRole('ROLE_ADMIN');
         $manager->persist($admin);
+
+        $super_admin = new User();
+        $super_admin->generateSalt();
+        $encoder = $this->container->get('security.encoder_factory')->getEncoder($super_admin);
+        $super_admin
+            ->setUsername('super_admin')
+            ->setEmail('super_admin@domain.tld')
+            ->setPassword($encoder->encodePassword('passwd', $super_admin->getSalt()))
+            ->setRole('ROLE_SUPER_ADMIN');
+        $manager->persist($super_admin);
 
         $manager->flush();
     }

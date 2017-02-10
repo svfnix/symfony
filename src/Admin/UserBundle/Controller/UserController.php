@@ -82,7 +82,7 @@ class UserController extends AdminPanelController
         $this->breadcrumb()->userIndex();
         return $this->render('AdminUserBundle:User:index.html.twig', [
             'roles' => $this->getRoles(),
-            'usergroups' => $repo->findAll()
+            'usergroup' => $repo->findAll()
         ]);
     }
 
@@ -125,7 +125,7 @@ class UserController extends AdminPanelController
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'user' => $user,
-            'usergroups' => $repo->findAll(),
+            'usergroup' => $repo->findAll(),
             'roles' => $this->getRoles()
         ]);
     }
@@ -180,7 +180,7 @@ class UserController extends AdminPanelController
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
             'user' => $user,
-            'usergroups' => $repo->findAll(),
+            'usergroup' => $repo->findAll(),
             'roles' => $this->getRoles()
         ]);
     }

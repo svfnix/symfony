@@ -26,7 +26,7 @@
             <th id="fullname"><a href="javascript:void(0)" onclick="ajax_sort('fullname')">{{ grid_column('fullname', 'نام', filters)|raw }}</a></th>
             <th id="email" style="width: 200px"><a href="javascript:void(0)" onclick="ajax_sort('email')">{{ grid_column('email', 'آدرس ایمیل', filters)|raw }}</a></th>
             <th id="role" style="width: 150px">نقش</th>
-            <th id="_usergroups" style="width: 200px">گروه های کاربری</th>
+            <th id="_usergroup" style="width: 200px">گروه های کاربری</th>
             <th id="_action" style="width: 80px">مدیریت</th>
         </tr>
         </thead>
@@ -40,7 +40,7 @@
             <td>{{ item.email }}</td>
             <td>{{ roles[item.role] }}</td>
             <td>
-                {% for group in item.usergroups %}
+                {% for group in item.usergroup %}
                 <div>{{ group }}</div>
                 {% endfor %}
             </td>

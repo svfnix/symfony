@@ -20,7 +20,7 @@ class AdminUserUserForm extends AbstractType
             ->add('username')
             ->add('password')
             ->add('role')
-            ->add('usergroups')
+            ->add('usergroup')
             ->add('memo')
         ;
     }
