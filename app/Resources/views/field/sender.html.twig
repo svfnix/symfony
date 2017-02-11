@@ -21,7 +21,7 @@
         dir: 'rtl',
         placeholder: 'انتخاب ارسال کننده ...',
         ajax: {
-            url: '{{  source }}',
+            url: '{{ path('repository_users') }}',
             dataType: 'json',
             delay: 250,
             data: function (params) {

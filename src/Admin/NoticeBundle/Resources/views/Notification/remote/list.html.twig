@@ -9,9 +9,9 @@
     } %}
 {% endif %}
 
-{% if filters.filters.status is defined %}
+{% if filters.filters.statusSee is defined %}
     {% include ':block:filter.html.twig' with {
-    'name': 'status',
+    'name': 'statusSee',
     'title': 'وضعیت اطلاعیه'
     } %}
 {% endif %}
@@ -25,7 +25,7 @@
             <th id="_counter" style="width: 10px">#</th>
             <th id="title"><a href="javascript:void(0)" onclick="ajax_sort('notification')">{{ grid_column('notification', 'عنوان', filters)|raw }}</a></th>
             <th id="receiver" style="width: 150px"><a href="javascript:void(0)" onclick="ajax_sort('receiver')">{{ grid_column('receiver', 'ارسال به', filters)|raw }}</a></th>
-            <th id="receiver" style="width: 100px"><a href="javascript:void(0)" onclick="ajax_sort('status')">{{ grid_column('status', 'وضعیت', filters)|raw }}</a></th>
+            <th id="receiver" style="width: 100px"><a href="javascript:void(0)" onclick="ajax_sort('statusSee')">{{ grid_column('statusSee', 'وضعیت', filters)|raw }}</a></th>
             <th id="receiver" style="width: 100px; text-align: center"><a href="javascript:void(0)" onclick="ajax_sort('createdAt')">{{ grid_column('createdAt', 'تاریخ ارسال', filters)|raw }}</a></th>
             <th id="_action" style="width: 80px">مدیریت</th>
         </tr>
@@ -38,7 +38,7 @@
             <td>{{ (loop.index + start)|pnum }}</td>
             <td>{{ item.notification|raw }}</td>
             <td>{{ item.receiver.fullname }}</td>
-            <td>{{ item.status|trans|raw }}</td>
+            <td>{{ item.statusSee|trans|raw }}</td>
             <td style="text-align: center">{{ item.createdAt|jdate('Y/m/d') }}</td>
             <td>
                 <a class="btn btn-xs btn-default" href="{{ path('admin_notice_notification_edit', {id: item.id}) }}"><i class="fa fa-edit margin-3px"></i></a>

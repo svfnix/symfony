@@ -46,11 +46,11 @@ class NotificationRepository extends \Doctrine\ORM\EntityRepository
             ;
         }
 
-        if(isset($filters['status'])) {
+        if(isset($filters['statusSee'])) {
 
             $qb
-                ->andWhere('n.status = :status')
-                ->setParameter('status', $filters['status'])
+                ->andWhere('n.statusSee = :statusSee')
+                ->setParameter('statusSee', $filters['statusSee'])
             ;
         }
 

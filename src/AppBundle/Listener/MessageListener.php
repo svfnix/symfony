@@ -24,7 +24,7 @@ class MessageListener
     function onMessageRead(MessageEvent $event)
     {
         $message = $event->getMessage();
-        $message->setStatus(Message::STATUS_READ);
+        $message->setStatusReadRead();
         $message->setUpdatedAt();
 
         $this->em->merge($message);

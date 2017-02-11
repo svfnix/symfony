@@ -21,8 +21,8 @@
             <div class="box-body">
 
                 {% include ':field:title.html.twig' with { 'form': form } only %}
-                {% include ':field:sender.html.twig' with { 'form': form, 'source': path('admin_notice_message_remote_users') } only %}
-                {% include ':field:receiver.html.twig' with { 'form': form, 'source': path('admin_notice_message_remote_users') } only %}
+                {% include ':field:sender.html.twig' with { 'form': form } only %}
+                {% include ':field:receiver.html.twig' with { 'form': form } only %}
                 {% include ':field:message.html.twig' with { 'form': form } only %}
 
             </div>

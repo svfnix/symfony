@@ -16,8 +16,8 @@
 {% endblock %}
 
 {% block datagrid_custom_toolbar %}
-    {% include ':filter:sender.html.twig' with {'path' : path('admin_notice_message_remote_users')} only %}
-    {% include ':filter:receiver.html.twig' with {'path' : path('admin_notice_message_remote_users')} only %}
+    {% include ':filter:sender.html.twig' %}
+    {% include ':filter:receiver.html.twig' %}
     {% include ':filter:status_read.html.twig' %}
 {% endblock %}
 
@@ -33,7 +33,7 @@
         function do_filter() {
             ajax_filter('sender', $('#filter-sender').val());
             ajax_filter('receiver', $('#filter-receiver').val());
-            ajax_filter('status_read', $('#filter-status-read option:selected').val());
+            ajax_filter('statusRead', $('#filter-status-read option:selected').val());
             ajax_refresh_list();
         }
 

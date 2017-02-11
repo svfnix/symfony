@@ -58,11 +58,11 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
             ;
         }
 
-        if(isset($filters['status_read'])) {
+        if(isset($filters['statusRead'])) {
 
             $qb
-                ->andWhere('m.status_read = :status_read')
-                ->setParameter('status_read', $filters['status_read'])
+                ->andWhere('m.statusRead = :statusRead')
+                ->setParameter('statusRead', $filters['statusRead'])
             ;
         }
 

@@ -27,7 +27,7 @@ class NotificationListener
     function onNotificationSeen(NotificationEvent $event)
     {
         $notification = $event->getNotification();
-        $notification->setStatus(Notification::STATUS_SEEN);
+        $notification->setStatusSeeSeen();
         $notification->setUpdatedAt();
 
         $this->em->merge($notification);
@@ -52,7 +52,7 @@ class NotificationListener
             $repo
                 ->createQueryBuilder('n')
                 ->update()
-                ->set('n.status', $qb->expr()->literal(Notification::STATUS_SEEN))
+                ->set('n.statusSee', $qb->expr()->literal(Notification::STATUS_SEEN))
                 ->set('n.updatedAt', $qb->expr()->literal((new \DateTime())->format('Y-m-d H:i:s')))
                 ->where('n.id IN(:ids)')
                 ->setParameter('ids', array_values($ids))

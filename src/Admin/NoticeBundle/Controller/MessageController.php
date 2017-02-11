@@ -17,41 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 class MessageController extends AdminPanelController
 {
     /**
-     * @Route("/remote_users", name="admin_notice_message_remote_users")
-     * @param Request $request
-     * @return Response
-     */
-    public function remote_users(Request $request)
-    {
-        if(!$this->checkPermission('admin_notice_message')){
-            return $this->redirectToLogin();
-        }
-
-        $query = $request->query->get('query');
-        $page = $request->query->getInt('page');
-
-        $em = $this->getDoctrine()->getEntityManager();
-        $repo = $em->getRepository('AppBundle:User');
-
-        $response = $repo->filter($query, $page, 10, 'fullname', 'ASC', null);
-
-        $items = [];
-        foreach ($response as $item){
-            $items[] = [
-                'id' => $item->getId(),
-                'fullname' => $item->getFullname(),
-                'email' => $item->getEmail()
-            ];
-        }
-
-        return $this->json([
-            'total_count' => $response->count(),
-            'items' => $items,
-            'incomplete_results' => ((($page + 1) * 10) < $response->count()) ? true : false
-        ]);
-    }
-
-    /**
      * @Route("/remote_list", name="admin_notice_message_remote_list")
      * @param Request $request
      * @return Response

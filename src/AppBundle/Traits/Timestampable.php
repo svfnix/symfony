@@ -28,14 +28,6 @@ trait Timestampable
     private $updatedAt;
 
     /**
-     * Construct
-     */
-    function __construct()
-    {
-        $this->createdAt = new \DateTime();
-    }
-
-    /**
      * Set createdAt
      *
      * @return $this

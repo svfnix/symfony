@@ -162,15 +162,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->from('AppBundle:User', 'u')
         ;
 
-        if(isset($filters['usergroup'])) {
-
-            $qb
-                ->join('u.usergroup', 'ug')
-                ->where('ug.id = :usergroup')
-                ->setParameter('usergroup', $filters['usergroup'])
-            ;
-        }
-
         if(!empty($search)) {
 
             $search = explode(' ', $search);
@@ -188,6 +179,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $qb
                 ->andWhere('u.role = :role')
                 ->setParameter('role', $filters['role'])
+            ;
+        }
+
+        if(isset($filters['usergroup'])) {
+
+            $qb
+                ->join('u.usergroup', 'ug')
+                ->where('ug.id = :usergroup')
+                ->setParameter('usergroup', $filters['usergroup'])
             ;
         }
 
@@ -228,10 +228,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $message_repo
                 ->createQueryBuilder('m')
                 ->select('count(m.id)')
-                ->where('m.status_read = :status_read')
+                ->where('m.statusRead = :statusRead')
                 ->andWhere('m.receiver = :id')
                 ->setParameter('id', $user->getId())
-                ->setParameter('status_read', Dictionary::STATUS_READ_UNREAD)
+                ->setParameter('statusRead', Dictionary::STATUS_READ_UNREAD)
                 ->getQuery()
                 ->getSingleScalarResult();
 
@@ -241,10 +241,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             $notification_repo
                 ->createQueryBuilder('m')
                 ->select('count(m.id)')
-                ->where('m.status_see = :status_see')
+                ->where('m.statusSee = :statusSee')
                 ->andWhere('m.receiver = :id')
                 ->setParameter('id', $user->getId())
-                ->setParameter('status_see', Dictionary::STATUS_SEE_UNSEEN)
+                ->setParameter('statusSee', Dictionary::STATUS_SEE_UNSEEN)
                 ->getQuery()
                 ->getSingleScalarResult();
 

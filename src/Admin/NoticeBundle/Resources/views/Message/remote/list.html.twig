@@ -16,9 +16,9 @@
     } %}
 {% endif %}
 
-{% if filters.filters.status is defined %}
+{% if filters.filters.statusRead is defined %}
     {% include ':block:filter.html.twig' with {
-    'name': 'status_read',
+    'name': 'statusRead',
     'title': 'وضعیت پیام'
     } %}
 {% endif %}
@@ -33,7 +33,7 @@
             <th id="title"><a href="javascript:void(0)" onclick="ajax_sort('title')">{{ grid_column('title', 'عنوان', filters)|raw }}</a></th>
             <th id="sender" style="width: 150px"><a href="javascript:void(0)" onclick="ajax_sort('sender')">{{ grid_column('sender', 'از طرف', filters)|raw }}</a></th>
             <th id="receiver" style="width: 150px"><a href="javascript:void(0)" onclick="ajax_sort('receiver')">{{ grid_column('receiver', 'ارسال به', filters)|raw }}</a></th>
-            <th id="receiver" style="width: 100px"><a href="javascript:void(0)" onclick="ajax_sort('status_read')">{{ grid_column('status_read', 'وضعیت', filters)|raw }}</a></th>
+            <th id="receiver" style="width: 100px"><a href="javascript:void(0)" onclick="ajax_sort('statusRead')">{{ grid_column('statusRead', 'وضعیت', filters)|raw }}</a></th>
             <th id="receiver" style="width: 100px; text-align: center"><a href="javascript:void(0)" onclick="ajax_sort('createdAt')">{{ grid_column('createdAt', 'تاریخ ارسال', filters)|raw }}</a></th>
             <th id="_action" style="width: 80px">مدیریت</th>
         </tr>
@@ -47,7 +47,7 @@
             <td>{{ item.title }}</td>
             <td>{{ item.sender.fullname }}</td>
             <td>{{ item.receiver.fullname }}</td>
-            <td>{{ item.status_read|trans|raw }}</td>
+            <td>{{ item.statusRead|trans|raw }}</td>
             <td style="text-align: center">{{ item.createdAt|jdate('Y/m/d') }}</td>
             <td>
                 <a class="btn btn-xs btn-default" href="{{ path('admin_notice_message_edit', {id: item.id}) }}"><i class="fa fa-edit margin-3px"></i></a>
