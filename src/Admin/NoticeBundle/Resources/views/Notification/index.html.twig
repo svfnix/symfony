@@ -16,7 +16,7 @@
 {% endblock %}
 
 {% block datagrid_custom_toolbar %}
-    {% include ':filter:receiver.html.twig' with {'path' : path('admin_notice_notification_remote_users')} only %}
+    {% include ':filter:receiver.html.twig' %}
     {% include ':filter:status_see.html.twig' %}
 {% endblock %}
 
