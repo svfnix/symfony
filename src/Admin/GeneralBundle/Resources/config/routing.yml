@@ -1,0 +1,5 @@
+_admin_general_repository:
+    resource: "@AdminGeneralBundle/Controller/RepositoryController.php"
+    type: annotation
+    prefix: /admin/general/repository
+

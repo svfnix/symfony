@@ -13,6 +13,7 @@
     {{ parent() }}
     <a href="{{ path('admin_notice_message_add') }}" class="btn btn-success">ارسال پیام جدید</a>
     <a href="javascript:void(0)" onclick="do_delete_all()" class="btn btn-danger">حذف انتخاب شده ها</a>
+    <a href="javascript:void(0)" onclick="modalMediaManager.show()" class="btn btn-primary">مدیریت رسانه</a>
 {% endblock %}
 
 {% block datagrid_custom_toolbar %}

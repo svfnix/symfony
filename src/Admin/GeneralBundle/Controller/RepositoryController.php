@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace Admin\GeneralBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -10,11 +10,11 @@ use Symfony\Component\HttpFoundation\Response;
 class RepositoryController extends Controller
 {
     /**
-     * @Route("/repository/users", name="repository_users")
+     * @Route("users", name="admin_general_repository_user")
      * @param Request $request
      * @return Response
      */
-    public function remote_users(Request $request)
+    public function user(Request $request)
     {
         $query = $request->query->get('query');
         $page = $request->query->getInt('page');

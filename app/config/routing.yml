@@ -13,3 +13,6 @@ UserSettingBundle:
 UserNoticeBundle:
   resource: "@UserNoticeBundle/Resources/config/routing.yml"
 
+AdminGeneralBundle:
+  resource: "@AdminGeneralBundle/Resources/config/routing.yml"
+

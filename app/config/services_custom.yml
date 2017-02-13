@@ -4,3 +4,4 @@ imports:
     - { resource: "@AdminNoticeBundle/Resources/config/services.yml" }
     - { resource: "@UserSettingBundle/Resources/config/services.yml" }
     - { resource: "@UserNoticeBundle/Resources/config/services.yml" }
+    - { resource: "@AdminGeneralBundle/Resources/config/services.yml" }
