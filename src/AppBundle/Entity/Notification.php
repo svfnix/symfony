@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Helper\Dictionary;
 use AppBundle\Traits\Base;
 use AppBundle\Traits\StatusSee;
 use AppBundle\Traits\Timestampable;
@@ -35,15 +36,15 @@ class Notification
     /**
      * @var string
      *
-     * @ORM\Column(name="type", type="text", length=512)
-     * @Assert\NotNull(message="متن اطلاعیه را مشخص نمایید")
+     * @ORM\Column(name="type", type="text", length=16)
      */
     private $type;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="notification", type="text", length=16)
+     * @ORM\Column(name="notification", type="text", length=512)
+     * @Assert\NotNull(message="متن اطلاعیه را مشخص نمایید")
      */
     private $notification;
 
@@ -54,13 +55,6 @@ class Notification
      * @Assert\NotNull(message="دریافت کننده اطلاعیه را مشخص نمایید")
      */
     private $receiver;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="status", type="string", length=32)
-     */
-    private $status = 'unseen';
 
     /**
      * Notification constructor.

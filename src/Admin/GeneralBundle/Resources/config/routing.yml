@@ -3,3 +3,8 @@ _admin_general_repository:
     type: annotation
     prefix: /admin/general/repository
 
+_admin_general_media:
+    resource: "@AdminGeneralBundle/Controller/MediaController.php"
+    type: annotation
+    prefix: /admin/general/media
+

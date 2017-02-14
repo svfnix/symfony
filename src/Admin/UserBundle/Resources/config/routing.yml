@@ -1,10 +1,10 @@
-_admin_user_group:
-    resource: "@AdminUserBundle/Controller/GroupController.php"
-    type: annotation
-    prefix: /admin/user/group
-
 _admin_user_user:
     resource: "@AdminUserBundle/Controller/UserController.php"
     type: annotation
     prefix: /admin/user/user
+
+_admin_user_group:
+    resource: "@AdminUserBundle/Controller/GroupController.php"
+    type: annotation
+    prefix: /admin/user/group
 

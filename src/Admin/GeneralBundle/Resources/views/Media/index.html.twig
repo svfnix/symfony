@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+    <head>
+        <meta charset="UTF-8" />
+        <title>مدیریت پرونده های چند رسانه ای</title>
+        <link rel="stylesheet" type="text/css" href="/vendor/fontawesome/4.6.3/css/font-awesome.min.css" />
+        <link rel="stylesheet" type="text/css" href="/vendor/fontiran/4.0/css/iransans.css" />
+
+        <script src="/vendor/jquery/2.2.3/jquery.min.js" ></script>
+
+        <style>
+            html, body{
+                height: 100%;
+                padding: 0px;
+                margin: 0px;
+            }
+            .sidebar{
+                float: left;
+                width: 0px;
+                height: 100%;
+                background-color: #FAFAFA;
+                border-right: 1px solid #E3E3E3;
+                transition: ease all 0.2s;
+            }
+            .mainbar{
+                margin-left: 5px;
+                height: 100%;
+                transition: ease all 0.2s;
+                width: 100%;
+            }
+
+            .open .sidebar{
+                width: 450px;
+            }
+            .open .mainbar{
+                width: calc(100% - 455px);
+            }
+        </style>
+        <script>
+            function toggleSidebar() {
+                $('body').toggleClass('open');
+            }
+        </script>
+    </head>
+    <body>
+        <div class="sidebar">
+
+        </div>
+        <div class="mainbar">
+            <a href="javascript:void(0)" onclick="toggleSidebar()">toggle</a>
+        </div>
+    </body>
+</html>

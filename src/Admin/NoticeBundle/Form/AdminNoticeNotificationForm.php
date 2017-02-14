@@ -15,8 +15,8 @@ class AdminNoticeNotificationForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('notification')
             ->add('receiver')
+            ->add('notification')
         ;
     }
     

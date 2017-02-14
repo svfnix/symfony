@@ -16,4 +16,8 @@ class Dictionary
 
     const STATUS_SEE_SEEN = 'seen';
     const STATUS_SEE_UNSEEN = 'unseen';
+
+    const NOTIFICATION_TYPE_SUCCESS = 'success';
+    const NOTIFICATION_TYPE_WARNING = 'warning';
+    const NOTIFICATION_TYPE_ERROR = 'error';
 }

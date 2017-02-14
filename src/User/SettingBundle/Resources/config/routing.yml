@@ -1,10 +1,10 @@
-_user_setting_profile:
-    resource: "@UserSettingBundle/Controller/ProfileController.php"
-    type: annotation
-    prefix: /user/setting/profile
-
 _user_setting_password:
     resource: "@UserSettingBundle/Controller/PasswordController.php"
     type: annotation
     prefix: /user/setting/password
+
+_user_setting_profile:
+    resource: "@UserSettingBundle/Controller/ProfileController.php"
+    type: annotation
+    prefix: /user/setting/profile
 

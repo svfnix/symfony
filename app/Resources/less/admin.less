@@ -3,9 +3,86 @@
     margin: 50px;
     width: calc(~'100% - 100px');
     height: 100%;
-  }
-  .modal-content {
-    height: calc(~'100% - 100px');
+
+    .modal-content{
+      height: calc(~'100% - 100px');
+      border-radius: 15px;
+
+      .modal-header {
+        background-color: #f8f8f8;
+        border-radius: 15px;
+
+        .modal-title {
+          font-weight: bold;
+          margin: 5px 5px 0px 0px;
+        }
+
+        .modal-close{
+          margin: 5px 0px 0px 5px;
+        }
+      }
+
+      .modal-body{
+        height: calc(~'100% - 110px');
+        padding: 0px;
+      }
+
+      .modal-footer{
+
+        .modal-progress{
+          float: left;
+          margin-left: 10px;
+          padding: 5px;
+        }
+
+        .modal-toolbar {
+          float: left;
+          padding: 5px;
+
+          a {
+            color:#787878;
+            font-size: 18px;
+          }
+        }
+
+        .modal-address{
+          float: right;
+
+          ul{
+            list-style: none;
+            padding: 0px;
+            margin: 0px 10px 0px 0px;
+            direction: rtl;
+
+            li{
+              float: right;
+
+              &:after{
+                font-family: FontAwesome;
+                content: "\f104";
+                color: #CCC;
+                font-size: 16px;
+                padding: 2px 10px 0px 10px;
+              }
+
+              &:first-child{
+                font-size: 18px;
+                &:after{
+                  content: "";
+                  padding: 2px 0px 0px 0px !important;
+                }
+              }
+
+              a{
+                color: #666;
+              }
+            }
+          }
+        }
+
+      }
+
+    }
   }
 }
 

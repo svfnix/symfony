@@ -1,10 +1,10 @@
-_user_notice_notification:
-    resource: "@UserNoticeBundle/Controller/NotificationController.php"
-    type: annotation
-    prefix: /user/notice/notification
-
 _user_notice_message:
     resource: "@UserNoticeBundle/Controller/MessageController.php"
     type: annotation
     prefix: /user/notice/message
+
+_user_notice_notification:
+    resource: "@UserNoticeBundle/Controller/NotificationController.php"
+    type: annotation
+    prefix: /user/notice/notification
 
