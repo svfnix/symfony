@@ -5,6 +5,7 @@
         <title>مدیریت پرونده های چند رسانه ای</title>
         <link rel="stylesheet" type="text/css" href="/vendor/fontawesome/4.6.3/css/font-awesome.min.css" />
         <link rel="stylesheet" type="text/css" href="/vendor/fontiran/4.0/css/iransans.css" />
+        <link rel="stylesheet" type="text/css" href="/dist/admin.css" />
 
         <script src="/vendor/jquery/2.2.3/jquery.min.js" ></script>
 
@@ -21,12 +22,11 @@
                 height: 100%;
                 background-color: #FAFAFA;
                 border-right: 1px solid #E3E3E3;
-                transition: ease all 0.2s;
+                padding: 10px;
             }
             .mainbar{
                 margin-left: 5px;
                 height: 100%;
-                transition: ease all 0.2s;
                 width: 100%;
             }
 
@@ -37,6 +37,10 @@
             .open .mainbar{
                 width: calc(100% - 455px);
             }
+            .sidebar-section{
+                height:100%;
+                background-color: white;
+            }
         </style>
         <script>
             function toggleSidebar() {
@@ -46,7 +50,13 @@
     </head>
     <body>
         <div class="sidebar">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#">پوشه</a></li>
+                <li><a href="#">پرونده</a></li>
+            </ul>
+            <div class="sidebar-section">
 
+            </div>
         </div>
         <div class="mainbar">
             <table width="100%" cellspacing="5" cellpadding="5" height="100%" border="0">
