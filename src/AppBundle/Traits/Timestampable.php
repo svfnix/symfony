@@ -28,6 +28,13 @@ trait Timestampable
     private $updatedAt;
 
     /**
+     * @var \Datetime
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    private $deletedAt;
+
+    /**
      * Set createdAt
      *
      * @return $this
@@ -42,7 +49,7 @@ trait Timestampable
     /**
      * Get createdAt
      *
-     * @return datetime
+     * @return DateTime|null
      */
     public function getCreatedAt()
     {
@@ -56,7 +63,7 @@ trait Timestampable
      */
     public function setUpdatedAt()
     {
-        $this->updatedAt = DateTime();
+        $this->updatedAt = \DateTime();
 
         return $this;
     }
@@ -64,10 +71,69 @@ trait Timestampable
     /**
      * Get updatedAt
      *
-     * @return datetime
+     * @return DateTime|null
      */
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Marks entity as deleted.
+     */
+    public function delete()
+    {
+        $this->deletedAt = $this->currentDateTime();
+    }
+
+    /**
+     * Restore entity by undeleting it
+     */
+    public function restore()
+    {
+        $this->deletedAt = null;
+    }
+
+    /**
+     * Checks whether the entity has been deleted.
+     *
+     * @return Boolean
+     */
+    public function isDeleted()
+    {
+        if (null !== $this->deletedAt) {
+            return $this->deletedAt <= $this->currentDateTime();
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks whether the entity will be deleted.
+     *
+     * @return Boolean
+     */
+    public function willBeDeleted(\DateTime $at = null)
+    {
+        if ($this->deletedAt === null) {
+
+            return false;
+        }
+        if ($at === null) {
+
+            return true;
+        }
+
+        return $this->deletedAt <= $at;
+    }
+
+    /**
+     * Returns date on which entity was been deleted.
+     *
+     * @return DateTime|null
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
     }
 }

@@ -1,0 +1,21 @@
+{% for node in nodes %}
+<table class="node" id="node_{{ node.id }}">
+    <tbody>
+        <tr>
+            <td>
+                <a href="javascript:void(0)"><img src="/assets/images/folder.png"></a>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div class="name_wrapper">
+                    <div class="hovername" onmouseover="$(this).html('{{ node.name }}');" onmouseout="$(this).html('forget')">{{ node.name }}</div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td>{{ node.owner.fullname }}</td>
+        </tr>
+    </tbody>
+</table>
+{% endfor %}

@@ -49,14 +49,14 @@ class Message
     private $message;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinColumn(name="sender", referencedColumnName="id")
      * @Assert\NotNull(message="ارسال کننده پیام را مشخص نمایید")
      */
     private $sender;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinColumn(name="receiver", referencedColumnName="id")
      * @Assert\NotNull(message="دریافت کننده پیام را مشخص نمایید")
      */

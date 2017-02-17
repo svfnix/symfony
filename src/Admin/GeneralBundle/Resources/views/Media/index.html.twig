@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="/dist/admin.css" />
 
         <script src="/vendor/jquery/2.2.3/jquery.min.js" ></script>
+        <script src="/vendor/bootstrap/3.6.6/js/bootstrap.min.js" ></script>
 
         <style>
             html, body{
@@ -20,249 +21,315 @@
                 width: 0px;
                 display: none;
                 height: 100%;
-                background-color: #FAFAFA;
+                background-color: #FCFCFC;
                 border-right: 1px solid #E3E3E3;
-                padding: 10px;
             }
-            .mainbar{
+            .stage{
                 margin-left: 5px;
                 height: 100%;
                 width: 100%;
+                padding: 15px;
             }
 
             .open .sidebar{
-                width: 450px;
+                width: 350px;
                 display: inline-block;
             }
-            .open .mainbar{
-                width: calc(100% - 455px);
+            .open .stage{
+                width: calc(100% - 355px);
             }
-            .sidebar-section{
-                height:100%;
-                background-color: white;
+
+            .toolbar {
+                padding: 0px;
+                background: #FDFDFD;
+                border-bottom: 1px solid #F6F6F6;
             }
+            .toolbar > ul > li > a {
+                color: #787878;
+            }
+            .toolbar .dropdown-menu {
+                border-radius: 0px;
+                margin-top: 0px;
+            }
+            .toolbar-box {
+                padding: 10px;
+                border-top: 1px solid #DBCFB7;
+                border-bottom: 1px solid #E6EA9E;
+                background: #fefdec;
+                display: none;
+            }
+            .toolbar-box .input-group {
+                max-width: 500px;
+            }
+            .toolbar-alert {
+                padding: 10px;
+                display: none;
+            }
+            .toolbar-alert-error {
+                border-top: 1px solid #F00;
+                border-bottom: 1px solid #F00;
+                background: #ffafaf;
+            }
+            .toolbar-alert-success {
+                border-top: 1px solid #8EC086;
+                border-bottom: 1px solid #8EC086;
+                background: #bce6a2;
+            }
+
+            .node {
+                width: 130px;
+                float: right;
+                margin: 10px;
+                text-align: center;
+                color:#AAA;
+                border: 1px solid #F9F9F9;
+            }
+
+            .node tr td{color:#AAA; font-size: 11px; display: block; overflow: hidden}
+            .node tr td a{color: #666}
+
+            .node tr:nth-child(1) td {height: 100px}
+            .node tr:nth-child(2) td {height: 25px}
+            .node tr:nth-child(3) td {height: 25px}
+
+            .node:hover{background-color:#FEFEFE; border: 1px solid #DDD}
+            .active_node,
+            .active_node:hover {background-color:#FEFEFE; border: 1px solid #A7C6ED}
+
+            .name_wrapper {text-align: center; direction: rtl;}
+            .name_wrapper .hovername{
+                font-size: 11px;
+                display: block;
+                position: relative;
+                text-align: center;
+                border: 1px solid transparent;
+                padding: 5px 10px;
+                z-index: 1;
+                border-radius: 5px;
+                color: #454545;
+            }
+            .name_wrapper .hovername:hover {
+                position: absolute;
+                min-width: 150px;
+                margin-right: -11px;
+                background-color: #FCFFF1;
+                border: 1px solid #E7DFC4;
+                z-index: 1000;
+            }
+
         </style>
         <script>
+            var current_node = 0;
+            var active_toolbar = null;
+            var active_proceesses = 0;
+            var modal = parent.modalMediaManager;
+
+            function ajax_request(url, data, events) {
+
+                var events = $.extend({
+                    beforeSend: null,
+                    done: null,
+                    fail: null,
+                    always: null
+                }, events);
+
+                $.ajax({
+                    url: url,
+                    method: "POST",
+                    data: data,
+                    events: events,
+                    beforeSend: function (xhr) {
+
+                        if(!active_proceesses){
+                            parent.modalMediaManager.showProgressBar();
+                        }
+
+                        active_proceesses++;
+
+                        if(typeof events.beforeSend === 'function'){
+                            events.beforeSend();
+                        }
+                    }
+                })
+                .done(function (data) {
+                    try {
+                        if(typeof events.done === 'function'){
+                            events.done(data);
+                        }
+                    } catch (e) {
+                        showError("خطا در پردازش اطلاعات!");
+                    }
+                })
+                .fail(function () {
+
+                    showError("خطا در دریافت اطلاعات!");
+
+                    if(typeof events.fail === 'function'){
+                        events.fail();
+                    }
+
+                })
+                .always(function () {
+
+                    active_proceesses--;
+                    if(!active_proceesses){
+                        parent.modalMediaManager.hideProgressBar();
+                    }
+
+                    if(typeof events.always === 'function'){
+                        events.always();
+                    }
+                });
+            }
+
             function toggleSidebar() {
                 $('body').toggleClass('open');
+            }
+
+            function switchToolbar(obj) {
+                $('.toolbar-box').slideUp();
+                if(obj != active_toolbar) {
+                    $(obj).slideDown();
+                    active_toolbar = obj;
+                } else {
+                    active_toolbar = null;
+                }
+            }
+
+            function closeToolbar() {
+                $('.toolbar-box').slideUp();
+                active_toolbar = null;
+            }
+
+            function showError(message) {
+                $('.toolbar-alert')
+                    .hide()
+                    .html(message)
+                    .removeClass('toolbar-alert-success')
+                    .addClass('toolbar-alert-error')
+                    .slideDown();
+                setTimeout(function () {
+                    hideAlert();
+                }, 4000)
+            }
+
+            function showSuccess(message) {
+                $('.toolbar-alert')
+                    .hide()
+                    .html(message)
+                    .removeClass('toolbar-alert-error')
+                    .addClass('toolbar-alert-success')
+                    .slideDown();
+                setTimeout(function () {
+                    hideAlert();
+                }, 4000)
+            }
+
+            function hideAlert() {
+                $('.toolbar-alert').slideUp();
             }
         </script>
     </head>
     <body>
-        <div class="sidebar">
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#">پوشه</a></li>
-                <li><a href="#">پرونده</a></li>
+
+        <div class="toolbar">
+            <ul class="nav nav-pills">
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarCreateFolder')" class="fa fa-folder-open-o" data-toggle="dropdown"></a></li>
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarUpload')" class="fa fa-file-text-o" data-toggle="dropdown"></a></li>
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarSearch')" class="fa fa-search" data-toggle="dropdown"></a></li>
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarDelete')" class="fa fa-trash-o" data-toggle="dropdown"></a></li>
+
+                <li class="pull-left" style="font-size: 18px"><a href="javascript:void(0)" class="fa fa-bars sidebar-pannel-handle" data-toggle="dropdown"></a></li>
             </ul>
-            <div class="sidebar-section">
-
+            <div class="toolbar-box" id="toolbarCreateFolder">
+                <div class="input-group">
+                    <input class="form-control" id="txtFolderName" placeholder="نام پوشه جدید را وارد نمایید">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" id="btnCreateFolder" type="button">ایجاد پوشه</button>
+                    </span>
+                </div>
             </div>
+            <div class="toolbar-box" id="toolbarUpload">
+                <input type="button" class="btn btn-success" value="انتخاب و آپلود فایل">
+            </div>
+            <div class="toolbar-box" id="toolbarSearch">
+                <div class="input-group">
+                    <input class="form-control" placeholder="عبارتی را جهت جستجو وارد نمایید">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="button">جستجو</button>
+                    </span>
+                </div>
+            </div>
+            <div class="toolbar-box" id="toolbarDelete">
+                <input type="button" class="btn btn-danger" value="حذف فایل های انتخاب شده">
+            </div>
+
+            <div class="toolbar-alert"></div>
         </div>
-        <div class="mainbar">
-            <table width="100%" cellspacing="5" cellpadding="5" height="100%" border="0">
-                <tbody><tr>
-                    <td class="dirtree">
 
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/52"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_52" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('forget');" onmouseout="$(this).html('forget')" href="/admin/explorer/index/nid/52">forget</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
+        <div class="sidebar"></div>
+        <div class="stage"></div>
 
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/53"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_53" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('info');" onmouseout="$(this).html('info')" href="/admin/explorer/index/nid/53">info</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
 
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/54"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_54" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('list');" onmouseout="$(this).html('list')" href="/admin/explorer/index/nid/54">list</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
+        <script>
+            ajax_request('{{ path('admin_general_media_remote_explore') }}', {}, {
+                done: function(data){
+                    if(data.success){
+                        $('.stage').html(data.stage);
+                        modal.setAddress(data.address);
+                    } else {
+                        showError('عملیات با خطا مواجه شد');
+                    }
+                }
+            });
+        </script>
+        <script>
+            $('.node').click(function () {
+                $('.active_node').removeClass('active_node');
+                $(this).addClass('active_node');
+            });
+            $('.sidebar-pannel-handle').click(function () {
+                toggleSidebar()
+            });
 
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/55"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_55" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('passwd');" onmouseout="$(this).html('passwd')" href="/admin/explorer/index/nid/55">passwd</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
+            $('#btnCreateFolder').click(function () {
+                hideAlert();
+                var name = $('#txtFolderName').val();
+                if(name == ''){
+                    showError('نام پوشه وارد نشده است');
+                } else {
+                    ajax_request('/admin/general/media/remote_create_folder/' + current_node,
+                        {
+                            'name': name
+                        },
+                        {
+                            beforeSend: function () {
+                                $('#btnCreateFolder').html('صبر کنید ...').attr('disabled', 'disabled');
+                            },
+                            done: function(data){
+                                if(data.success){
 
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/56"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_56" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('reg');" onmouseout="$(this).html('reg')" href="/admin/explorer/index/nid/56">reg</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
+                                    $('.stage').html(data.stage);
+                                    $('#txtFolderName').val('');
 
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/57"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_57" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('signin');" onmouseout="$(this).html('signin')" href="/admin/explorer/index/nid/57">signin</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
+                                    modal.setAddress(data.address);
+                                    showSuccess('عملیات با موفقیت انجام شد');
 
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/58"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_58" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('signup');" onmouseout="$(this).html('signup')" href="/admin/explorer/index/nid/58">signup</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
+                                    closeToolbar();
 
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/91"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_91" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('update');" onmouseout="$(this).html('update')" href="/admin/explorer/index/nid/91">update</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
-
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/96"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_96" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('hot');" onmouseout="$(this).html('hot')" href="/admin/explorer/index/nid/96">hot</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
-
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/102"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_102" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('telegfa');" onmouseout="$(this).html('telegfa')" href="/admin/explorer/index/nid/102">telegfa</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
-
-                        <table class="node">
-                            <tbody><tr>
-                                <td>
-                                    <a href="/admin/explorer/index/nid/105"><img src="/assets/images/folder.png"></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div id="name_105" class="hovername_wrappercenter">
-                                        <a class="hovername" onmouseover="$(this).html('specialoffers');" onmouseout="$(this).html('specialoffers')" href="/admin/explorer/index/nid/105">specialoffers</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>saeed</td>
-                            </tr>
-                            </tbody></table>
-                    </td>
-                </tr>
-                </tbody></table>
-        </div>
+                                } else if(data.error){
+                                    showSuccess(data.error)
+                                } else {
+                                    showError('عملیات با خطا مواجه شد');
+                                }
+                            },
+                            always: function () {
+                                $('#btnCreateFolder').html('ایجاد پوشه').removeAttr('disabled');
+                            }
+                        }
+                    );
+                }
+            });
+        </script>
     </body>
 </html>

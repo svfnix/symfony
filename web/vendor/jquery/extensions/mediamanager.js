@@ -19,8 +19,7 @@ var modalMediaManager = modalMediaManager || (function ($) {
                 '           </div>'+
                 '           <div class="modal-body"><iframe style="overflow-x:hidden; overflow-y:scroll;" id="modalMediaManagerFrame" src="' + url + '" width="100%" height="100%" frameborder="0"></iframe></div>'+
                 '           <div class="modal-footer">'+
-                '               <div class="modal-toolbar"><a href="javascript:void(0)" class="fa fa-bars toolbar-menu" data-toggle="dropdown"></a></div>'+
-                '               <div class="modal-progress"></div>'+
+                '               <div class="modal-progress"><img src="/images/loading/three-dots.svg" width="50px" /></div>'+
                 '               <div class="modal-address"></div>'+
                 '           </div>'+
                 '       </div>'+
@@ -34,20 +33,18 @@ var modalMediaManager = modalMediaManager || (function ($) {
 
                 if($dialog !== undefined) {
                     modalMediaManager.hide();
+                    $dialog.modal();
+                } else {
+
+                    // Configuring dialog
+                    $dialog = create(url);
+                    $dialog.modal();
+
+                    $iframe = $dialog.find('iframe');
+                    $tool_bar = $dialog.find('.modal-toolbar');
+                    $progress_bar = $dialog.find('.modal-progress');
+                    $address_bar = $dialog.find('.modal-address');
                 }
-
-                // Configuring dialog
-                $dialog = create(url);
-                $dialog.modal();
-
-                $iframe = $dialog.find('iframe');
-                $tool_bar = $dialog.find('.modal-toolbar');
-                $progress_bar = $dialog.find('.modal-progress');
-                $address_bar = $dialog.find('.modal-address');
-
-                $tool_bar.find('.toolbar-menu').click(function () {
-                    modalMediaManager.toogleSidebar();
-                })
 
             },
             hide: function () {
@@ -61,9 +58,6 @@ var modalMediaManager = modalMediaManager || (function ($) {
             },
             setAddress: function (address) {
                 $address_bar.html(address);
-            },
-            toogleSidebar: function () {
-                document.all.modalMediaManagerFrame.contentWindow.toggleSidebar();
             }
         };
 

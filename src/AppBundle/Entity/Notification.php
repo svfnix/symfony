@@ -21,9 +21,6 @@ class Notification
         Timestampable,
         StatusSee;
 
-    const STATUS_SEEN = 'seen';
-    const STATUS_UNSEEN = 'unseen';
-
     /**
      * @var int
      *
@@ -50,7 +47,7 @@ class Notification
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
      * @ORM\JoinColumn(name="receiver", referencedColumnName="id")
      * @Assert\NotNull(message="دریافت کننده اطلاعیه را مشخص نمایید")
      */
