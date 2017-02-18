@@ -49,14 +49,14 @@ class MediaController extends Controller
                 $nodes = $node->getChildren();
             }
         } else {
-            $nodes = $repo->findOneBy(['parent' => null]);
+            $nodes = $repo->findBy(['parent' => null], ['name' => 'ASC']);
         }
 
         $return = array();
         $return['success'] = 1;
         $return['stage'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
             'nodes' => $nodes
-        ]);
+        ])->getContent();
         $return['address'] = $this->nodeAddress($node);
 
         return $this->json($return);

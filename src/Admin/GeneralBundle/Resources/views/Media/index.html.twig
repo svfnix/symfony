@@ -181,6 +181,20 @@
                     }
                 });
             }
+            function explore(id) {
+                ajax_request('/admin/general/media/remote_explore/' + current_node, {},
+                    {
+                        done: function(data){
+                            if(data.success){
+                                $('.stage').html(data.stage);
+                                modal.setAddress(data.address);
+                            } else {
+                                showError('عملیات با خطا مواجه شد');
+                            }
+                        }
+                    }
+                );
+            }
 
             function toggleSidebar() {
                 $('body').toggleClass('open');
@@ -270,19 +284,6 @@
         <div class="sidebar"></div>
         <div class="stage"></div>
 
-
-        <script>
-            ajax_request('{{ path('admin_general_media_remote_explore') }}', {}, {
-                done: function(data){
-                    if(data.success){
-                        $('.stage').html(data.stage);
-                        modal.setAddress(data.address);
-                    } else {
-                        showError('عملیات با خطا مواجه شد');
-                    }
-                }
-            });
-        </script>
         <script>
             $('.node').click(function () {
                 $('.active_node').removeClass('active_node');
@@ -330,6 +331,8 @@
                     );
                 }
             });
+
+            explore(0);
         </script>
     </body>
 </html>
