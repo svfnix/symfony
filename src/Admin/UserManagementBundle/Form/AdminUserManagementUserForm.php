@@ -1,12 +1,12 @@
 <?php
 
-namespace Admin\UserBundle\Form;
+namespace Admin\UserManagementBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AdminUserGroupForm extends AbstractType
+class AdminUserManagementUserForm extends AbstractType
 {
     /**
      * {@inheritdoc}
@@ -14,10 +14,14 @@ class AdminUserGroupForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title')
-            ->add('name')
+            ->add('fullname')
+            ->add('mobile')
+            ->add('email')
+            ->add('username')
+            ->add('password')
+            ->add('role')
+            ->add('usergroup')
             ->add('memo')
-            ->add('permissions')
         ;
     }
     
@@ -27,7 +31,7 @@ class AdminUserGroupForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\UserGroup'
+            'data_class' => 'AppBundle\Entity\User'
         ));
     }
 

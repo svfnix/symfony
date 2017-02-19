@@ -1,6 +1,6 @@
 imports:
     - { resource: "@AppBundle/Resources/config/services.yml" }
-    - { resource: "@AdminUserBundle/Resources/config/services.yml" }
+    - { resource: "@AdminUserManagementBundle/Resources/config/services.yml" }
     - { resource: "@AdminNoticeBundle/Resources/config/services.yml" }
     - { resource: "@UserSettingBundle/Resources/config/services.yml" }
     - { resource: "@UserNoticeBundle/Resources/config/services.yml" }

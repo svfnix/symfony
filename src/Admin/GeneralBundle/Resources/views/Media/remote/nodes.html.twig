@@ -1,21 +1,37 @@
 {% for node in nodes %}
-<table class="node" id="node_{{ node.id }}">
-    <tbody>
-        <tr>
-            <td>
-                <a href="javascript:void(0)" onclick="explore({{ node.id }})"><img src="/assets/images/folder.png"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <div class="name_wrapper">
-                    <div class="hovername" onmouseover="$(this).html('{{ node.name }}');" onmouseout="$(this).html('forget')">{{ node.name }}</div>
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td>{{ node.owner.fullname }}</td>
-        </tr>
-    </tbody>
-</table>
+    {% if node.name|length > 10 %}
+        {% set name_short = node.name[:10] %}
+    {% else %}
+        {% set name_short = node.name %}
+    {% endif %}
+    {% if node.name|length > 15 %}
+        <style>
+            #node_{{ node.id }} .hoverfullname:hover{
+                text-align: right;
+            }
+        </style>
+    {% endif %}
+    <table class="node" id="node_{{ node.id }}">
+        <tbody>
+            <tr>
+                <td>
+                    <a href="javascript:void(0)" onclick="explore({{ node.id }})"><img src="/assets/images/folder.png"></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="name_wrapper">
+                        {% if name_short == node.name %}
+                            <div class="hovername">{{ node.name }}</div>
+                        {% else %}
+                            <div class="hoverfullname" onmouseover="$(this).html('{{ node.name }}');" onmouseout="$(this).html('{{ name_short }} ...')">{{ name_short }} ...</div>
+                        {% endif %}
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>{{ node.owner.fullname }}</td>
+            </tr>
+        </tbody>
+    </table>
 {% endfor %}

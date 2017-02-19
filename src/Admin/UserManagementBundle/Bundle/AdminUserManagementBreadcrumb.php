@@ -6,13 +6,13 @@
  * Time: 9:02 PM
  */
 
-namespace Admin\UserBundle\Bundle;
+namespace Admin\UserManagementBundle\Bundle;
 
 use AppBundle\Helper\Breadcrumb;
 use AppBundle\Helper\BreadcrumbWrapper;
 use Symfony\Component\Routing\Router;
 
-class AdminUserBreadcrumb extends BreadcrumbWrapper
+class AdminUserManagementBreadcrumb extends BreadcrumbWrapper
 {
     var $router = null;
 

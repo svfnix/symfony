@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\UserBundle\Controller;
+namespace Admin\UserManagementBundle\Controller;
 
-use Admin\UserBundle\Form\AdminUserUserForm;
+use Admin\UserManagementBundle\Form\AdminUserManagementUserForm;
 use AppBundle\Entity\User;
 use AppBundle\Helper\App;
 use AppBundle\Wrappers\AdminPanelController;
@@ -32,7 +32,7 @@ class UserController extends AdminPanelController
         $filters = $this->getFilters($request, $em->getClassMetadata(User::class)->getFieldNames());
         $response = call_user_func_array([$repo, 'filter'], $filters);
 
-        return $this->render('AdminUserBundle:User:remote/list.html.twig', [
+        return $this->render('AdminUserManagementBundle:User:remote/list.html.twig', [
             'items' => $response,
             'roles' => $this->getRoles(),
             'filters' => $filters,
@@ -80,7 +80,7 @@ class UserController extends AdminPanelController
         $repo = $em->getRepository('AppBundle:UserGroup');
 
         $this->breadcrumb()->userIndex();
-        return $this->render('AdminUserBundle:User:index.html.twig', [
+        return $this->render('AdminUserManagementBundle:User:index.html.twig', [
             'roles' => $this->getRoles(),
             'usergroup' => $repo->findAll()
         ]);
@@ -101,7 +101,7 @@ class UserController extends AdminPanelController
         $repo = $em->getRepository('AppBundle:UserGroup');
 
         $user = new User();
-        $form = $this->createForm(AdminUserUserForm::class, $user, [
+        $form = $this->createForm(AdminUserManagementUserForm::class, $user, [
             'validation_groups' => ['add']
         ]);
 
@@ -120,7 +120,7 @@ class UserController extends AdminPanelController
         }
 
         $this->breadcrumb()->userAdd();
-        return $this->render('AdminUserBundle:User:add.html.twig', [
+        return $this->render('AdminUserManagementBundle:User:add.html.twig', [
             'tab' => $tab,
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
@@ -147,7 +147,7 @@ class UserController extends AdminPanelController
         $repo = $em->getRepository('AppBundle:UserGroup');
 
         $default_password = $user->getPassword();
-        $form = $this->createForm(AdminUserUserForm::class, $user, [
+        $form = $this->createForm(AdminUserManagementUserForm::class, $user, [
             'validation_groups' => ['update']
         ]);
 
@@ -175,7 +175,7 @@ class UserController extends AdminPanelController
         }
 
         $this->breadcrumb()->userEdit();
-        return $this->render('AdminUserBundle:User:edit.html.twig', [
+        return $this->render('AdminUserManagementBundle:User:edit.html.twig', [
             'tab' => $tab,
             'form' => $form->createView(),
             'errors' => $form->getErrors(),

@@ -1,14 +1,14 @@
-_admin_notice_message:
+Admin_Notice_Message:
     resource: "@AdminNoticeBundle/Controller/MessageController.php"
     type: annotation
     prefix: /admin/notice/message
 
-_admin_notice_news:
+Admin_Notice_News:
     resource: "@AdminNoticeBundle/Controller/NewsController.php"
     type: annotation
     prefix: /admin/notice/news
 
-_admin_notice_notification:
+Admin_Notice_Notification:
     resource: "@AdminNoticeBundle/Controller/NotificationController.php"
     type: annotation
     prefix: /admin/notice/notification

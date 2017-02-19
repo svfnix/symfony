@@ -6,11 +6,11 @@
  * Time: 9:02 PM
  */
 
-namespace Admin\UserBundle\Bundle;
+namespace Admin\UserManagementBundle\Bundle;
 
 use AppBundle\Helper\Permission;
 
-class AdminUserPermission
+class AdminUserManagementPermission
 {
     public function inflateAdminPermission(Permission $list){
 

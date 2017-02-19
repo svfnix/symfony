@@ -1,9 +1,9 @@
-_user_setting_password:
+User_Setting_Password:
     resource: "@UserSettingBundle/Controller/PasswordController.php"
     type: annotation
     prefix: /user/setting/password
 
-_user_setting_profile:
+User_Setting_Profile:
     resource: "@UserSettingBundle/Controller/ProfileController.php"
     type: annotation
     prefix: /user/setting/profile

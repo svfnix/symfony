@@ -1,8 +1,8 @@
 <?php
 
-namespace Admin\UserBundle\Controller;
+namespace Admin\UserManagementBundle\Controller;
 
-use Admin\UserBundle\Form\AdminUserGroupForm;
+use Admin\UserManagementBundle\Form\AdminUserManagementGroupForm;
 use AppBundle\Entity\UserGroup;
 use AppBundle\Wrappers\AdminPanelController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,7 +29,7 @@ class GroupController extends AdminPanelController
         $filters = $this->getFilters($request, $em->getClassMetadata(UserGroup::class)->getFieldNames());
         $response = call_user_func_array([$repo, 'filter'], $filters);
 
-        return $this->render('AdminUserBundle:Group:remote/list.html.twig', [
+        return $this->render('AdminUserManagementBundle:Group:remote/list.html.twig', [
             'items' => $response,
             'filters' => $filters,
             'pagination' => $this->pagination($response->count(), $filters['page'], $filters['count'])
@@ -72,7 +72,7 @@ class GroupController extends AdminPanelController
         }
 
         $this->breadcrumb()->groupIndex();
-        return $this->render('AdminUserBundle:Group:index.html.twig');
+        return $this->render('AdminUserManagementBundle:Group:index.html.twig');
     }
 
     /**
@@ -88,7 +88,7 @@ class GroupController extends AdminPanelController
         }
 
         $group = new UserGroup();
-        $form = $this->createForm(AdminUserGroupForm::class, $group);
+        $form = $this->createForm(AdminUserManagementGroupForm::class, $group);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -104,7 +104,7 @@ class GroupController extends AdminPanelController
         }
 
         $this->breadcrumb()->groupAdd();
-        return $this->render('AdminUserBundle:Group:add.html.twig', [
+        return $this->render('AdminUserManagementBundle:Group:add.html.twig', [
             'tab' => $tab,
             'form' => $form->createView(),
             'errors' => $form->getErrors(),
@@ -126,7 +126,7 @@ class GroupController extends AdminPanelController
             return $this->redirectToLogin();
         }
 
-        $form = $this->createForm(AdminUserGroupForm::class, $group);
+        $form = $this->createForm(AdminUserManagementGroupForm::class, $group);
 
         $form->handleRequest($request);
         if ($form->isSubmitted()) {
@@ -143,7 +143,7 @@ class GroupController extends AdminPanelController
         }
 
         $this->breadcrumb()->groupEdit();
-        return $this->render('AdminUserBundle:Group:edit.html.twig', [
+        return $this->render('AdminUserManagementBundle:Group:edit.html.twig', [
             'tab' => $tab,
             'form' => $form->createView(),
             'errors' => $form->getErrors(),

@@ -1,9 +1,9 @@
-_admin_general_repository:
+Admin_General_Repository:
     resource: "@AdminGeneralBundle/Controller/RepositoryController.php"
     type: annotation
     prefix: /admin/general/repository
 
-_admin_general_media:
+Admin_General_Media:
     resource: "@AdminGeneralBundle/Controller/MediaController.php"
     type: annotation
     prefix: /admin/general/media

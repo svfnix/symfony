@@ -38,8 +38,12 @@ class AppUpdateRoutesCommand extends ContainerAwareCommand
 
                 $path = $bundle->getPath();
                 $path_array = explode('/', ltrim(substr($path, strlen($root)), '/'));
+                $last_item = array_pop($path_array);
+                $last_item = substr($last_item, 0, -6);
+                $path_array[] = $last_item;
 
                 if ($path_array[0] == 'src') {
+                    array_shift($path_array);
 
                     $output->writeln("- {$name} [{$path}]");
 
@@ -52,17 +56,16 @@ class AppUpdateRoutesCommand extends ContainerAwareCommand
                     $bundle_route_config = $kernel->locateResource("@{$name}/Resources/config/routing.yml");
                     file_put_contents($bundle_route_config, '');
 
-                    $name_array = explode('/', dirname(strtolower(preg_replace('/[A-Z]/', '/$0', $name))));
                     foreach ($finder as $file) {
 
                         $controller = basename($file->getBasename('Controller.php'));
 
                         $output->writeln("* ({$controller})");
 
-                        $route = array_merge($name_array, [strtolower($controller)]);
+                        $route = array_merge($path_array, [$controller]);
                         file_put_contents(
                             $bundle_route_config,
-                            implode('_', $route) . ":\n    resource: \"@{$name}/Controller/{$controller}Controller.php\"\n    type: annotation\n    prefix: " . implode('/', $route) . "\n\n",
+                            implode('_', $route) . ":\n    resource: \"@{$name}/Controller/{$controller}Controller.php\"\n    type: annotation\n    prefix: /" . strtolower(implode('/', $route)) . "\n\n",
                             FILE_APPEND);
 
                     }

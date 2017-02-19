@@ -1,8 +1,8 @@
 custom:
   resource: routing_custom.yml
 
-AdminUserBundle:
-  resource: "@AdminUserBundle/Resources/config/routing.yml"
+AdminUserManagementBundle:
+  resource: "@AdminUserManagementBundle/Resources/config/routing.yml"
 
 AdminNoticeBundle:
   resource: "@AdminNoticeBundle/Resources/config/routing.yml"

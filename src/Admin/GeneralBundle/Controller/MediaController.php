@@ -21,11 +21,11 @@ class MediaController extends Controller
 
         if($node) {
             do {
-                array_unshift($return, '<li><a href="javascript:void(0)" onclick="explore(' . $node->getId() . ')">' . $node->getName() . '</a></li>');
+                array_unshift($return, '<li><a href="javascript:void(0)" onclick="modalMediaManager.explore(' . $node->getId() . ')">' . $node->getName() . '</a></li>');
             } while ($node = $node->getParent());
         }
 
-        array_unshift($return, '<li><a href="javascript:void(0)" onclick="explore(0)"><i class="fa fa-home"></i></a></li>');
+        array_unshift($return, '<li><a href="javascript:void(0)" onclick="modalMediaManager.explore(0)"><i class="fa fa-home"></i></a></li>');
 
         return '<ul>' . implode('', $return) . '</ul>';
     }

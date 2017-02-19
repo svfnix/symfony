@@ -1,0 +1,10 @@
+Admin_UserManagement_User:
+    resource: "@AdminUserManagementBundle/Controller/UserController.php"
+    type: annotation
+    prefix: /admin/usermanagement/user
+
+Admin_UserManagement_Group:
+    resource: "@AdminUserManagementBundle/Controller/GroupController.php"
+    type: annotation
+    prefix: /admin/usermanagement/group
+

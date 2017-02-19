@@ -17,7 +17,7 @@ class AdminNoticeMenu
     var $router = null;
 
     /**
-     * AdminUserMenu constructor.
+     * AdminUserManagementMenu constructor.
      * @param $container
      */
     function __construct($container)

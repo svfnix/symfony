@@ -19,7 +19,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Svfnix\JalaliDateBundle\SvfnixJalaliDateBundle(),
             new AppBundle\AppBundle(),
-            new Admin\UserBundle\AdminUserBundle(),
+            new Admin\UserManagementBundle\AdminUserManagementBundle(),
             new Admin\NoticeBundle\AdminNoticeBundle(),
             new User\SettingBundle\UserSettingBundle(),
             new User\NoticeBundle\UserNoticeBundle(),

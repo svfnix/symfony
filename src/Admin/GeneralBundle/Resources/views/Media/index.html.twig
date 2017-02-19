@@ -82,7 +82,7 @@
                 margin: 10px;
                 text-align: center;
                 color:#AAA;
-                border: 1px solid #F9F9F9;
+                border: 1px solid #DDD;
             }
 
             .node tr td{color:#AAA; font-size: 11px; display: block; overflow: hidden}
@@ -108,13 +108,25 @@
                 border-radius: 5px;
                 color: #454545;
             }
-            .name_wrapper .hovername:hover {
+            .name_wrapper .hoverfullname{
+                font-size: 11px;
+                display: block;
+                position: relative;
+                text-align: center;
+                border: 1px solid transparent;
+                padding: 5px 10px;
+                z-index: 1;
+                border-radius: 5px;
+                color: #454545;
+            }
+            .name_wrapper .hoverfullname:hover {
                 position: absolute;
                 min-width: 150px;
                 margin-right: -11px;
                 background-color: #FCFFF1;
                 border: 1px solid #E7DFC4;
                 z-index: 1000;
+                max-width: 250px;
             }
 
         </style>
@@ -182,7 +194,7 @@
                 });
             }
             function explore(id) {
-                ajax_request('/admin/general/media/remote_explore/' + current_node, {},
+                ajax_request('/admin/general/media/remote_explore/' + id, {},
                     {
                         done: function(data){
                             if(data.success){

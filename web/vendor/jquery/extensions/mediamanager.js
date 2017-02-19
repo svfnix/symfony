@@ -58,6 +58,9 @@ var modalMediaManager = modalMediaManager || (function ($) {
             },
             setAddress: function (address) {
                 $address_bar.html(address);
+            },
+            explore: function (id){
+                document.all.modalMediaManagerFrame.contentWindow.explore(id);
             }
         };
 

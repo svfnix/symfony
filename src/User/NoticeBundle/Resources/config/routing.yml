@@ -1,9 +1,9 @@
-_user_notice_message:
+User_Notice_Message:
     resource: "@UserNoticeBundle/Controller/MessageController.php"
     type: annotation
     prefix: /user/notice/message
 
-_user_notice_notification:
+User_Notice_Notification:
     resource: "@UserNoticeBundle/Controller/NotificationController.php"
     type: annotation
     prefix: /user/notice/notification

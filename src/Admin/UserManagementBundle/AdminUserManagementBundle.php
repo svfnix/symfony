@@ -1,22 +1,22 @@
 <?php
 
-namespace Admin\UserBundle;
+namespace Admin\UserManagementBundle;
 
-use Admin\UserBundle\Bundle\AdminUserBreadcrumb;
-use Admin\UserBundle\Bundle\AdminUserMenu;
-use Admin\UserBundle\Bundle\AdminUserPermission;
+use Admin\UserManagementBundle\Bundle\AdminUserManagementBreadcrumb;
+use Admin\UserManagementBundle\Bundle\AdminUserManagementMenu;
+use Admin\UserManagementBundle\Bundle\AdminUserManagementPermission;
 use AppBundle\Helper\Menu;
 use AppBundle\Helper\Permission;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class AdminUserBundle extends Bundle
+class AdminUserManagementBundle extends Bundle
 {
     /**
-     * @return AdminUserBreadcrumb
+     * @return AdminUserManagementBreadcrumb
      */
     public function getBreadcrumb()
     {
-        return new AdminUserBreadcrumb($this->container);
+        return new AdminUserManagementBreadcrumb($this->container);
     }
 
     /**
@@ -24,7 +24,7 @@ class AdminUserBundle extends Bundle
      */
     public function inflateAdminMenu(Menu $menu)
     {
-        $admin_menu = new AdminUserMenu($this->container);
+        $admin_menu = new AdminUserManagementMenu($this->container);
         $admin_menu->inflateAdminMenu($menu);
     }
 
@@ -33,7 +33,7 @@ class AdminUserBundle extends Bundle
      */
     public function inflateAdminPermission(Permission $permissions)
     {
-        $permission = new AdminUserPermission();
+        $permission = new AdminUserManagementPermission();
         $permission->inflateAdminPermission($permissions);
     }
 }

@@ -6,18 +6,18 @@
  * Time: 9:02 PM
  */
 
-namespace Admin\UserBundle\Bundle;
+namespace Admin\UserManagementBundle\Bundle;
 
 
 use AppBundle\Helper\Menu;
 use AppBundle\Helper\App;
 
-class AdminUserMenu
+class AdminUserManagementMenu
 {
     var $router = null;
 
     /**
-     * AdminUserMenu constructor.
+     * AdminUserManagementMenu constructor.
      * @param $container
      */
     function __construct($container)

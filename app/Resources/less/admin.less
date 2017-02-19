@@ -57,7 +57,7 @@
             li{
               float: right;
 
-              &:after{
+              &:before{
                 font-family: FontAwesome;
                 content: "\f104";
                 color: #CCC;
@@ -67,13 +67,15 @@
 
               &:first-child{
                 font-size: 18px;
-                &:after{
+                &:before{
                   content: "";
                   padding: 2px 0px 0px 0px !important;
                 }
               }
 
               a{
+                direction: rtl;
+                display: inline-block;
                 color: #666;
               }
             }
