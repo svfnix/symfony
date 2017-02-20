@@ -8,6 +8,7 @@
         <link rel="stylesheet" type="text/css" href="/dist/admin.css" />
 
         <script src="/vendor/jquery/2.2.3/jquery.min.js" ></script>
+        <script src="/vendor/jquery/extensions/form.js" ></script>
         <script src="/vendor/bootstrap/3.6.6/js/bootstrap.min.js" ></script>
 
         <style>
@@ -83,14 +84,15 @@
                 text-align: center;
                 color:#AAA;
                 border: 1px solid #DDD;
+                height: 153px;
             }
 
             .node tr td{color:#AAA; font-size: 11px; display: block; overflow: hidden}
             .node tr td a{color: #666}
 
-            .node tr:nth-child(1) td {height: 100px}
-            .node tr:nth-child(2) td {height: 25px}
-            .node tr:nth-child(3) td {height: 25px}
+            .node .thumb {height: 100px}
+            .node .title {height: 25px}
+            .node .owner {height: 25px}
 
             .node:hover{background-color:#FEFEFE; border: 1px solid #DDD}
             .active_node,
@@ -129,11 +131,17 @@
                 max-width: 250px;
             }
 
+            .template { display: none; }
+            .template_loading { padding: 50px 30px 40px 30px; width: 128px; color: #DDD; }
+            .template_progress{ padding: 0px 15px; }
+
         </style>
         <script>
             var current_node = 0;
             var active_toolbar = null;
             var active_proceesses = 0;
+            var file_upload_counter = 0;
+
             var modal = parent.modalMediaManager;
 
             function ajax_request(url, data, events) {
@@ -193,6 +201,7 @@
                     }
                 });
             }
+
             function explore(id) {
                 ajax_request('/admin/general/media/remote_explore/' + id, {},
                     {
@@ -206,6 +215,32 @@
                         }
                     }
                 );
+            }
+
+            function upload(file) {
+
+                file_upload_counter ++;
+
+                var $template = $('#newFileTemplate').html().clone();
+                $($template).find('.node').prop('id', 'upload_' + file_upload_counter);
+                $('.stage').append($template);
+
+                var $form = $("<form></form>");
+                $form.append('<input type="file" value="button">');
+
+                $box = $('#upload_' + file_upload_counter);
+                $form.ajaxForm({
+                    beforeSend: function() {
+                        $box.find('.progress-bar').attr('width', '0%');
+                    },
+                    uploadProgress: function(event, position, total, percentComplete) {
+                        $box.find('.progress-bar').attr('width', percentComplete + '%');
+                    },
+                    complete: function(xhr) {
+                        xhr.responseText;
+                    }
+                });
+
             }
 
             function toggleSidebar() {
@@ -276,7 +311,8 @@
                 </div>
             </div>
             <div class="toolbar-box" id="toolbarUpload">
-                <input type="button" class="btn btn-success" value="انتخاب و آپلود فایل">
+                <input type="button" class="btn btn-success" id="btnUpload" value="انتخاب و آپلود فایل">
+                <input type="file" id="fileChooseFiles" multiple="multiple" style="display: none;">
             </div>
             <div class="toolbar-box" id="toolbarSearch">
                 <div class="input-group">
@@ -291,7 +327,7 @@
             </div>
 
             <div class="toolbar-alert"></div>
-        </div>
+        </div>e.target.files
 
         <div class="sidebar"></div>
         <div class="stage"></div>
@@ -322,7 +358,11 @@
                             done: function(data){
                                 if(data.success){
 
-                                    $('.stage').html(data.stage);
+                                    if ($('.node-folder').length) {
+                                        $('.node-folder:last').after(data.node);
+                                    } else {
+                                        $('.stage').prepend(data.node);
+                                    }
                                     $('#txtFolderName').val('');
 
                                     modal.setAddress(data.address);
@@ -344,7 +384,37 @@
                 }
             });
 
+            $('#btnUpload').click(function () {
+                $('#fileChooseFiles').click();
+            });
+            $('#fileChooseFiles').change(function (e) {
+                for(var i = 0; i < e.target.files.length; i++){
+                    upload(e.target.files[i]);
+                }
+            });
+
             explore(0);
         </script>
+        <div class="template" id="newFileTemplate">
+            <table class="node">
+                <tbody>
+                <tr>
+                    <td><div class="template_loading"><i class="fa fa-refresh fa-spin fa-3x fa-fw"></i></div></td>
+                </tr>
+                <tr>
+                    <td><div class="template_name"></div></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="template_progress">
+                            <div class="progress progress-xxs active">
+                                <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </body>
 </html>

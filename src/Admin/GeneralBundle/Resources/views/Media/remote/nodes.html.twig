@@ -11,15 +11,15 @@
             }
         </style>
     {% endif %}
-    <table class="node" id="node_{{ node.id }}">
+    <table class="node node-{{ node.mediaType ? 'file' : 'folder' }}" id="node_{{ node.id }}">
         <tbody>
             <tr>
-                <td>
+                <td class="thumb">
                     <a href="javascript:void(0)" onclick="explore({{ node.id }})"><img src="/assets/images/folder.png"></a>
                 </td>
             </tr>
             <tr>
-                <td>
+                <td class="title">
                     <div class="name_wrapper">
                         {% if name_short == node.name %}
                             <div class="hovername">{{ node.name }}</div>
@@ -30,7 +30,7 @@
                 </td>
             </tr>
             <tr>
-                <td>{{ node.owner.fullname }}</td>
+                <td class="owner">{{ node.owner.fullname }}</td>
             </tr>
         </tbody>
     </table>

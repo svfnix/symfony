@@ -96,7 +96,14 @@ class MediaController extends Controller
         $em->persist($media);
         $em->flush();
 
-        return $this->remote_explore($id);
+        $return = array();
+        $return['success'] = 1;
+        $return['node'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
+            'nodes' => [$media]
+        ])->getContent();
+        $return['address'] = $this->nodeAddress($node);
+
+        return $this->json($return);
     }
 
     /**
