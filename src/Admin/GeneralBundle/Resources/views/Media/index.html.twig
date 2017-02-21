@@ -94,7 +94,7 @@
             .node .title {height: 25px}
             .node .owner {height: 25px}
 
-            .node:hover{background-color:#FEFEFE; border: 1px solid #DDD}
+            .node:hover{background-color:#FEFEFE; border: 1px solid #BBB}
             .active_node,
             .active_node:hover {background-color:#FEFEFE; border: 1px solid #A7C6ED}
 
@@ -140,7 +140,7 @@
             var current_node = 0;
             var active_toolbar = null;
             var active_proceesses = 0;
-            var file_upload_counter = 0;
+            var upload_id = 0;
 
             var modal = parent.modalMediaManager;
 
@@ -217,30 +217,48 @@
                 );
             }
 
-            function upload(file) {
+            function upload() {
 
-                file_upload_counter ++;
+                upload_id ++;
 
-                var $template = $('#newFileTemplate').html().clone();
-                $($template).find('.node').prop('id', 'upload_' + file_upload_counter);
-                $('.stage').append($template);
+                $('#temp').append('<form id="form_'+ upload_id +'"><input type="file" class="file"></form>');
+                $('#form_' + upload_id + ' .file').change(function () {
 
-                var $form = $("<form></form>");
-                $form.append('<input type="file" value="button">');
+                    var $template = $($('#template_file').html());
+                    $template.filter('table').attr('id', 'box_' + upload_id);
+                    $('.stage').append($template);
 
-                $box = $('#upload_' + file_upload_counter);
-                $form.ajaxForm({
-                    beforeSend: function() {
-                        $box.find('.progress-bar').attr('width', '0%');
-                    },
-                    uploadProgress: function(event, position, total, percentComplete) {
-                        $box.find('.progress-bar').attr('width', percentComplete + '%');
-                    },
-                    complete: function(xhr) {
-                        xhr.responseText;
-                    }
-                });
+                    $(this).parent().ajaxSubmit({
 
+                        type: 'post',
+                        url: '/remote_upload/' + current_node,
+                        upload_id: upload_id,
+
+                        beforeSend: function() {
+                            $('#box_' + this.upload_id).find('.progress-bar').css('width', '0%');
+                        },
+
+                        uploadProgress: function(event, position, total, percentComplete) {
+                            $('#box_' + this.upload_id).find('.progress-bar').css('width', percentComplete + '%');
+                        },
+
+                        complete: function(data, status, form) {
+                            try {
+                                var result = JSON.parse(data.responseText);
+
+                                if (result.success) {
+
+                                } else {
+                                }
+
+                            } catch (e){
+                                $('#box_' + this.upload_id).remove();
+                                showError('عملیات با خطا مواجه شد.');
+                            }
+                        }
+                    });
+
+                }).click();
             }
 
             function toggleSidebar() {
@@ -312,7 +330,6 @@
             </div>
             <div class="toolbar-box" id="toolbarUpload">
                 <input type="button" class="btn btn-success" id="btnUpload" value="انتخاب و آپلود فایل">
-                <input type="file" id="fileChooseFiles" multiple="multiple" style="display: none;">
             </div>
             <div class="toolbar-box" id="toolbarSearch">
                 <div class="input-group">
@@ -327,7 +344,7 @@
             </div>
 
             <div class="toolbar-alert"></div>
-        </div>e.target.files
+        </div>
 
         <div class="sidebar"></div>
         <div class="stage"></div>
@@ -385,17 +402,13 @@
             });
 
             $('#btnUpload').click(function () {
-                $('#fileChooseFiles').click();
-            });
-            $('#fileChooseFiles').change(function (e) {
-                for(var i = 0; i < e.target.files.length; i++){
-                    upload(e.target.files[i]);
-                }
+                upload();
             });
 
             explore(0);
+
         </script>
-        <div class="template" id="newFileTemplate">
+        <div class="template" id="template_file">
             <table class="node">
                 <tbody>
                 <tr>
@@ -416,5 +429,6 @@
                 </tbody>
             </table>
         </div>
+        <div id="temp" style="display: none;"></div>
     </body>
 </html>

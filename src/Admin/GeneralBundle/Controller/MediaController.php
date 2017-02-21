@@ -107,6 +107,17 @@ class MediaController extends Controller
     }
 
     /**
+     * @Route("/remote_upload/{id}", name="admin_general_media_remote_upload", requirements={"id" = "\d+"}, defaults={"id" = 0})
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
+    public function remote_upload($id, Request $request)
+    {
+
+    }
+
+    /**
      * @Route("/", name="admin_general_media")
      * @param Request $request
      * @return Response
