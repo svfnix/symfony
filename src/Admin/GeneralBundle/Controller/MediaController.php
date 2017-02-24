@@ -3,9 +3,11 @@
 namespace Admin\GeneralBundle\Controller;
 
 use AppBundle\Entity\Media;
+use AppBundle\Service\UploaderService;
 use AppBundle\Wrappers\AdminPanelController;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -49,7 +51,7 @@ class MediaController extends Controller
                 $nodes = $node->getChildren();
             }
         } else {
-            $nodes = $repo->findBy(['parent' => null], ['name' => 'ASC']);
+            $nodes = $repo->findBy(['parent' => null], ['mediaType' => 'ASC', 'name' => 'ASC']);
         }
 
         $return = array();
@@ -90,7 +92,7 @@ class MediaController extends Controller
         $media->setCreatedAt();
         $media->setName($name);
         $media->setParent($node);
-        $media->setMediaType(Media::FILE_TYPE_FOLDER);
+        $media->setMediaType(Media::FILE_TYPE_DIR);
         $media->setOwner($this->getUser());
 
         $em->persist($media);
@@ -114,7 +116,36 @@ class MediaController extends Controller
      */
     public function remote_upload($id, Request $request)
     {
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:Media');
 
+        $return = array();
+        $return['success'] = 0;
+
+        $node = null;
+        if($id) {
+            $node = $repo->findOneBy(['id' => $id]);
+            if(!$node) {
+                return $this->json(['error' => 'پوشه والد موجود نیست']);
+            }
+        }
+
+        /** @var UploaderService $uploader */
+        $uploader = $this->get('service.uploader');
+        $uploader->allowAll();
+
+        if ($media = $uploader->upload($node, 'file')) {
+
+            $return['success'] = 1;
+            $return['node'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
+                'nodes' => [$media]
+            ])->getContent();
+            $return['address'] = $this->nodeAddress($node);
+
+
+        }
+
+        return $this->json($return);
     }
 
     /**

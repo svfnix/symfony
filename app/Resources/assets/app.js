@@ -10,7 +10,22 @@ function showPassword(obj){
     });
 }
 
+function autodir() {
+    $(".autodir").each(function () {
+        $(this).removeClass('rtl ltr');
+        var content = $(this).html();
+        for (var i = 0; i <= content.length; i++) {
+            if (content.charCodeAt(i - 1) > 255) {
+                $(this).addClass('rtl');
+                return true;
+            }
+        }
+        $(this).addClass('ltr');
+    });
+}
+
 $(function() {
+
     $(".enter_submit").keypress(function (e) {
         if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
             $($(this).data('submit')).click();
@@ -19,4 +34,7 @@ $(function() {
             return true;
         }
     });
+
+    autodir();
+
 });

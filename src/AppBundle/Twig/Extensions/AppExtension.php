@@ -2,8 +2,11 @@
 
 namespace AppBundle\Twig\Extensions;
 
+use AppBundle\Entity\Media;
 use Fisharebest\ExtCalendar\GregorianCalendar;
 use Fisharebest\ExtCalendar\PersianCalendar;
+use Liip\ImagineBundle\Templating\ImagineExtension;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Twig_Extension;
 use Twig_Filter;
 use Twig_Function;
@@ -16,6 +19,17 @@ use Twig_Function;
  */
 class AppExtension extends Twig_Extension
 {
+
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    public function __construct(ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     /**
      * @return array
      */
@@ -34,6 +48,7 @@ class AppExtension extends Twig_Extension
     {
         return [
             new Twig_Function('grid_column', [$this, 'grid_column']),
+            new Twig_Function('node_icon', [$this, 'node_icon'])
         ];
     }
 
@@ -86,6 +101,78 @@ class AppExtension extends Twig_Extension
 
         return $input;
 
+    }
+
+    /**
+     * @param $node
+     * @param int $width
+     * @param int $height
+     * @return string
+     */
+    public function node_icon(Media $node, $width=96, $height=96)
+    {
+
+        if($node->isDir()){
+            return '/assets/images/folder.png';
+        }
+
+        switch ($node->getExtension()){
+            case 'pdf':
+                return '/assets/images/pdf.png';
+                break;
+
+            case 'doc':
+            case 'docx':
+                return '/assets/images/word.png';
+                break;
+
+            case 'xls':
+            case 'xlsx':
+                return '/assets/images/excel.png';
+                break;
+
+            case 'ppt':
+            case 'pptx':
+                return '/assets/images/powerpoint.png';
+                break;
+
+            case 'bmp':
+            case 'gif':
+                return '/assets/images/image.png';
+                break;
+        }
+
+        switch ($node->getFileType()){
+            case 'image':
+
+                $ext = new ImagineExtension(
+                    $this->container->get('liip_imagine.cache.manager')
+                );
+
+                return $ext->filter(
+                    implode(DIRECTORY_SEPARATOR, [
+                        $this->container->getParameter('upload_dir'),
+                        $node->getPath()
+                    ]), 'thumb_small');
+
+                break;
+
+            case 'audio':
+                return '/assets/images/audio.png';
+                break;
+
+            case 'video':
+                return '/assets/images/video.png';
+                break;
+
+            case 'document':
+                return '/assets/images/document.png';
+                break;
+
+            default:
+                return '/assets/images/rest.png';
+                break;
+        }
     }
 
     /**

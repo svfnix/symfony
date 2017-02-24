@@ -7,6 +7,7 @@ var modalMediaManager = modalMediaManager || (function ($) {
         var $tool_bar;
         var $progress_bar;
         var $address_bar;
+        var $address;
 
         function create(url){
             return $(
@@ -57,7 +58,11 @@ var modalMediaManager = modalMediaManager || (function ($) {
                 $progress_bar.html('');
             },
             setAddress: function (address) {
-                $address_bar.html(address);
+                $address = address;
+                $address_bar.html($address);
+            },
+            getAddress: function () {
+                return $address;
             },
             explore: function (id){
                 document.all.modalMediaManagerFrame.contentWindow.explore(id);

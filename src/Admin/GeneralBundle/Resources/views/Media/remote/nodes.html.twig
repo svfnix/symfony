@@ -1,36 +1,49 @@
 {% for node in nodes %}
-    {% if node.name|length > 10 %}
-        {% set name_short = node.name[:10] %}
+
+    {% if node.mediaType == 0 %}
+        {% set node_name = node.name %}
     {% else %}
-        {% set name_short = node.name %}
+        {% set node_name = node.originalName %}
     {% endif %}
-    {% if node.name|length > 15 %}
+
+    {% if node_name|length > 10 %}
+        {% set name_short = node_name[:10] %}
+    {% else %}
+        {% set name_short = node_name %}
+    {% endif %}
+
+    {% if node_name|length > 15 %}
         <style>
             #node_{{ node.id }} .hoverfullname:hover{
                 text-align: right;
             }
         </style>
     {% endif %}
-    <table class="node node-{{ node.mediaType ? 'file' : 'folder' }}" id="node_{{ node.id }}">
+
+    <table class="node node-item node-{{ node.mediaType ? 'file' : 'folder' }}" id="node_{{ node.id }}">
         <tbody>
             <tr>
                 <td class="thumb">
+                    {% if node.mediaType == 0 %}
                     <a href="javascript:void(0)" onclick="explore({{ node.id }})"><img src="/assets/images/folder.png"></a>
+                    {% else %}
+                        <a href="javascript:void(0)" onclick="info({{ node.id }})"><img src="{{ node_icon(node) }}" style="margin-top: 8px"></a>
+                    {% endif %}
                 </td>
             </tr>
             <tr>
                 <td class="title">
                     <div class="name_wrapper">
-                        {% if name_short == node.name %}
-                            <div class="hovername">{{ node.name }}</div>
+                        {% if name_short == node_name %}
+                            <div class="hovername autodir">{{ node_name }}</div>
                         {% else %}
-                            <div class="hoverfullname" onmouseover="$(this).html('{{ node.name }}');" onmouseout="$(this).html('{{ name_short }} ...')">{{ name_short }} ...</div>
+                            <div class="hoverfullname autodir" onmouseover="$(this).html('{{ node_name }}');" onmouseout="$(this).html('{{ name_short }} ...')">{{ name_short }} ...</div>
                         {% endif %}
                     </div>
                 </td>
             </tr>
             <tr>
-                <td class="owner">{{ node.owner.fullname }}</td>
+                <td class="owner autodir">{{ node.owner.fullname }}</td>
             </tr>
         </tbody>
     </table>

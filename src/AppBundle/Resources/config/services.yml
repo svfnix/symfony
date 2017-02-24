@@ -1,5 +1,22 @@
 services:
 
+    app.twig_extension:
+        class: AppBundle\Twig\Extensions\AppExtension
+        public: true
+        arguments:
+            container: "@service_container"
+        tags:
+            - { name: twig.extension }
+
+    service.uploader:
+        class: AppBundle\Service\UploaderService
+        arguments:
+            request: "@request_stack"
+            em: "@doctrine.orm.entity_manager"
+            tokenStorage: "@security.token_storage"
+            dir: "%upload_dir%"
+
+
     message.listener:
         class: AppBundle\Listener\MessageListener
         arguments:
@@ -7,7 +24,7 @@ services:
         tags:
             - { name: kernel.event_listener, event: message.read, method: onMessageRead }
 
-    notification.seen:
+    notification.listener:
         class: AppBundle\Listener\NotificationListener
         arguments:
             em: "@doctrine.orm.entity_manager"

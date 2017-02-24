@@ -10,6 +10,7 @@
         <script src="/vendor/jquery/2.2.3/jquery.min.js" ></script>
         <script src="/vendor/jquery/extensions/form.js" ></script>
         <script src="/vendor/bootstrap/3.6.6/js/bootstrap.min.js" ></script>
+        <script src="/dist/script.js" ></script>
 
         <style>
             html, body{
@@ -175,6 +176,7 @@
                     try {
                         if(typeof events.done === 'function'){
                             events.done(data);
+                            autodir();
                         }
                     } catch (e) {
                         showError("خطا در پردازش اطلاعات!");
@@ -228,10 +230,18 @@
                     $template.filter('table').attr('id', 'box_' + upload_id);
                     $('.stage').append($template);
 
-                    $(this).parent().ajaxSubmit({
+                    var formData = new FormData();
+                    formData.append('file', $(this)[0].files[0]);
+                    formData.append('name', 'saeed');
 
-                        type: 'post',
-                        url: '/remote_upload/' + current_node,
+                    $.ajax({
+                        url: '/admin/general/media/remote_upload/' + current_node,
+                        type: 'POST',
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+
                         upload_id: upload_id,
 
                         beforeSend: function() {
@@ -242,21 +252,44 @@
                             $('#box_' + this.upload_id).find('.progress-bar').css('width', percentComplete + '%');
                         },
 
-                        complete: function(data, status, form) {
-                            try {
-                                var result = JSON.parse(data.responseText);
+                        // Ajax events
+                        success: function(data) {
 
-                                if (result.success) {
+                            try {
+
+                                if (data.success) {
+
+                                    if(data.address == modal.getAddress()) {
+
+                                        $('#box_' + this.upload_id).remove();
+
+                                        if ($('.node-item').length) {
+                                            $('.node-item:last').after(data.node);
+                                        } else {
+                                            $('.stage').prepend(data.node);
+                                        }
+
+                                        autodir();
+                                        showSuccess('عملیات ارسال پرونده با موفقیت انجام شد.');
+                                    }
 
                                 } else {
+                                    showError('پرونده ارسال شده معتبر نمی باشد.');
+                                    $('#box_' + this.upload_id).remove();
                                 }
 
                             } catch (e){
                                 $('#box_' + this.upload_id).remove();
                                 showError('عملیات با خطا مواجه شد.');
                             }
+
+                        },
+
+                        error: function () {
+                            $('#box_' + this.upload_id).remove();
+                            showError('عملیات با خطا مواجه شد.');
                         }
-                    });
+                    }, 'json');
 
                 }).click();
             }
@@ -289,7 +322,7 @@
                     .slideDown();
                 setTimeout(function () {
                     hideAlert();
-                }, 4000)
+                }, 6000)
             }
 
             function showSuccess(message) {
@@ -301,7 +334,7 @@
                     .slideDown();
                 setTimeout(function () {
                     hideAlert();
-                }, 4000)
+                }, 6000)
             }
 
             function hideAlert() {
@@ -382,6 +415,7 @@
                                     }
                                     $('#txtFolderName').val('');
 
+                                    autodir();
                                     modal.setAddress(data.address);
                                     showSuccess('عملیات با موفقیت انجام شد');
 

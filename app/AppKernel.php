@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new Knp\DoctrineBehaviors\Bundle\DoctrineBehaviorsBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Svfnix\JalaliDateBundle\SvfnixJalaliDateBundle(),
+            new Liip\ImagineBundle\LiipImagineBundle(),
             new AppBundle\AppBundle(),
             new Admin\UserManagementBundle\AdminUserManagementBundle(),
             new Admin\NoticeBundle\AdminNoticeBundle(),
