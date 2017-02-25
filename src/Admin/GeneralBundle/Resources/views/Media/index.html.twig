@@ -138,12 +138,62 @@
 
         </style>
         <script>
+
             var current_node = 0;
             var active_toolbar = null;
             var active_proceesses = 0;
             var upload_id = 0;
 
             var modal = parent.modalMediaManager;
+
+
+            function toggleSidebar() {
+                $('body').toggleClass('open');
+            }
+
+            function switchToolbar(obj) {
+                $('.toolbar-box').slideUp();
+                if(obj != active_toolbar) {
+                    $(obj).slideDown();
+                    active_toolbar = obj;
+                } else {
+                    active_toolbar = null;
+                }
+            }
+
+            function closeToolbar() {
+                $('.toolbar-box').slideUp();
+                active_toolbar = null;
+            }
+
+            function showError(message) {
+                $('.toolbar-alert')
+                    .hide()
+                    .html(message)
+                    .removeClass('toolbar-alert-success')
+                    .addClass('toolbar-alert-error')
+                    .slideDown();
+                setTimeout(function () {
+                    hideAlert();
+                }, 6000)
+            }
+
+            function showSuccess(message) {
+                $('.toolbar-alert')
+                    .hide()
+                    .html(message)
+                    .removeClass('toolbar-alert-error')
+                    .addClass('toolbar-alert-success')
+                    .slideDown();
+                setTimeout(function () {
+                    hideAlert();
+                }, 6000)
+            }
+
+            function hideAlert() {
+                $('.toolbar-alert').slideUp();
+            }
+
 
             function ajax_request(url, data, events) {
 
@@ -204,16 +254,58 @@
                 });
             }
 
+
             function explore(id) {
                 ajax_request('/admin/general/media/remote_explore/' + id, {},
                     {
                         done: function(data){
                             if(data.success){
-                                $('.stage').html(data.stage);
+
+                                $('.stage').html(data.content);
                                 modal.setAddress(data.address);
+                                current_node = data.node;
+
                             } else {
                                 showError('عملیات با خطا مواجه شد');
                             }
+                        }
+                    }
+                );
+            }
+
+            function create_folder(name){
+                ajax_request('/admin/general/media/remote_create_folder/' + current_node, {'name': name},
+                    {
+                        beforeSend: function () {
+                            $('#btnCreateFolder').html('صبر کنید ...').attr('disabled', 'disabled');
+                        },
+                        done: function(data){
+                            if(data.success){
+
+                                if(data.node == current_node) {
+
+                                    if ($('.node-folder').length) {
+                                        $('.node-folder:last').after(data.content);
+                                    } else {
+                                        $('.stage').prepend(data.content);
+                                    }
+                                    $('#txtFolderName').val('');
+
+                                    autodir();
+                                    modal.setAddress(data.address);
+                                    showSuccess('عملیات با موفقیت انجام شد');
+
+                                    closeToolbar();
+                                }
+
+                            } else if(data.error){
+                                showSuccess(data.error)
+                            } else {
+                                showError('عملیات با خطا مواجه شد');
+                            }
+                        },
+                        always: function () {
+                            $('#btnCreateFolder').html('ایجاد پوشه').removeAttr('disabled');
                         }
                     }
                 );
@@ -259,18 +351,21 @@
 
                                 if (data.success) {
 
-                                    if(data.address == modal.getAddress()) {
+                                    if(data.node == current_node) {
 
-                                        $('#box_' + this.upload_id).remove();
+                                        if (data.address == modal.getAddress()) {
 
-                                        if ($('.node-item').length) {
-                                            $('.node-item:last').after(data.node);
-                                        } else {
-                                            $('.stage').prepend(data.node);
+                                            $('#box_' + this.upload_id).remove();
+
+                                            if ($('.node-item').length) {
+                                                $('.node-item:last').after(data.content);
+                                            } else {
+                                                $('.stage').prepend(data.content);
+                                            }
+
+                                            autodir();
+                                            showSuccess('عملیات ارسال پرونده با موفقیت انجام شد.');
                                         }
-
-                                        autodir();
-                                        showSuccess('عملیات ارسال پرونده با موفقیت انجام شد.');
                                     }
 
                                 } else {
@@ -294,52 +389,6 @@
                 }).click();
             }
 
-            function toggleSidebar() {
-                $('body').toggleClass('open');
-            }
-
-            function switchToolbar(obj) {
-                $('.toolbar-box').slideUp();
-                if(obj != active_toolbar) {
-                    $(obj).slideDown();
-                    active_toolbar = obj;
-                } else {
-                    active_toolbar = null;
-                }
-            }
-
-            function closeToolbar() {
-                $('.toolbar-box').slideUp();
-                active_toolbar = null;
-            }
-
-            function showError(message) {
-                $('.toolbar-alert')
-                    .hide()
-                    .html(message)
-                    .removeClass('toolbar-alert-success')
-                    .addClass('toolbar-alert-error')
-                    .slideDown();
-                setTimeout(function () {
-                    hideAlert();
-                }, 6000)
-            }
-
-            function showSuccess(message) {
-                $('.toolbar-alert')
-                    .hide()
-                    .html(message)
-                    .removeClass('toolbar-alert-error')
-                    .addClass('toolbar-alert-success')
-                    .slideDown();
-                setTimeout(function () {
-                    hideAlert();
-                }, 6000)
-            }
-
-            function hideAlert() {
-                $('.toolbar-alert').slideUp();
-            }
         </script>
     </head>
     <body>
@@ -383,10 +432,12 @@
         <div class="stage"></div>
 
         <script>
+
             $('.node').click(function () {
                 $('.active_node').removeClass('active_node');
                 $(this).addClass('active_node');
             });
+
             $('.sidebar-pannel-handle').click(function () {
                 toggleSidebar()
             });
@@ -397,41 +448,7 @@
                 if(name == ''){
                     showError('نام پوشه وارد نشده است');
                 } else {
-                    ajax_request('/admin/general/media/remote_create_folder/' + current_node,
-                        {
-                            'name': name
-                        },
-                        {
-                            beforeSend: function () {
-                                $('#btnCreateFolder').html('صبر کنید ...').attr('disabled', 'disabled');
-                            },
-                            done: function(data){
-                                if(data.success){
-
-                                    if ($('.node-folder').length) {
-                                        $('.node-folder:last').after(data.node);
-                                    } else {
-                                        $('.stage').prepend(data.node);
-                                    }
-                                    $('#txtFolderName').val('');
-
-                                    autodir();
-                                    modal.setAddress(data.address);
-                                    showSuccess('عملیات با موفقیت انجام شد');
-
-                                    closeToolbar();
-
-                                } else if(data.error){
-                                    showSuccess(data.error)
-                                } else {
-                                    showError('عملیات با خطا مواجه شد');
-                                }
-                            },
-                            always: function () {
-                                $('#btnCreateFolder').html('ایجاد پوشه').removeAttr('disabled');
-                            }
-                        }
-                    );
+                    create_folder(name);
                 }
             });
 

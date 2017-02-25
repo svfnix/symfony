@@ -56,7 +56,8 @@ class MediaController extends Controller
 
         $return = array();
         $return['success'] = 1;
-        $return['stage'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
+        $return['node'] = $id;
+        $return['content'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
             'nodes' => $nodes
         ])->getContent();
         $return['address'] = $this->nodeAddress($node);
@@ -100,7 +101,8 @@ class MediaController extends Controller
 
         $return = array();
         $return['success'] = 1;
-        $return['node'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
+        $return['node'] = $id;
+        $return['content'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
             'nodes' => [$media]
         ])->getContent();
         $return['address'] = $this->nodeAddress($node);
@@ -137,11 +139,11 @@ class MediaController extends Controller
         if ($media = $uploader->upload($node, 'file')) {
 
             $return['success'] = 1;
-            $return['node'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
+            $return['node'] = $id;
+            $return['content'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
                 'nodes' => [$media]
             ])->getContent();
             $return['address'] = $this->nodeAddress($node);
-
 
         }
 

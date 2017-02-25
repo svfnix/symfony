@@ -153,7 +153,7 @@ class Media
     }
 
     /**
-     * @return mixed
+     * @return Media|null
      */
     public function getParent()
     {
@@ -168,7 +168,7 @@ class Media
     {
         if ($parent){
             $this->parent = $parent;
-            $this->tree = $parent->getParent() . $parent->getId() . '/';
+            $this->tree = $parent->getTree() . $parent->getId() . '/';
         }
 
         return $this;
