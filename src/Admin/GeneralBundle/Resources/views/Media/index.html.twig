@@ -30,21 +30,28 @@
                 margin-left: 5px;
                 height: 100%;
                 width: 100%;
-                padding: 15px;
+                padding: 60px 15px 15px 15px;
+                transition: ease all 0.6s;
             }
 
-            .open .sidebar{
+            .sidebar_open .sidebar{
                 width: 350px;
                 display: inline-block;
             }
-            .open .stage{
+            .sidebar_open .stage{
                 width: calc(100% - 355px);
+            }
+            .toolbar_open .stage{
+                padding-top: 110px;
             }
 
             .toolbar {
                 padding: 0px;
                 background: #FDFDFD;
                 border-bottom: 1px solid #F6F6F6;
+                position: fixed;
+                width: 100%;
+                z-index: 1000;
             }
             .toolbar > ul > li > a {
                 color: #787878;
@@ -86,6 +93,7 @@
                 color:#AAA;
                 border: 1px solid #DDD;
                 height: 153px;
+                position: relative;
             }
 
             .node tr td{color:#AAA; font-size: 11px; display: block; overflow: hidden}
@@ -97,7 +105,25 @@
 
             .node:hover{background-color:#FEFEFE; border: 1px solid #BBB}
             .active_node,
-            .active_node:hover {background-color:#FEFEFE; border: 1px solid #A7C6ED}
+            .active_node:hover {background-color:#FEFEFE; border: 1px solid #13B2FC}
+
+            .node .flag {
+                position: absolute;
+                display: none;
+                top: -15px;
+                left: 5px;
+                z-index: 10000;
+                color: #58992a;
+                font-size: 30px;
+            }
+
+            .node_selected {
+                border: 1px solid #3bcb3b;
+            }
+
+            .node_selected .flag {
+                display: inline-block;
+            }
 
             .name_wrapper {text-align: center; direction: rtl;}
             .name_wrapper .hovername{
@@ -142,6 +168,7 @@
             var current_node = 0;
             var active_toolbar = null;
             var active_proceesses = 0;
+            var select_mode = false
             var upload_id = 0;
 
             var modal = parent.modalMediaManager;
@@ -156,8 +183,23 @@
                 if(obj != active_toolbar) {
                     $(obj).slideDown();
                     active_toolbar = obj;
+                    $('body').addClass('toolbar_open');
+
+                    if(obj == '#toolbarDelete'){
+                        select_mode = true;
+                        $('.active_node').removeClass('active_node');
+                    } else if(obj == '#toolbarMove'){
+                        select_mode = true;
+                        $('.active_node').removeClass('active_node');
+                    } else {
+                        select_mode = false;
+                        $('.node_selected').removeClass('node_selected');
+                    }
                 } else {
                     active_toolbar = null;
+                    select_mode = false;
+                    $('body').removeClass('toolbar_open');
+                    $('.node_selected').removeClass('node_selected');
                 }
             }
 
@@ -191,7 +233,7 @@
             }
 
             function hideAlert() {
-                $('.toolbar-alert').slideUp();
+                $('.toolbar-alert').hide();
             }
 
 
@@ -256,6 +298,11 @@
 
 
             function explore(id) {
+
+                if(select_mode){
+                    return false
+                }
+
                 ajax_request('/admin/general/media/remote_explore/' + id, {},
                     {
                         done: function(data){
@@ -278,6 +325,7 @@
                     {
                         beforeSend: function () {
                             $('#btnCreateFolder').html('صبر کنید ...').attr('disabled', 'disabled');
+                            $('#txtFolderName').attr('disabled', 'disabled');
                         },
                         done: function(data){
                             if(data.success){
@@ -299,13 +347,14 @@
                                 }
 
                             } else if(data.error){
-                                showSuccess(data.error)
+                                showError(data.error)
                             } else {
                                 showError('عملیات با خطا مواجه شد');
                             }
                         },
                         always: function () {
                             $('#btnCreateFolder').html('ایجاد پوشه').removeAttr('disabled');
+                            $('#txtFolderName').removeAttr('disabled');
                         }
                     }
                 );
@@ -315,59 +364,56 @@
 
                 upload_id ++;
 
-                $('#temp').append('<form id="form_'+ upload_id +'"><input type="file" class="file"></form>');
+                $('#temp').append('<form id="form_'+ upload_id +'"><input type="file" class="file" multiple="multiple"></form>');
                 $('#form_' + upload_id + ' .file').change(function () {
 
-                    var $template = $($('#template_file').html());
-                    $template.filter('table').attr('id', 'box_' + upload_id);
-                    $('.stage').append($template);
+                    closeToolbar();
 
-                    var formData = new FormData();
-                    formData.append('file', $(this)[0].files[0]);
-                    formData.append('name', 'saeed');
+                    var files = $(this)[0].files;
 
-                    $.ajax({
-                        url: '/admin/general/media/remote_upload/' + current_node,
-                        type: 'POST',
-                        data: formData,
-                        cache: false,
-                        contentType: false,
-                        processData: false,
+                    for(var i = 0; i < files.length; i++) {
 
-                        upload_id: upload_id,
+                        upload_id ++;
 
-                        beforeSend: function() {
-                            if(!active_proceesses){
-                                modal.showProgressBar();
+                        var $template = $($('#template_file').html());
+                        $template.filter('table').attr('id', 'box_' + upload_id);
+                        $('.stage').append($template);
+
+                        var formData = new FormData();
+                        formData.append('file', files[i]);
+
+                        $.ajax({
+                            url: '/admin/general/media/remote_upload/' + current_node,
+                            type: 'POST',
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+
+                            upload_id: upload_id,
+
+                            beforeSend: function () {
+                                if (!active_proceesses) {
+                                    modal.showProgressBar();
+                                }
+
+                                active_proceesses++;
+
+                                $('#box_' + this.upload_id).find('.progress-bar').css('width', '0%');
+                            },
+
+                            uploadProgress: function (event, position, total, percentComplete) {
+                                $('#box_' + this.upload_id).find('.progress-bar').css('width', percentComplete + '%');
                             }
 
-                            active_proceesses++;
-
-                            $('#box_' + this.upload_id).find('.progress-bar').css('width', '0%');
-                        },
-
-                        uploadProgress: function(event, position, total, percentComplete) {
-                            $('#box_' + this.upload_id).find('.progress-bar').css('width', percentComplete + '%');
-                        },
-
-                        // Ajax events
-                        success: function(data) {
-
+                        }, 'json')
+                        .done(function (data) {
                             try {
-
                                 if (data.success) {
-
-                                    if(data.node == current_node) {
-
+                                    if (data.node == current_node) {
                                         if (data.address == modal.getAddress()) {
 
-                                            $('#box_' + this.upload_id).remove();
-
-                                            if ($('.node-item').length) {
-                                                $('.node-item:last').after(data.content);
-                                            } else {
-                                                $('.stage').prepend(data.content);
-                                            }
+                                            $('#box_' + this.upload_id).replaceWith(data.content);
 
                                             autodir();
                                             showSuccess('عملیات ارسال پرونده با موفقیت انجام شد.');
@@ -379,20 +425,52 @@
                                     $('#box_' + this.upload_id).remove();
                                 }
 
-                            } catch (e){
+                            } catch (e) {
                                 $('#box_' + this.upload_id).remove();
                                 showError('عملیات با خطا مواجه شد.');
                             }
-
-                        },
-
-                        error: function () {
+                        })
+                        .fail(function () {
                             $('#box_' + this.upload_id).remove();
                             showError('عملیات با خطا مواجه شد.');
-                        }
-                    }, 'json');
+                        })
+                        .always(function () {
+                            active_proceesses--;
+                            if (!active_proceesses) {
+                                modal.hideProgressBar();
+                            }
+                        });
+                    }
 
                 }).click();
+            }
+
+            function search(query){
+                ajax_request('/admin/general/media/remote_search', {'query': query},
+                    {
+                        beforeSend: function () {
+                            $('#btnSearch').html('صبر کنید ...').attr('disabled', 'disabled');
+                            $('#txtSearch').attr('disabled', 'disabled');
+                        },
+                        done: function(data){
+                            if(data.success){
+
+                                $('.stage').html(data.content);
+                                modal.setAddress(data.address);
+                                current_node = data.node;
+
+                            } else if(data.error){
+                                showError(data.error)
+                            } else {
+                                showError('عملیات با خطا مواجه شد');
+                            }
+                        },
+                        always: function () {
+                            $('#btnSearch').html('جستجو').removeAttr('disabled');
+                            $('#txtSearch').removeAttr('disabled');
+                        }
+                    }
+                );
             }
 
         </script>
@@ -405,8 +483,6 @@
                 <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarUpload')" class="fa fa-file-text-o" data-toggle="dropdown"></a></li>
                 <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarSearch')" class="fa fa-search" data-toggle="dropdown"></a></li>
                 <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarDelete')" class="fa fa-trash-o" data-toggle="dropdown"></a></li>
-
-                <li class="pull-left" style="font-size: 18px"><a href="javascript:void(0)" class="fa fa-bars sidebar-pannel-handle" data-toggle="dropdown"></a></li>
             </ul>
             <div class="toolbar-box" id="toolbarCreateFolder">
                 <div class="input-group">
@@ -421,9 +497,9 @@
             </div>
             <div class="toolbar-box" id="toolbarSearch">
                 <div class="input-group">
-                    <input class="form-control" placeholder="عبارتی را جهت جستجو وارد نمایید">
+                    <input class="form-control" id="txtSearch" placeholder="عبارتی را جهت جستجو وارد نمایید">
                     <span class="input-group-btn">
-                        <button class="btn btn-primary" type="button">جستجو</button>
+                        <button class="btn btn-primary" id="btnSearch" type="button">جستجو</button>
                     </span>
                 </div>
             </div>
@@ -439,13 +515,13 @@
 
         <script>
 
-            $('.node').click(function () {
-                $('.active_node').removeClass('active_node');
-                $(this).addClass('active_node');
-            });
-
-            $('.sidebar-pannel-handle').click(function () {
-                toggleSidebar()
+            $('.stage').on('click', '.node', function (){
+                if(select_mode){
+                    $(this).toggleClass('node_selected');
+                } else {
+                    $('.active_node').removeClass('active_node');
+                    $(this).addClass('active_node');
+                }
             });
 
             $('#btnCreateFolder').click(function () {
@@ -459,7 +535,18 @@
             });
 
             $('#btnUpload').click(function () {
+                hideAlert();
                 upload();
+            });
+
+            $('#btnSearch').click(function () {
+                hideAlert();
+                var query = $('#txtSearch').val();
+                if(query == ''){
+                    showError('نام پوشه وارد نشده است');
+                } else {
+                    search(query);
+                }
             });
 
             explore(0);

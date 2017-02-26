@@ -83,4 +83,32 @@ class MediaRepository extends EntityRepository
 
         return new Paginator($qb->getQuery());
     }
+
+
+    public function search($query)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb
+            ->select('m')
+            ->from('AppBundle:Media', 'm')
+        ;
+
+        $query = explode(' ', $query);
+        foreach ($query as $q) {
+            $qb->andWhere($qb->expr()->like('CONCAT(' . implode(", ' ', ", [
+                    'm.name',
+                    'm.originalName'
+                ]) . ')', $qb->expr()->literal('%' . $q . '%')));
+        }
+
+        $qb->orderBy("m.name", 'ASC');
+        $qb->orderBy("m.mediaType", 'ASC');
+
+        $qb
+            ->setFirstResult(0)
+            ->setMaxResults(100)
+        ;
+
+        return new Paginator($qb->getQuery());
+    }
 }

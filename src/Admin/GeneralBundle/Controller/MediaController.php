@@ -21,10 +21,12 @@ class MediaController extends Controller
     {
         $return = [];
 
-        if($node) {
+        if(is_object($node)) {
             do {
                 array_unshift($return, '<li><a href="javascript:void(0)" onclick="modalMediaManager.explore(' . $node->getId() . ')">' . $node->getName() . '</a></li>');
             } while ($node = $node->getParent());
+        } else if(!empty($node)) {
+            array_unshift($return, $node);
         }
 
         array_unshift($return, '<li><a href="javascript:void(0)" onclick="modalMediaManager.explore(0)"><i class="fa fa-home"></i></a></li>');
@@ -150,12 +152,44 @@ class MediaController extends Controller
         return $this->json($return);
     }
 
+
     /**
-     * @Route("/", name="admin_general_media")
+     * @Route("/remote_search", name="admin_general_media_remote_search")
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
+    public function remote_search(Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:Media');
+
+        $node = null;
+        $nodes = [];
+
+        $query = $request->request->get('query');
+        if(empty($query)){
+            return $this->json(['error' => 'عبارت جستجو وارد نشده است']);
+        }
+
+        $nodes = $repo->search($query);
+
+
+        $return = array();
+        $return['success'] = 1;
+        $return['node'] = 0;
+        $return['content'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
+            'nodes' => $nodes
+        ])->getContent();
+        $return['address'] = $this->nodeAddress('<li>جستجو :‌ ' . htmlspecialchars($query) . '</li>');
+
+        return $this->json($return);
+    }
+
+    /**
+     * @Route("/", name="admin_general_media")
+     * @return Response
+     */
+    public function index()
     {
         return $this->render('AdminGeneralBundle:Media:index.html.twig');
     }
