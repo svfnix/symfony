@@ -107,7 +107,6 @@ class MediaController extends Controller
         $return['content'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
             'nodes' => [$media]
         ])->getContent();
-        $return['address'] = $this->nodeAddress($node);
 
         return $this->json($return);
     }
@@ -145,13 +144,11 @@ class MediaController extends Controller
             $return['content'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
                 'nodes' => [$media]
             ])->getContent();
-            $return['address'] = $this->nodeAddress($node);
 
         }
 
         return $this->json($return);
     }
-
 
     /**
      * @Route("/remote_search", name="admin_general_media_remote_search")
@@ -181,6 +178,49 @@ class MediaController extends Controller
             'nodes' => $nodes
         ])->getContent();
         $return['address'] = $this->nodeAddress('<li>جستجو :‌ ' . htmlspecialchars($query) . '</li>');
+
+        return $this->json($return);
+    }
+
+    /**
+     * @Route("/remote_delete", name="admin_general_media_remote_delete")
+     * @param Request $request
+     * @return Response
+     */
+    public function remote_delete(Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:Media');
+
+        $node = null;
+        if($id) {
+            $node = $repo->findOneBy(['id' => $id]);
+            if(!$node) {
+                return $this->json(['error' => 'پوشه والد موجود نیست']);
+            }
+        }
+
+        $name = $request->request->get('name');
+        if(empty($name)){
+            return $this->json(['error' => 'پوشه والد موجود نیست']);
+        }
+
+        $media = new Media();
+        $media->setCreatedAt();
+        $media->setName($name);
+        $media->setParent($node);
+        $media->setMediaType(Media::FILE_TYPE_DIR);
+        $media->setOwner($this->getUser());
+
+        $em->persist($media);
+        $em->flush();
+
+        $return = array();
+        $return['success'] = 1;
+        $return['node'] = $id;
+        $return['content'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
+            'nodes' => [$media]
+        ])->getContent();
 
         return $this->json($return);
     }

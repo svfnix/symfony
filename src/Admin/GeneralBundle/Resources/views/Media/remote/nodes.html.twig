@@ -20,7 +20,7 @@
         </style>
     {% endif %}
 
-    <table class="node node-item node-{{ node.mediaType ? 'file' : 'folder' }}" id="node_{{ node.id }}">
+    <table class="node node-item node-{{ node.mediaType ? 'file' : 'folder' }}" id="node_{{ node.id }}" data-id="{{ node.id }}">
         <tbody>
             <tr>
                 <td class="thumb">

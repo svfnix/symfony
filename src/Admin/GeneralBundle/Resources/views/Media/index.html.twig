@@ -112,16 +112,16 @@
                 display: none;
                 top: -15px;
                 left: 5px;
-                z-index: 10000;
+                z-index: 999;
                 color: #58992a;
                 font-size: 30px;
             }
 
-            .node_selected {
+            .selected_node {
                 border: 1px solid #3bcb3b;
             }
 
-            .node_selected .flag {
+            .selected_node .flag {
                 display: inline-block;
             }
 
@@ -173,34 +173,45 @@
 
             var modal = parent.modalMediaManager;
 
-
             function toggleSidebar() {
                 $('body').toggleClass('open');
             }
 
             function switchToolbar(obj) {
-                $('.toolbar-box').slideUp();
+
+                reset_all();
+
                 if(obj != active_toolbar) {
+
                     $(obj).slideDown();
+
                     active_toolbar = obj;
                     $('body').addClass('toolbar_open');
 
                     if(obj == '#toolbarDelete'){
                         select_mode = true;
-                        $('.active_node').removeClass('active_node');
                     } else if(obj == '#toolbarMove'){
                         select_mode = true;
-                        $('.active_node').removeClass('active_node');
                     } else {
-                        select_mode = false;
-                        $('.node_selected').removeClass('node_selected');
                     }
+
                 } else {
                     active_toolbar = null;
-                    select_mode = false;
                     $('body').removeClass('toolbar_open');
-                    $('.node_selected').removeClass('node_selected');
                 }
+            }
+
+            function reset_all() {
+
+                select_mode = false;
+
+                $('.toolbar-box').slideUp();
+
+                $('.active_node').removeClass('active_node');
+                $('.node_').removeClass('selected_node');
+
+                $('#btnDelete').removeData('confirm').removeAttr('disabled').val('حذف فایل های انتخاب شده');
+
             }
 
             function closeToolbar() {
@@ -296,7 +307,6 @@
                 });
             }
 
-
             function explore(id) {
 
                 if(select_mode){
@@ -320,48 +330,104 @@
                 );
             }
 
-            function create_folder(name){
-                ajax_request('/admin/general/media/remote_create_folder/' + current_node, {'name': name},
-                    {
-                        beforeSend: function () {
-                            $('#btnCreateFolder').html('صبر کنید ...').attr('disabled', 'disabled');
-                            $('#txtFolderName').attr('disabled', 'disabled');
-                        },
-                        done: function(data){
-                            if(data.success){
+        </script>
+    </head>
+    <body>
 
-                                if(data.node == current_node) {
+        <div class="toolbar">
+            <ul class="nav nav-pills">
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarCreateFolder')" class="fa fa-folder-open-o" data-toggle="dropdown"></a></li>
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarUpload')" class="fa fa-file-text-o" data-toggle="dropdown"></a></li>
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarSearch')" class="fa fa-search" data-toggle="dropdown"></a></li>
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarDelete')" class="fa fa-trash-o" data-toggle="dropdown"></a></li>
+            </ul>
+            <div class="toolbar-box" id="toolbarCreateFolder">
+                <div class="input-group">
+                    <input class="form-control" id="txtFolderName" placeholder="نام پوشه جدید را وارد نمایید">
+                    <span class="input-group-btn">
+                        <button class="btn btn-success" id="btnCreateFolder" type="button">ایجاد پوشه</button>
+                    </span>
+                </div>
+            </div>
+            <div class="toolbar-box" id="toolbarUpload">
+                <input type="button" class="btn btn-success" id="btnUpload" value="انتخاب و آپلود فایل">
+            </div>
+            <div class="toolbar-box" id="toolbarSearch">
+                <div class="input-group">
+                    <input class="form-control" id="txtSearch" placeholder="عبارتی را جهت جستجو وارد نمایید">
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" id="btnSearch" type="button">جستجو</button>
+                    </span>
+                </div>
+            </div>
+            <div class="toolbar-box" id="toolbarDelete">
+                <input type="button" class="btn btn-danger" id="btnDelete" value="حذف فایل های انتخاب شده">
+            </div>
 
-                                    if ($('.node-folder').length) {
-                                        $('.node-folder:last').after(data.content);
-                                    } else {
-                                        $('.stage').prepend(data.content);
+            <div class="toolbar-alert"></div>
+        </div>
+
+        <div class="sidebar"></div>
+        <div class="stage"></div>
+
+        <script>
+
+            $('.stage').on('click', '.node', function (){
+                if(select_mode){
+                    $(this).toggleClass('selected_node');
+                } else {
+                    $('.active_node').removeClass('active_node');
+                    $(this).addClass('active_node');
+                }
+            });
+
+            $('#btnCreateFolder').click(function () {
+                hideAlert();
+                var name = $('#txtFolderName').val();
+                if(name == ''){
+                    showError('نام پوشه وارد نشده است');
+                } else {
+                    ajax_request('/admin/general/media/remote_create_folder/' + current_node, {'name': name},
+                        {
+                            beforeSend: function () {
+                                $('#btnCreateFolder').val('صبر کنید ...').attr('disabled', 'disabled');
+                                $('#txtFolderName').attr('disabled', 'disabled');
+                            },
+                            done: function(data){
+                                if(data.success){
+
+                                    if(data.node == current_node) {
+
+                                        if ($('.node-folder').length) {
+                                            $('.node-folder:last').after(data.content);
+                                        } else {
+                                            $('.stage').prepend(data.content);
+                                        }
+                                        $('#txtFolderName').val('');
+
+                                        autodir();
+                                        showSuccess('عملیات با موفقیت انجام شد');
+
+                                        closeToolbar();
                                     }
-                                    $('#txtFolderName').val('');
 
-                                    autodir();
-                                    modal.setAddress(data.address);
-                                    showSuccess('عملیات با موفقیت انجام شد');
-
-                                    closeToolbar();
+                                } else if(data.error){
+                                    showError(data.error)
+                                } else {
+                                    showError('عملیات با خطا مواجه شد');
                                 }
-
-                            } else if(data.error){
-                                showError(data.error)
-                            } else {
-                                showError('عملیات با خطا مواجه شد');
+                            },
+                            always: function () {
+                                $('#btnCreateFolder').val('ایجاد پوشه').removeAttr('disabled');
+                                $('#txtFolderName').removeAttr('disabled');
                             }
-                        },
-                        always: function () {
-                            $('#btnCreateFolder').html('ایجاد پوشه').removeAttr('disabled');
-                            $('#txtFolderName').removeAttr('disabled');
                         }
-                    }
-                );
-            }
+                    );
+                }
+            });
 
-            function upload() {
-
+            $('#btnUpload').click(function () {
+                hideAlert();
                 upload_id ++;
 
                 $('#temp').append('<form id="form_'+ upload_id +'"><input type="file" class="file" multiple="multiple"></form>');
@@ -407,136 +473,42 @@
                             }
 
                         }, 'json')
-                        .done(function (data) {
-                            try {
-                                if (data.success) {
-                                    if (data.node == current_node) {
-                                        if (data.address == modal.getAddress()) {
+                            .done(function (data) {
+                                try {
+                                    if (data.success) {
+                                        if (data.node == current_node) {
+                                            if (data.address == modal.getAddress()) {
 
-                                            $('#box_' + this.upload_id).replaceWith(data.content);
+                                                $('#box_' + this.upload_id).replaceWith(data.content);
 
-                                            autodir();
-                                            showSuccess('عملیات ارسال پرونده با موفقیت انجام شد.');
+                                                autodir();
+                                                showSuccess('عملیات ارسال پرونده با موفقیت انجام شد.');
+                                            }
                                         }
+
+                                    } else {
+                                        showError('پرونده ارسال شده معتبر نمی باشد.');
+                                        $('#box_' + this.upload_id).remove();
                                     }
 
-                                } else {
-                                    showError('پرونده ارسال شده معتبر نمی باشد.');
+                                } catch (e) {
                                     $('#box_' + this.upload_id).remove();
+                                    showError('عملیات با خطا مواجه شد.');
                                 }
-
-                            } catch (e) {
+                            })
+                            .fail(function () {
                                 $('#box_' + this.upload_id).remove();
                                 showError('عملیات با خطا مواجه شد.');
-                            }
-                        })
-                        .fail(function () {
-                            $('#box_' + this.upload_id).remove();
-                            showError('عملیات با خطا مواجه شد.');
-                        })
-                        .always(function () {
-                            active_proceesses--;
-                            if (!active_proceesses) {
-                                modal.hideProgressBar();
-                            }
-                        });
+                            })
+                            .always(function () {
+                                active_proceesses--;
+                                if (!active_proceesses) {
+                                    modal.hideProgressBar();
+                                }
+                            });
                     }
 
                 }).click();
-            }
-
-            function search(query){
-                ajax_request('/admin/general/media/remote_search', {'query': query},
-                    {
-                        beforeSend: function () {
-                            $('#btnSearch').html('صبر کنید ...').attr('disabled', 'disabled');
-                            $('#txtSearch').attr('disabled', 'disabled');
-                        },
-                        done: function(data){
-                            if(data.success){
-
-                                $('.stage').html(data.content);
-                                modal.setAddress(data.address);
-                                current_node = data.node;
-
-                            } else if(data.error){
-                                showError(data.error)
-                            } else {
-                                showError('عملیات با خطا مواجه شد');
-                            }
-                        },
-                        always: function () {
-                            $('#btnSearch').html('جستجو').removeAttr('disabled');
-                            $('#txtSearch').removeAttr('disabled');
-                        }
-                    }
-                );
-            }
-
-        </script>
-    </head>
-    <body>
-
-        <div class="toolbar">
-            <ul class="nav nav-pills">
-                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarCreateFolder')" class="fa fa-folder-open-o" data-toggle="dropdown"></a></li>
-                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarUpload')" class="fa fa-file-text-o" data-toggle="dropdown"></a></li>
-                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarSearch')" class="fa fa-search" data-toggle="dropdown"></a></li>
-                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarDelete')" class="fa fa-trash-o" data-toggle="dropdown"></a></li>
-            </ul>
-            <div class="toolbar-box" id="toolbarCreateFolder">
-                <div class="input-group">
-                    <input class="form-control" id="txtFolderName" placeholder="نام پوشه جدید را وارد نمایید">
-                    <span class="input-group-btn">
-                        <button class="btn btn-success" id="btnCreateFolder" type="button">ایجاد پوشه</button>
-                    </span>
-                </div>
-            </div>
-            <div class="toolbar-box" id="toolbarUpload">
-                <input type="button" class="btn btn-success" id="btnUpload" value="انتخاب و آپلود فایل">
-            </div>
-            <div class="toolbar-box" id="toolbarSearch">
-                <div class="input-group">
-                    <input class="form-control" id="txtSearch" placeholder="عبارتی را جهت جستجو وارد نمایید">
-                    <span class="input-group-btn">
-                        <button class="btn btn-primary" id="btnSearch" type="button">جستجو</button>
-                    </span>
-                </div>
-            </div>
-            <div class="toolbar-box" id="toolbarDelete">
-                <input type="button" class="btn btn-danger" value="حذف فایل های انتخاب شده">
-            </div>
-
-            <div class="toolbar-alert"></div>
-        </div>
-
-        <div class="sidebar"></div>
-        <div class="stage"></div>
-
-        <script>
-
-            $('.stage').on('click', '.node', function (){
-                if(select_mode){
-                    $(this).toggleClass('node_selected');
-                } else {
-                    $('.active_node').removeClass('active_node');
-                    $(this).addClass('active_node');
-                }
-            });
-
-            $('#btnCreateFolder').click(function () {
-                hideAlert();
-                var name = $('#txtFolderName').val();
-                if(name == ''){
-                    showError('نام پوشه وارد نشده است');
-                } else {
-                    create_folder(name);
-                }
-            });
-
-            $('#btnUpload').click(function () {
-                hideAlert();
-                upload();
             });
 
             $('#btnSearch').click(function () {
@@ -545,7 +517,77 @@
                 if(query == ''){
                     showError('نام پوشه وارد نشده است');
                 } else {
-                    search(query);
+                    ajax_request('/admin/general/media/remote_search', {'query': query},
+                        {
+                            beforeSend: function () {
+                                $('#btnSearch').val('صبر کنید ...').attr('disabled', 'disabled');
+                                $('#txtSearch').attr('disabled', 'disabled');
+                            },
+                            done: function(data){
+                                if(data.success){
+
+                                    $('.stage').html(data.content);
+                                    modal.setAddress(data.address);
+                                    current_node = data.node;
+
+                                } else if(data.error){
+                                    showError(data.error)
+                                } else {
+                                    showError('عملیات با خطا مواجه شد');
+                                }
+                            },
+                            always: function () {
+                                $('#btnSearch').val('جستجو').removeAttr('disabled');
+                                $('#txtSearch').removeAttr('disabled');
+                            }
+                        }
+                    );
+                }
+            });
+
+            $('#btnDelete').click(function () {
+
+                hideAlert();
+
+                if ($(this).data('confirm') != null) {
+
+                    var selected = [];
+                    $('.selected_node').each(function () {
+                        selected.push($(this).data('id'));
+                    });
+
+                    ajax_request('/admin/general/media/remote_delete', {'selected': selected},
+                    {
+                        beforeSend: function () {
+                            $('#btnDelete').val('صبر کنید ...').attr('disabled', 'disabled');
+                        },
+                        done: function(data){
+                            if(data.success){
+
+                                var deleted = JSON.decode(data.deleted);
+                                for (var i = 0; i < deleted.length; i++){
+                                    $('node_' + deleted[i]).remove();
+                                }
+
+                                showSuccess('عملیات با موفقیت انجام شد');
+
+                                if(!$( "div" ).length) {
+                                    closeToolbar();
+                                }
+
+                            } else if(data.error){
+                                showError(data.error)
+                            } else {
+                                showError('عملیات با خطا مواجه شد');
+                            }
+                        },
+                        always: function () {
+                            $('#btnDelete').removeData('confirm').removeAttr('disabled').val('حذف فایل های انتخاب شده');
+                        }
+                    });
+
+                } else {
+                    $(this).data('confirm', 1).val('عملیات قابل بازگشت نمیباشد. آیا مطمئنید ؟');
                 }
             });
 
