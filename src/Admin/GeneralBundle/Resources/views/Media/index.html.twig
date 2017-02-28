@@ -120,9 +120,22 @@
             .selected_node {
                 border: 1px solid #3bcb3b;
             }
-
             .selected_node .flag {
                 display: inline-block;
+            }
+
+            .toolbar_open_for_delete .selected_node{
+                border: 1px solid #d43f3a;;
+            }
+            .toolbar_open_for_delete .selected_node .flag{
+                color:#d43f3a;;
+            }
+
+            .toolbar_open_for_move .selected_node{
+                border: 1px solid #2e6da4;
+            }
+            .toolbar_open_for_move .selected_node .flag{
+                color:#2e6da4;
             }
 
             .name_wrapper {text-align: center; direction: rtl;}
@@ -162,6 +175,11 @@
             .template_loading { padding: 50px 30px 40px 30px; width: 128px; color: #DDD; }
             .template_progress{ padding: 0px 15px; }
 
+            .rtlbox{direction: rtl}
+            .rtlbox:hover{text-align: right !important;}
+            .ltrbox{direction: ltr}
+            .ltrbox:hover{text-align: left !important;}
+
         </style>
         <script>
 
@@ -173,51 +191,55 @@
 
             var modal = parent.modalMediaManager;
 
-            function toggleSidebar() {
-                $('body').toggleClass('open');
-            }
-
             function switchToolbar(obj) {
 
-                reset_all();
+                resetAll();
 
                 if(obj != active_toolbar) {
 
+                    active_toolbar = obj;
+
+                    $('body').addClass('toolbar_open');
+                    $('.toolbar-box').slideUp();
                     $(obj).slideDown();
 
-                    active_toolbar = obj;
-                    $('body').addClass('toolbar_open');
-
-                    if(obj == '#toolbarDelete'){
+                    if(obj == '#toolbarMove'){
                         select_mode = true;
-                    } else if(obj == '#toolbarMove'){
+                        $('body').addClass('toolbar_open_for_move');
+                    } else if(obj == '#toolbarDelete'){
                         select_mode = true;
-                    } else {
+                        $('body').addClass('toolbar_open_for_delete');
                     }
 
                 } else {
-                    active_toolbar = null;
-                    $('body').removeClass('toolbar_open');
+                    closeToolbar();
                 }
             }
 
-            function reset_all() {
+            function resetAll() {
 
                 select_mode = false;
 
-                $('.toolbar-box').slideUp();
-
                 $('.active_node').removeClass('active_node');
-                $('.node_').removeClass('selected_node');
+                $('.selected_node').removeClass('selected_node');
 
+                $('#btnMove').removeData('confirm').removeAttr('disabled').val('انتقال فایل های انتخاب شده');
                 $('#btnDelete').removeData('confirm').removeAttr('disabled').val('حذف فایل های انتخاب شده');
+
+                $('body').removeClass('toolbar_open_for_move toolbar_open_for_delete');
 
             }
 
             function closeToolbar() {
-                $('.toolbar-box').slideUp();
+
+                resetAll();
+
                 active_toolbar = null;
+                $('.toolbar-box').slideUp();
+                $('body').removeClass('toolbar_open');
+
             }
+
 
             function showError(message) {
                 $('.toolbar-alert')
@@ -238,9 +260,10 @@
                     .removeClass('toolbar-alert-error')
                     .addClass('toolbar-alert-success')
                     .slideDown();
+
                 setTimeout(function () {
                     hideAlert();
-                }, 6000)
+                }, 6000);
             }
 
             function hideAlert() {
@@ -339,6 +362,7 @@
                 <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarCreateFolder')" class="fa fa-folder-open-o" data-toggle="dropdown"></a></li>
                 <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarUpload')" class="fa fa-file-text-o" data-toggle="dropdown"></a></li>
                 <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarSearch')" class="fa fa-search" data-toggle="dropdown"></a></li>
+                <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarMove')" class="fa fa-files-o" data-toggle="dropdown"></a></li>
                 <li style="font-size: 18px"><a href="javascript:void(0)" onclick="switchToolbar('#toolbarDelete')" class="fa fa-trash-o" data-toggle="dropdown"></a></li>
             </ul>
             <div class="toolbar-box" id="toolbarCreateFolder">
@@ -356,9 +380,12 @@
                 <div class="input-group">
                     <input class="form-control" id="txtSearch" placeholder="عبارتی را جهت جستجو وارد نمایید">
                     <span class="input-group-btn">
-                        <button class="btn btn-primary" id="btnSearch" type="button">جستجو</button>
+                        <button class="btn btn-default" id="btnSearch" type="button">جستجو</button>
                     </span>
                 </div>
+            </div>
+            <div class="toolbar-box" id="toolbarMove">
+                <input type="button" class="btn btn-primary" id="btnMove" value="انتقال فایل های انتخاب شده">
             </div>
             <div class="toolbar-box" id="toolbarDelete">
                 <input type="button" class="btn btn-danger" id="btnDelete" value="حذف فایل های انتخاب شده">
@@ -382,7 +409,9 @@
             });
 
             $('#btnCreateFolder').click(function () {
+
                 hideAlert();
+
                 var name = $('#txtFolderName').val();
                 if(name == ''){
                     showError('نام پوشه وارد نشده است');
@@ -406,9 +435,8 @@
                                         $('#txtFolderName').val('');
 
                                         autodir();
-                                        showSuccess('عملیات با موفقیت انجام شد');
-
                                         closeToolbar();
+                                        showSuccess('عملیات با موفقیت انجام شد');
                                     }
 
                                 } else if(data.error){
@@ -432,8 +460,6 @@
 
                 $('#temp').append('<form id="form_'+ upload_id +'"><input type="file" class="file" multiple="multiple"></form>');
                 $('#form_' + upload_id + ' .file').change(function () {
-
-                    closeToolbar();
 
                     var files = $(this)[0].files;
 
@@ -459,6 +485,7 @@
                             upload_id: upload_id,
 
                             beforeSend: function () {
+
                                 if (!active_proceesses) {
                                     modal.showProgressBar();
                                 }
@@ -473,39 +500,39 @@
                             }
 
                         }, 'json')
-                            .done(function (data) {
-                                try {
-                                    if (data.success) {
-                                        if (data.node == current_node) {
-                                            if (data.address == modal.getAddress()) {
+                        .done(function (data) {
+                            try {
+                                if (data.success) {
+                                    if (data.node == current_node) {
 
-                                                $('#box_' + this.upload_id).replaceWith(data.content);
+                                        $('#box_' + this.upload_id).replaceWith(data.content);
 
-                                                autodir();
-                                                showSuccess('عملیات ارسال پرونده با موفقیت انجام شد.');
-                                            }
-                                        }
+                                        autodir();
+                                        closeToolbar();
+                                        showSuccess('عملیات ارسال پرونده با موفقیت انجام شد.');
 
-                                    } else {
-                                        showError('پرونده ارسال شده معتبر نمی باشد.');
-                                        $('#box_' + this.upload_id).remove();
                                     }
 
-                                } catch (e) {
+                                } else {
+                                    showError('پرونده ارسال شده معتبر نمی باشد.');
                                     $('#box_' + this.upload_id).remove();
-                                    showError('عملیات با خطا مواجه شد.');
                                 }
-                            })
-                            .fail(function () {
+
+                            } catch (e) {
                                 $('#box_' + this.upload_id).remove();
                                 showError('عملیات با خطا مواجه شد.');
-                            })
-                            .always(function () {
-                                active_proceesses--;
-                                if (!active_proceesses) {
-                                    modal.hideProgressBar();
-                                }
-                            });
+                            }
+                        })
+                        .fail(function () {
+                            $('#box_' + this.upload_id).remove();
+                            showError('عملیات با خطا مواجه شد.');
+                        })
+                        .always(function () {
+                            active_proceesses--;
+                            if (!active_proceesses) {
+                                modal.hideProgressBar();
+                            }
+                        });
                     }
 
                 }).click();
@@ -545,6 +572,54 @@
                 }
             });
 
+            $('#btnMove').click(function () {
+
+                hideAlert();
+
+                if ($(this).data('confirm') != null) {
+
+                    ajax_request('/admin/general/media/remote_move/' + current_node, {'selected': $(this).data('confirm')},
+                        {
+                            beforeSend: function () {
+                                $('#btnMove').val('صبر کنید ...').attr('disabled', 'disabled');
+                            },
+                            done: function(data){
+                                if(data.success){
+
+                                    closeToolbar();
+                                    showSuccess('عملیات با موفقیت انجام شد');
+                                    explore(current_node);
+
+
+                                } else if(data.error){
+                                    closeToolbar();
+                                    showError(data.error);
+                                } else {
+                                    showError('عملیات با خطا مواجه شد');
+                                    $('#btnMove').val('انتقال به پوشه فعلی').removeAttr('disabled', 'disabled');
+                                }
+                            },
+                            failed: function () {
+                                showError('عملیات با خطا مواجه شد');
+                                $('#btnMove').val('انتقال به پوشه فعلی').removeAttr('disabled', 'disabled');
+                            }
+                        });
+
+                } else {
+
+                    var selected = [];
+                    $('.selected_node').each(function () {
+                        selected.push($(this).data('id'));
+                    });
+
+                    select_mode = false;
+                    $('.selected_node').removeClass('selected_node');
+                    $('body').removeClass('toolbar_open_for_move');
+
+                    $(this).data('confirm', selected).val('انتقال به پوشه فعلی');
+                }
+            });
+
             $('#btnDelete').click(function () {
 
                 hideAlert();
@@ -564,16 +639,15 @@
                         done: function(data){
                             if(data.success){
 
-                                var deleted = JSON.decode(data.deleted);
-                                for (var i = 0; i < deleted.length; i++){
-                                    $('node_' + deleted[i]).remove();
+                                for (var i = 0; i < data.deleted.length; i++){
+                                    $('#node_' + data.deleted[i]).hide('fast', function () {
+                                        $(this).remove();
+                                    })
                                 }
 
+                                closeToolbar();
                                 showSuccess('عملیات با موفقیت انجام شد');
 
-                                if(!$( "div" ).length) {
-                                    closeToolbar();
-                                }
 
                             } else if(data.error){
                                 showError(data.error)

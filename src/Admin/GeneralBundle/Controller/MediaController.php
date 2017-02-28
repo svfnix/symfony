@@ -114,10 +114,9 @@ class MediaController extends Controller
     /**
      * @Route("/remote_upload/{id}", name="admin_general_media_remote_upload", requirements={"id" = "\d+"}, defaults={"id" = 0})
      * @param $id
-     * @param Request $request
      * @return Response
      */
-    public function remote_upload($id, Request $request)
+    public function remote_upload($id)
     {
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:Media');
@@ -192,6 +191,33 @@ class MediaController extends Controller
         $em = $this->getDoctrine()->getEntityManager();
         $repo = $em->getRepository('AppBundle:Media');
 
+        $selected = $request->request->get('selected');
+        foreach($selected as $id){
+            if($media = $repo->findOneBy(['id' => $id])){
+                //$repo-delTree($node);
+                $em->remove($media);
+                $em->flush();
+            }
+        }
+
+        $return = array();
+        $return['success'] = 1;
+        $return['deleted'] = $selected;
+
+        return $this->json($return);
+    }
+
+    /**
+     * @Route("/remote_move/{id}", name="admin_general_media_remote_move", requirements={"id" = "\d+"}, defaults={"id" = 0})
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
+    public function remote_move($id, Request $request)
+    {
+        $em = $this->getDoctrine()->getEntityManager();
+        $repo = $em->getRepository('AppBundle:Media');
+
         $node = null;
         if($id) {
             $node = $repo->findOneBy(['id' => $id]);
@@ -200,27 +226,25 @@ class MediaController extends Controller
             }
         }
 
-        $name = $request->request->get('name');
-        if(empty($name)){
-            return $this->json(['error' => 'پوشه والد موجود نیست']);
+        $selected = $request->request->get('selected');
+        if(is_array($selected)) {
+            foreach ($selected as $id) {
+                /** @var Media $media */
+                if ($media = $repo->findOneBy(['id' => $id])) {
+
+                    $media->setParent($node);
+                    $media->setUpdatedAt();
+
+                    $em->persist($node);
+                    $em->flush();
+                }
+            }
+        } else {
+            return $this->json(['error' => 'پرونده ای جهت انتقال انتخاب نشده است']);
         }
-
-        $media = new Media();
-        $media->setCreatedAt();
-        $media->setName($name);
-        $media->setParent($node);
-        $media->setMediaType(Media::FILE_TYPE_DIR);
-        $media->setOwner($this->getUser());
-
-        $em->persist($media);
-        $em->flush();
 
         $return = array();
         $return['success'] = 1;
-        $return['node'] = $id;
-        $return['content'] = $this->render('AdminGeneralBundle:Media:remote/nodes.html.twig', [
-            'nodes' => [$media]
-        ])->getContent();
 
         return $this->json($return);
     }

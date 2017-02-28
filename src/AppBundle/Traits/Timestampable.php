@@ -63,7 +63,7 @@ trait Timestampable
      */
     public function setUpdatedAt()
     {
-        $this->updatedAt = \DateTime();
+        $this->updatedAt = new \DateTime();
 
         return $this;
     }

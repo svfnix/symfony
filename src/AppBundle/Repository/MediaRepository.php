@@ -1,6 +1,7 @@
 <?php
 
 namespace AppBundle\Repository;
+use AppBundle\Entity\Media;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -84,7 +85,10 @@ class MediaRepository extends EntityRepository
         return new Paginator($qb->getQuery());
     }
 
-
+    /**
+     * @param $query
+     * @return Paginator
+     */
     public function search($query)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
@@ -111,4 +115,5 @@ class MediaRepository extends EntityRepository
 
         return new Paginator($qb->getQuery());
     }
+
 }

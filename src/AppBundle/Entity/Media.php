@@ -37,15 +37,15 @@ class Media
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Media", mappedBy="parent")
-     */
-    private $children;
-
-    /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Media", inversedBy="children")
      * @ORM\JoinColumn(name="parent", referencedColumnName="id")
      */
     private $parent;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Media", mappedBy="parent", cascade={"remove"})
+     */
+    private $children;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", cascade={"persist"})
